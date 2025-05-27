@@ -2,7 +2,9 @@
 
 **InvoiceKit** is a modern, open source **.NET SDK** for generating professional PDF invoices with support for **custom themes**, **invoice line items**, **totals**, **due date calculations**, and more.
 
-> 🚧 **This project is in early development**. Expect breaking changes, limited functionality, and rapid iteration as the core features are built out.
+> 🚧 **This project is in early development**.
+>
+> Expect breaking changes, limited functionality, and rapid iteration as the core features are built out.
 
 ## ✨ Features
 
@@ -23,11 +25,11 @@ var invoice = new InvoiceBuilder()
 invoice.SaveAsPdf("invoice.pdf");
 ```
 
-## 🚀 Roadmap
+## 🚀 Roadmap to v1
 
 - [ ] Define core domain models (Invoice, LineItem, Customer, Theme)
 - [ ] Unit tests
-- [ ] Build PDF rendering engine (initial theme)
+- [ ] Build PDF rendering engine
 - [ ] Publish SDK on NuGet
 - [ ] Add multiple themes
    - [ ] Contemporary
@@ -37,7 +39,8 @@ invoice.SaveAsPdf("invoice.pdf");
 
 ## 📝 License and OSS
 
-MIT Licenseed.
+[MIT License](LICENSE)
 
 > 💡 **Open Source Commitment**
+>
 > InvoiceKit is and always will be open source. This project is built with the developer community in mind. That includes a committment to maintaining InvoiceKit as a free and open source software.
