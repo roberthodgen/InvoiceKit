@@ -11,4 +11,8 @@
     <ProjectReference Include="..\Domain\InvoiceKit.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="SkiaSharp" Version="3.119.0" />
+  </ItemGroup>
+
 </Project>
