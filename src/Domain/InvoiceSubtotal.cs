@@ -2,9 +2,9 @@ namespace InvoiceKit.Domain;
 
 public sealed record InvoiceSubtotal
 {
-    public string Type { get; }
+    public required string Type { get; init; }
 
-    public string Description { get; }
+    public required string Description { get; init; }
 
-    public decimal Amount { get; }
+    public required decimal Amount { get; init; }
 }
