@@ -4,7 +4,7 @@ using SkiaSharp;
 
 public class Layout
 {
-    private const float _margin = 50;
+    private const float documentMargin = 50;
 
     private readonly SKCanvas _canvas;
     private readonly SKPaint _textPaint = new ();
@@ -18,31 +18,53 @@ public class Layout
         _font.Size = 12;
     }
 
-    public void DrawText(string text, float x, float y)
+    public void DrawText(string text, SKRect rect)
     {
-        _canvas.DrawText(text, x, y, SKTextAlign.Left, _font, _textPaint);
+        _canvas.DrawRect(rect, new SKPaint
+        {
+            Color = SKColors.AliceBlue,
+        });
+
+        _canvas.DrawText(text, rect.Left, rect.Bottom, SKTextAlign.Left, _font, _textPaint);
+    }
+
+    public void DrawCurrency(string text, SKRect rect)
+    {
+        _canvas.DrawRect(rect, new SKPaint
+        {
+            Color = SKColors.Beige,
+        });
+
+        _canvas.DrawText(text, rect.Right, rect.Bottom, SKTextAlign.Right, _font, _textPaint);
     }
 
     public void DrawTableHeader(float startY, float[] colWidths, string[] headers)
     {
-        var x = _margin;
+        var start = new SKPoint(documentMargin, startY);
         for (var i = 0; i < headers.Length; i++)
         {
-            DrawText(headers[i], x + 4, startY);
-            x += colWidths[i];
+            var size = new SKSize(colWidths[0], 25);
+            var rect = SKRect.Create(start, size);
+            DrawText(headers[i], rect);
+            start.Offset(colWidths[i], 0);
         }
 
         // Draw bottom line of header row
-        _canvas.DrawLine(_margin, startY + 6, _margin + colWidths.Sum(), startY + 6, _textPaint);
+        _canvas.DrawLine(
+            new SKPoint(documentMargin, startY + 25),
+            new SKPoint(documentMargin + colWidths.Sum(), startY + 25),
+            _textPaint);
     }
 
     public void DrawRow(float startY, float[] colWidths, string[] cells)
     {
-        var x = _margin;
+        var start = new SKPoint(documentMargin, startY);
         for (var i = 0; i < cells.Length; i++)
         {
-            DrawText(cells[i], x + 4, startY);
-            x += colWidths[i];
+            var size = new SKSize(colWidths[0], 25);
+            var rect = SKRect.Create(start, size);
+            DrawText(cells[i], rect);
+            start.Offset(colWidths[i], 0);
         }
     }
 }
