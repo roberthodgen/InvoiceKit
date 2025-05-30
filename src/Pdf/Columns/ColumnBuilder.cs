@@ -5,6 +5,13 @@ using SkiaSharp;
 public class ColumnBuilder
 {
     private readonly List<(string text, TextStyle style)> _lines = [];
+    
+    private readonly TextStyle _defaultTextStyle; // TODO make this editable for the column
+
+    public ColumnBuilder(TextStyle defaultTextStyle)
+    {
+        _defaultTextStyle = defaultTextStyle;
+    }
 
     public ColumnBuilder AddTextLine(string text)
     {
@@ -13,7 +20,7 @@ public class ColumnBuilder
 
     public ColumnBuilder AddTextLine(string text, Action<TextOptionsBuilder> options)
     {
-        var builder = new TextOptionsBuilder();
+        var builder = new TextOptionsBuilder(_defaultTextStyle);
         options(builder);
         var style = builder.Build();
         _lines.Add((text, style));

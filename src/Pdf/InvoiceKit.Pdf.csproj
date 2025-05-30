@@ -15,4 +15,10 @@
     <PackageReference Include="SkiaSharp" Version="3.119.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Fonts\Open Sans\*.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

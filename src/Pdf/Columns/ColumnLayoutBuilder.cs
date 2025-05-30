@@ -8,15 +8,18 @@ public class ColumnLayoutBuilder : IRenderable
     private readonly SKRect _bounds;
     private readonly List<ColumnBuilder> _columns = new();
 
-    public ColumnLayoutBuilder(SKCanvas canvas, SKRect bounds)
+    private TextStyle _defaultTextStyle; // TODO make this editable for the column
+
+    public ColumnLayoutBuilder(SKCanvas canvas, SKRect bounds, TextStyle defaultTextStyle)
     {
         _canvas = canvas;
         _bounds = bounds;
+        _defaultTextStyle = defaultTextStyle;
     }
 
     public ColumnLayoutBuilder AddColumn(Action<ColumnBuilder> config)
     {
-        var column = new ColumnBuilder();
+        var column = new ColumnBuilder(_defaultTextStyle);
         config(column);
         _columns.Add(column);
         return this;
@@ -24,8 +27,8 @@ public class ColumnLayoutBuilder : IRenderable
 
     public void Render()
     {
-        float columnWidth = _bounds.Width / _columns.Count;
-        for (int i = 0; i < _columns.Count; i++)
+        var columnWidth = _bounds.Width / _columns.Count;
+        for (var i = 0; i < _columns.Count; i++)
         {
             var columnRect = new SKRect(
                 _bounds.Left + i * columnWidth,
@@ -37,4 +40,3 @@ public class ColumnLayoutBuilder : IRenderable
         }
     }
 }
-

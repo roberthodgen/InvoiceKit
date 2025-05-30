@@ -15,6 +15,7 @@ public class DocumentTests(ITestOutputHelper testOutputHelper)
         using var stream = File.OpenWrite(fileName);
         using var builder = PdfDocumentBuilder.UsLetter;
         var pdfBytes = builder
+            .DefaultFont("Open Sans/Regular")
             .UseColumns(columns =>
             {
                 columns
@@ -22,7 +23,7 @@ public class DocumentTests(ITestOutputHelper testOutputHelper)
                         "Test Co.",
                         text => text.FontSize(24)
                             .Color(SKColors.Navy)
-                            // .FontWeight(SKFontStyleWeight.SemiBold)
+                            .Font("Open Sans/Bold")
                         ))
                     .AddColumn(col => col
                         .AddTextLine("Customer Co.")
@@ -31,12 +32,13 @@ public class DocumentTests(ITestOutputHelper testOutputHelper)
             })
             .UseTable(table =>
             {
-                table.AddHeader(header =>
-                {
-                    header.AddCell(cell => cell.Text("Description"));
-                    header.AddCell(cell => cell.Text("Qty"));
-                    header.AddCell(cell => cell.Text("Price"));
-                });
+                table.ConfigureHeaderText(text => text.Font("Open Sans/Bold"))
+                    .AddHeader(header =>
+                    {
+                        header.AddCell(cell => cell.Text("Description"));
+                        header.AddCell(cell => cell.Text("Qty"));
+                        header.AddCell(cell => cell.Text("Price"));
+                    });
             })
             .Build();
 

@@ -7,13 +7,16 @@ using Tables;
 public class PdfDocumentBuilder : IDisposable
 {
     private const float PointsPerInch = 72f;
+
     public static PdfDocumentBuilder UsLetter => new (8.5f * PointsPerInch, 11f * PointsPerInch);
 
     private readonly float _width;
-    private readonly MemoryStream _stream = new();
-    private readonly SKDocument? _document;
-    private readonly SKCanvas? _canvas;
-    private readonly List<IRenderable> _elements = new();
+    private readonly MemoryStream _stream = new ();
+    private readonly SKDocument _document;
+    private readonly SKCanvas _canvas;
+    private readonly List<IRenderable> _elements = new ();
+
+    private TextStyle _defaultTextStyle = new ();
 
     public PdfDocumentBuilder(float width, float height)
     {
@@ -24,7 +27,8 @@ public class PdfDocumentBuilder : IDisposable
 
     public PdfDocumentBuilder UseColumns(Action<ColumnLayoutBuilder> config)
     {
-        var builder = new ColumnLayoutBuilder(_canvas!, new SKRect(50, 50, _width - 50, 200));
+        var rect = new SKRect(50, 50, _width - 50, 200);
+        var builder = new ColumnLayoutBuilder(_canvas, rect, _defaultTextStyle);
         config(builder);
         _elements.Add(builder);
         return this;
@@ -32,9 +36,22 @@ public class PdfDocumentBuilder : IDisposable
 
     public PdfDocumentBuilder UseTable(Action<TableLayoutBuilder> config)
     {
-        var builder = new TableLayoutBuilder(_canvas!, new SKRect(50, 250, _width - 50, 600));
+        var rect = new SKRect(50, 250, _width - 50, 600);
+        var builder = new TableLayoutBuilder(_canvas, rect, _defaultTextStyle);
         config(builder);
         _elements.Add(builder);
+        return this;
+    }
+
+    public PdfDocumentBuilder DefaultFont(string fontPath, float fontSize = 12f, SKColor? color = null)
+    {
+        _defaultTextStyle = new TextStyle
+        {
+            FontPath = fontPath,
+            FontSize = fontSize,
+            Color = color ?? SKColors.Black
+        };
+
         return this;
     }
 
@@ -45,7 +62,7 @@ public class PdfDocumentBuilder : IDisposable
             element.Render();
         }
 
-        _document!.EndPage();
+        _document.EndPage();
         _document.Close();
         return _stream.ToArray();
     }
@@ -53,7 +70,7 @@ public class PdfDocumentBuilder : IDisposable
     public void Dispose()
     {
         _stream.Dispose();
-        _document?.Dispose();
-        _canvas?.Dispose();
+        _document.Dispose();
+        _canvas.Dispose();
     }
 }
