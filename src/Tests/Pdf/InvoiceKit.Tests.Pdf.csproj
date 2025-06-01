@@ -26,4 +26,10 @@
     <ProjectReference Include="..\..\Pdf\InvoiceKit.Pdf.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Images\circle.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

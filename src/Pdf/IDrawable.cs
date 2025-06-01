@@ -1,16 +1,25 @@
 namespace InvoiceKit.Pdf;
 
+using Layouts;
 using SkiaSharp;
 
-public interface IRenderable
+public interface IDrawable
 {
     /// <summary>
     /// Attempts to fit the content within the available size. Returns the size necessary.
     /// </summary>
     /// <param name="available">The available rectangle to render content within.</param>
-    /// <param name="measured">The minimum rectangle necessary to render the content within.</param>
-    /// <returns>The rectangle is necessary to render the content within.</returns>
-    bool TryMeasure(SKSize available, out SKSize measured);
+    /// <returns>The size necessary to render the content.</returns>
+    /// <remarks>
+    /// The returned size may be larger than the available size and indicates a new page or resize is necessary by the
+    /// calling layout component.
+    /// </remarks>
+    SKSize Measure(SKSize available);
 
-    void Draw(SKCanvas canvas, SKRect rect);
+    /// <summary>
+    /// Draws the content within the specified rectangle.
+    /// </summary>
+    /// <param name="page">The canvas into which to draw.</param>
+    /// <param name="rect">The rectangle into which the content should be drawn.</param>
+    void Draw(PageLayout page, SKRect rect);
 }

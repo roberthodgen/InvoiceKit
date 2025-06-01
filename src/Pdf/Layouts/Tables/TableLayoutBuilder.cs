@@ -1,8 +1,9 @@
 namespace InvoiceKit.Pdf.Layouts.Tables;
 
 using SkiaSharp;
+using Styles.Text;
 
-public class TableLayoutBuilder : IDrawable
+public class TableLayoutBuilder
 {
     private readonly SKCanvas _canvas;
     private readonly SKRect _bounds;

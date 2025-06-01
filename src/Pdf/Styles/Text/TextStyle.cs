@@ -6,9 +6,13 @@ public sealed record TextStyle
 {
     public string? FontPath { get; init; }
 
+    public float LineHeight { get; init; } = 1.25f;
+
     public float FontSize { get; init; } = 16f;
 
     public SKColor Color { get; init; } = SKColors.Black;
+
+    public float Height => FontSize * LineHeight;
 
     public SKPaint ToPaint()
     {
