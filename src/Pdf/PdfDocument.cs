@@ -16,6 +16,7 @@ public class PdfDocument : IDisposable
     private readonly SKDocument _document;
 
     private List<IDrawable> _blocks = [];
+    private bool _debug = true;
 
     public TextStyle DefaultTextStyle { get; private set; } = new ();
 
@@ -59,14 +60,17 @@ public class PdfDocument : IDisposable
     public byte[] Build()
     {
         var page = BeginNewPage(); // TODO handle dispose/using
-        page.Canvas.DrawRect(
-            page.Available,
-            new SKPaint
-            {
-                Style = SKPaintStyle.Stroke,
-                Color = SKColors.Magenta,
-                StrokeWidth = .5f,
-            });
+        if (_debug)
+        {
+            page.Canvas.DrawRect(
+                page.Available,
+                new SKPaint
+                {
+                    Style = SKPaintStyle.Stroke,
+                    Color = SKColors.Magenta,
+                    StrokeWidth = .5f,
+                });
+        }
 
         foreach (var block in _blocks)
         {
@@ -97,7 +101,8 @@ public class PdfDocument : IDisposable
         return new PageLayout(
             _document.BeginPage(_pageSize.Width, _pageSize.Height),
             _pageSize,
-            SKRect.Create(Margin, Margin, _pageSize.Width - (Margin * 2), _pageSize.Height - (Margin * 2)));
+            SKRect.Create(Margin, Margin, _pageSize.Width - (Margin * 2), _pageSize.Height - (Margin * 2)),
+            _debug);
     }
 
     private void EndPage()

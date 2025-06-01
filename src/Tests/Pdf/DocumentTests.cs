@@ -20,42 +20,51 @@ public class DocumentTests(ITestOutputHelper testOutputHelper)
         var pdfBytes = builder
             .DefaultFont("Open Sans/Regular")
             .AddBlock(doc => new HStack()
-                .Add(new TextBlock(doc.DefaultTextStyle)
-                    .AddLine("Test Co.", text => text.Color(SKColors.Navy).Font("Open Sans/Bold"))
-                    .AddLine("123 Main Street")
-                    .AddLine("Anytown, XX 12345"))
-                .Add(new TextBlock(doc.DefaultTextStyle)
-                    .AddLine("Customer Co.", text => text.Font("Open Sans/Bold"))
-                    .AddLine("Invoice No.: 123")
-                    .AddLine("Due: July 1, 2025")))
+                .Add(
+                    new TextBlock(doc.DefaultTextStyle)
+                        .AddLine("Test Document", text => text.Font("Open Sans/Bold").FontSize(24))
+                        .AddLine("123 Main Street")
+                        .AddLine("Anytown, XX 12345"))
+                .Add(
+                    new TextBlock(doc.DefaultTextStyle)
+                        .AddLine("Customer Co.", text => text.Font("Open Sans/Bold"))
+                        .AddLine("Invoice No.: 123")
+                        .AddLine("Due: July 1, 2025")))
             .AddBlock(doc => new HStack()
-                .Add(new TextBlock(doc.DefaultTextStyle)
-                    .AddLine("Footer")))
+                .Add(
+                    new TextBlock(doc.DefaultTextStyle)
+                        .AddLine("Footer")))
             .AddBlock(doc => ImageBlock.CreateSvg(Path.Combine(Directory.GetCurrentDirectory(), "Images/circle.svg")))
+            .AddBlock(doc => new TextBlock(doc.DefaultTextStyle)
+                .AddLine("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pharetra neque nec sapien pharetra gravida. Aenean quis sapien enim. In semper quis nisi laoreet sollicitudin. Morbi vehicula massa sed erat egestas tempus. Duis tincidunt odio elit, a efficitur est dictum quis. Cras egestas ante et mi vulputate, in dapibus nisi suscipit. Sed sodales nibh leo, eu hendrerit nibh semper non. Praesent id nunc sed eros aliquam tristique eget ut erat. Pellentesque dignissim mattis justo sed viverra. Aenean dui mauris, sagittis ac dapibus et, commodo sit amet tortor.")
+                .AddLine("Vestibulum porttitor feugiat sem, at fermentum ex laoreet at. Curabitur lobortis finibus tincidunt. Morbi mattis quam nec nulla dapibus luctus. Quisque mattis nunc risus, quis pellentesque felis molestie ut. Donec rhoncus accumsan aliquam. Nulla vestibulum dolor eget sapien aliquet, a volutpat urna efficitur. Proin erat lorem, auctor placerat tincidunt eu, porta nec dui. Ut dapibus tortor sit amet tortor tristique, tempus pharetra nunc sagittis. Aenean pretium vulputate quam, at rutrum nisi commodo eu. Curabitur vitae erat nec lacus placerat suscipit iaculis et nunc.")
+                .AddLine("Nulla id aliquam orci. Etiam id magna eget metus bibendum sodales. Suspendisse maximus ullamcorper ipsum. Quisque vel sagittis sapien. Integer finibus tellus eu rutrum pretium. Sed congue auctor posuere. Pellentesque tortor orci, molestie in turpis non, mattis pharetra eros. Aliquam vitae lacus sit amet augue varius auctor. Aenean ipsum diam, sodales sit amet nibh scelerisque, pellentesque sagittis dui.\n\n")
+                .AddLine("Suspendisse dictum faucibus justo, sit amet sollicitudin orci fermentum ac. Etiam placerat velit lacus, eget gravida magna luctus vitae. Donec facilisis nibh nulla, at mattis mauris interdum eleifend. Donec euismod enim commodo, porta enim eget, sollicitudin est. Morbi imperdiet tortor eget ex semper, sed viverra augue tincidunt. Pellentesque non scelerisque nisi, sit amet lacinia leo. Nam quis purus vitae eros tempor tristique eu vel libero. Nam et quam feugiat, placerat nunc sit amet, egestas velit. In pellentesque commodo enim, a ultrices odio tincidunt in. Nullam vel quam justo.")
+                .AddLine("Integer ac placerat neque. Vivamus tempus felis sodales lacus pretium, ut finibus nibh porttitor. Nullam eleifend risus sit amet porttitor congue. Nullam a sem lacinia est tincidunt feugiat. Vestibulum sed mi pulvinar lectus maximus congue at nec justo. Quisque enim tortor, ultrices ut suscipit sed, pulvinar vitae turpis. Vestibulum a quam ligula."))
             .Build();
-            // .UseTable(table =>
-            // {
-            //     table.AddHeader(header =>
-            //     {
-            //         header.UseText(text => text.Font("Open Sans/Bold"))
-            //             .AddCell(cell => cell.AddText("Description"))
-            //             .AddCell(cell => cell.AddText("Qty"))
-            //             .AddCell(cell => cell.AddText("Price"));
-            //     });
-            //
-            //     foreach (var nthProduct in Enumerable.Range(1, 100))
-            //     {
-            //         table.AddRow(row =>
-            //         {
-            //             row.AddCell(cell => cell.AddText(
-            //                     $"Product {nthProduct}",
-            //                     text => text.Font("Open Sans/SemiBold")))
-            //                 .AddCell(cell => cell.AddText("1"))
-            //                 .AddCell(cell => cell.AddText("$ 10.00"));
-            //         });
-            //     }
-            // })
-            // .Build();
+        // .UseTable(table =>
+        // {
+        //     table.AddHeader(header =>
+        //     {
+        //         header.UseText(text => text.Font("Open Sans/Bold"))
+        //             .AddCell(cell => cell.AddText("Description"))
+        //             .AddCell(cell => cell.AddText("Qty"))
+        //             .AddCell(cell => cell.AddText("Price"));
+        //     });
+        //
+        //     foreach (var nthProduct in Enumerable.Range(1, 100))
+        //     {
+        //         table.AddRow(row =>
+        //         {
+        //             row.AddCell(cell => cell.AddText(
+        //                     $"Product {nthProduct}",
+        //                     text => text.Font("Open Sans/SemiBold")))
+        //                 .AddCell(cell => cell.AddText("1"))
+        //                 .AddCell(cell => cell.AddText("$ 10.00"));
+        //         });
+        //     }
+        // })
+        // .Build();
 
         stream.Write(pdfBytes);
         testOutputHelper.WriteLine($"PDF created: {fileName}");

@@ -12,6 +12,11 @@ public sealed record TextStyle
 
     public SKColor Color { get; init; } = SKColors.Black;
 
+    /// <summary>
+    /// Additional vertical space between paragraphs (not wrapped lines).
+    /// </summary>
+    public ParagraphSpacing ParagraphSpacing { get; init; } = new (0f, 8f);
+
     public float Height => FontSize * LineHeight;
 
     public SKPaint ToPaint()

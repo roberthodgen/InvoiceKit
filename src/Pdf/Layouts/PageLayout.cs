@@ -24,16 +24,19 @@ public class PageLayout : IDisposable
 
     public SKRect Available => SKRect.Create(_cursor, Drawable.Size);
 
+    public bool Debug { get; }
+
     /// <summary>
     /// The next available drawing position on the page.
     /// </summary>
     private SKPoint _cursor;
 
-    public PageLayout(SKCanvas canvas, SKSize size, SKRect drawable)
+    public PageLayout(SKCanvas canvas, SKSize size, SKRect drawable, bool debug)
     {
         Canvas = canvas;
         Size = size;
         Drawable = drawable;
+        Debug = debug;
         _cursor = Drawable.Location;
     }
 
