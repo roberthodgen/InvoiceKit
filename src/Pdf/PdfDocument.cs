@@ -60,17 +60,6 @@ public class PdfDocument : IDisposable
     public byte[] Build()
     {
         var page = BeginNewPage(); // TODO handle dispose/using
-        if (_debug)
-        {
-            page.Canvas.DrawRect(
-                page.Available,
-                new SKPaint
-                {
-                    Style = SKPaintStyle.Stroke,
-                    Color = SKColors.Magenta,
-                    StrokeWidth = .5f,
-                });
-        }
 
         foreach (var block in _blocks)
         {

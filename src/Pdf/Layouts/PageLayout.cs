@@ -22,7 +22,7 @@ public class PageLayout : IDisposable
     /// </summary>
     public SKCanvas Canvas { get; }
 
-    public SKRect Available => SKRect.Create(_cursor, Drawable.Size);
+    public SKRect Available => new (_cursor.X, _cursor.Y, Drawable.Width, Drawable.Height);
 
     public bool Debug { get; }
 
@@ -38,6 +38,18 @@ public class PageLayout : IDisposable
         Drawable = drawable;
         Debug = debug;
         _cursor = Drawable.Location;
+
+        if (debug)
+        {
+            canvas.DrawRect(
+                Available,
+                new SKPaint
+                {
+                    Style = SKPaintStyle.Stroke,
+                    Color = SKColors.Magenta,
+                    StrokeWidth = .5f,
+                });
+        }
     }
 
     public void DrawBlock(IDrawable block)
