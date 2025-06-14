@@ -17,6 +17,7 @@ public class DocumentTests(ITestOutputHelper testOutputHelper)
         using var stream = File.OpenWrite(fileName);
         using var builder = PdfDocument.UsLetter;
         var pdfBytes = builder
+            .DisplayLayoutGuidelines()
             .DefaultFont("Open Sans/Regular")
             .AddBlock(doc => new HStack()
                 .AddColumn(

@@ -3,6 +3,9 @@ namespace InvoiceKit.Pdf.Layouts.Images;
 using SkiaSharp;
 using Svg.Skia;
 
+/// <summary>
+/// Renders an image as a block element.
+/// </summary>
 public class ImageBlock : IDrawable, IDisposable
 {
     public float Width { get; }

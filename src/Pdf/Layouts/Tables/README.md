@@ -6,6 +6,6 @@
 - [ ] Auto column widths
 - [x] Consistent row heights
 - [x] Percentage-based row widths
-- [ ] Row Separators
+- [x] Row Separators
 - [ ] Striped rows
 - [ ] All bordered cell rows

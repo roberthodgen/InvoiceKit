@@ -22,6 +22,8 @@ public class TableLayoutBuilder(TextStyle defaultTextStyle) : IDrawable
 
     public TextStyle TableHeaderStyle { get; } = defaultTextStyle with { FontPath = "Open Sans/Bold", };
 
+    public bool ShowRowSeparators { get; set; } = false;
+
     public TableLayoutBuilder AddHeader(Action<TableRow> config)
     {
         var row = new TableRow(this, TableHeaderStyle);
@@ -83,6 +85,15 @@ public class TableLayoutBuilder(TextStyle defaultTextStyle) : IDrawable
     {
         ColumnSizing = ColumnSizing.FixedPercentage;
         ColumnWidthPercentages = columnWidths;
+        return this;
+    }
+
+    /// <summary>
+    /// Adds row separators between rows. 
+    /// </summary>
+    public TableLayoutBuilder AddRowSeparators()
+    {
+        ShowRowSeparators = true;
         return this;
     }
 

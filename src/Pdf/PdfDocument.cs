@@ -16,7 +16,7 @@ public class PdfDocument : IDisposable
     private readonly SKDocument _document;
 
     private List<IDrawable> _blocks = [];
-    private bool _debug = true;
+    private bool _debug = false;
 
     public TextStyle DefaultTextStyle { get; private set; } = new ();
 
@@ -77,6 +77,12 @@ public class PdfDocument : IDisposable
         EndPage();
         _document.Close();
         return _stream.ToArray();
+    }
+    
+    public PdfDocument DisplayLayoutGuidelines()
+    {
+        _debug = true;
+        return this;
     }
 
     public void Dispose()

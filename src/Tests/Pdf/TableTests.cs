@@ -16,12 +16,14 @@ public class TableTests(ITestOutputHelper testOutputHelper)
         using var stream = File.OpenWrite(fileName);
         using var builder = PdfDocument.UsLetter;
         var pdfBytes = builder
+            // .DisplayLayoutGuidelines()
             .AddBlock(doc => new TextBlock(doc.DefaultTextStyle)
                 .AddLine("Simple Table", text => text.Font("Open Sans/Bold").FontSize(24f)))
             .AddBlock(doc => new TextBlock(doc.DefaultTextStyle)
-                .AddLine("The table below contains two rows and 3 equally spaced columns."))
+                .AddLine("The table below contains two rows and 3 equally spaced columns with row separators."))
             .AddBlock(doc => new TableLayoutBuilder(doc.DefaultTextStyle)
                 .UseEquallySpaceColumns()
+                .AddRowSeparators()
                 .AddHeader(header => header
                     .AddCell(cell => cell.AddText("Description"))
                     .AddCell(cell => cell.AddText("Qty"))
@@ -60,7 +62,7 @@ public class TableTests(ITestOutputHelper testOutputHelper)
             .AddBlock(doc => new TextBlock(doc.DefaultTextStyle)
                 .AddLine("Consistent Row Heights", text => text.Font("Open Sans/Bold").FontSize(24f)))
             .AddBlock(doc => new TextBlock(doc.DefaultTextStyle)
-                .AddLine("All rows are the same height."))
+                .AddLine("All rows are the same height with row separators."))
             .AddBlock(doc => new TableLayoutBuilder(doc.DefaultTextStyle)
                 .UseFixedColumnWidths(
                 [
@@ -68,6 +70,7 @@ public class TableTests(ITestOutputHelper testOutputHelper)
                     ColumnWidthPercent.FromPercent(25),
                     ColumnWidthPercent.FromPercent(25),
                 ])
+                .AddRowSeparators()
                 .AddHeader(header => header
                     .AddCell(cell => cell.AddText("Description"))
                     .AddCell(cell => cell.AddText("Qty"))

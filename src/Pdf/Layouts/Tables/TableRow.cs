@@ -12,6 +12,8 @@ public class TableRow(TableLayoutBuilder table, TextStyle defaultTextStyle)
 
     public TextStyle Style { get; private set; } = defaultTextStyle;
 
+    private bool IsLastRow => table.Rows.Last() == this;
+
     public TableRow AddCell(Action<TableCell> config)
     {
         var column = table.GetOrAddColumn(_columnIndex);
@@ -53,6 +55,18 @@ public class TableRow(TableLayoutBuilder table, TextStyle defaultTextStyle)
             var columnWidth = table.GetColumnWidth(rect.Width, cell.ColumnIndex);
             cell.Draw(page, new SKRect(left, top, left + columnWidth, top + height));
             left += columnWidth;
+        }
+
+        if (table.ShowRowSeparators && IsLastRow == false)
+        {
+            page.Canvas.DrawLine(
+                new SKPoint(rect.Left, rect.Bottom),
+                new SKPoint(rect.Right, rect.Bottom),
+                new SKPaint
+                {
+                    Color = SKColors.Black,
+                    StrokeWidth = 1f,
+                });
         }
     }
 }

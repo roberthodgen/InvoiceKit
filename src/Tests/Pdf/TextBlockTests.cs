@@ -17,6 +17,7 @@ public class TextBlockTests(ITestOutputHelper testOutputHelper)
         using var stream = File.OpenWrite(fileName);
         using var builder = PdfDocument.UsLetter;
         var pdfBytes = builder
+            .DisplayLayoutGuidelines()
             .AddBlock(doc => new TextBlock(doc.DefaultTextStyle)
                 .AddLine("Test Document", text => text.Font("Open Sans/Bold").FontSize(24f))
                 .AddLine(
