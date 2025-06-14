@@ -68,7 +68,10 @@ public class PdfDocument : IDisposable
             {
                 EndPage();
                 page = BeginNewPage();
-                page.ForceAllocateRect(size, out rect);
+                if (block is not PageBreak)
+                {
+                    page.ForceAllocateRect(size, out rect);
+                }
             }
 
             block.Draw(page, rect);

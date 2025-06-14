@@ -17,7 +17,7 @@ public class DocumentTests(ITestOutputHelper testOutputHelper)
         using var stream = File.OpenWrite(fileName);
         using var builder = PdfDocument.UsLetter;
         var pdfBytes = builder
-            .DisplayLayoutGuidelines()
+            // .DisplayLayoutGuidelines()
             .DefaultFont("Open Sans/Regular")
             .AddBlock(doc => new HStack()
                 .AddColumn(
@@ -30,20 +30,16 @@ public class DocumentTests(ITestOutputHelper testOutputHelper)
                         .AddLine("Customer Co.", text => text.Font("Open Sans/Bold"))
                         .AddLine("Invoice No.: 123")
                         .AddLine("Due: July 1, 2025")))
-            .AddBlock(doc => new HStack()
-                .AddColumn(
-                    new TextBlock(doc.DefaultTextStyle)
-                        .AddLine("Footer")))
+            .AddBlock(_ => new HorizontalRule())
             .AddBlock(_ => ImageBlock.CreateSvg(Path.Combine(Directory.GetCurrentDirectory(), "Images/circle.svg")))
             .AddBlock(doc => new TextBlock(doc.DefaultTextStyle)
                 .AddLine(
                     "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pharetra neque nec sapien pharetra gravida. Aenean quis sapien enim. In semper quis nisi laoreet sollicitudin. Morbi vehicula massa sed erat egestas tempus. Duis tincidunt odio elit, a efficitur est dictum quis. Cras egestas ante et mi vulputate, in dapibus nisi suscipit. Sed sodales nibh leo, eu hendrerit nibh semper non. Praesent id nunc sed eros aliquam tristique eget ut erat. Pellentesque dignissim mattis justo sed viverra. Aenean dui mauris, sagittis ac dapibus et, commodo sit amet tortor.")
                 .AddLine(
-                    "Vestibulum porttitor feugiat sem, at fermentum ex laoreet at. Curabitur lobortis finibus tincidunt. Morbi mattis quam nec nulla dapibus luctus. Quisque mattis nunc risus, quis pellentesque felis molestie ut. Donec rhoncus accumsan aliquam. Nulla vestibulum dolor eget sapien aliquet, a volutpat urna efficitur. Proin erat lorem, auctor placerat tincidunt eu, porta nec dui. Ut dapibus tortor sit amet tortor tristique, tempus pharetra nunc sagittis. Aenean pretium vulputate quam, at rutrum nisi commodo eu. Curabitur vitae erat nec lacus placerat suscipit iaculis et nunc.")
-                .AddLine(
                     "Nulla id aliquam orci. Etiam id magna eget metus bibendum sodales. Suspendisse maximus ullamcorper ipsum. Quisque vel sagittis sapien. Integer finibus tellus eu rutrum pretium. Sed congue auctor posuere. Pellentesque tortor orci, molestie in turpis non, mattis pharetra eros. Aliquam vitae lacus sit amet augue varius auctor. Aenean ipsum diam, sodales sit amet nibh scelerisque, pellentesque sagittis dui.")
                 .AddLine(
                     "Integer ac placerat neque. Vivamus tempus felis sodales lacus pretium, ut finibus nibh porttitor. Nullam eleifend risus sit amet porttitor congue. Nullam a sem lacinia est tincidunt feugiat. Vestibulum sed mi pulvinar lectus maximus congue at nec justo. Quisque enim tortor, ultrices ut suscipit sed, pulvinar vitae turpis. Vestibulum a quam ligula."))
+            .AddPageBreak()
             .AddBlock(doc => new TextBlock(doc.DefaultTextStyle)
                 .AddLine("New page?"))
             .AddBlock(doc => new TextBlock(doc.DefaultTextStyle)
