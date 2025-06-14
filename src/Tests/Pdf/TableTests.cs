@@ -56,6 +56,30 @@ public class TableTests(ITestOutputHelper testOutputHelper)
                     row.AddCell(cell => cell.AddText("Product Two - The quick brown fox jumps over the lazy dog."))
                         .AddCell(cell => cell.AddText("1"))
                         .AddCell(cell => cell.AddText("$ 20.00"))))
+            // .AddPageBreak()
+            .AddBlock(doc => new TextBlock(doc.DefaultTextStyle)
+                .AddLine("Consistent Row Heights", text => text.Font("Open Sans/Bold").FontSize(24f)))
+            .AddBlock(doc => new TextBlock(doc.DefaultTextStyle)
+                .AddLine("All rows are the same height."))
+            .AddBlock(doc => new TableLayoutBuilder(doc.DefaultTextStyle)
+                .UseFixedColumnWidths(
+                [
+                    ColumnWidthPercent.FromPercent(50),
+                    ColumnWidthPercent.FromPercent(25),
+                    ColumnWidthPercent.FromPercent(25),
+                ])
+                .AddHeader(header => header
+                    .AddCell(cell => cell.AddText("Description"))
+                    .AddCell(cell => cell.AddText("Qty"))
+                    .AddCell(cell => cell.AddText("Price")))
+                .AddRow(row =>
+                    row.AddCell(cell => cell.AddText("Product One - The quick brown fox jumps over the lazy dog."))
+                        .AddCell(cell => cell.AddText("1"))
+                        .AddCell(cell => cell.AddText("$ 10.00")))
+                .AddRow(row =>
+                    row.AddCell(cell => cell.AddText("Product Two - The quick brown fox jumps over the lazy dog."))
+                        .AddCell(cell => cell.AddText("1"))
+                        .AddCell(cell => cell.AddText("$ 20.00"))))
             .Build();
 
         stream.Write(pdfBytes);
