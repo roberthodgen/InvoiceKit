@@ -3,32 +3,19 @@ namespace InvoiceKit.Pdf.Layouts.Tables;
 using SkiaSharp;
 using Styles.Text;
 
-public class TableRow : IDrawable
+public class TableRow(TableLayoutBuilder table, TextStyle defaultTextStyle)
+    : IDrawable
 {
     private int _columnIndex = 0;
 
-    private readonly List<TableColumn> _columns;
-
     public List<TableCell> Cells { get; } = [];
 
-    public TextStyle Style { get; private set; }
-
-    private int ColumnCount => _columns.Count;
-
-    public TableRow(TextStyle defaultTextStyle, List<TableColumn> columns)
-    {
-        _columns = columns;
-        Style = defaultTextStyle;
-    }
+    public TextStyle Style { get; private set; } = defaultTextStyle;
 
     public TableRow AddCell(Action<TableCell> config)
     {
-        if (_columns.ElementAtOrDefault(_columnIndex) is null)
-        {
-            _columns.Add(new TableColumn(_columnIndex));
-        }
-
-        var cell = _columns[_columnIndex].AddCell(Style);
+        var column = table.GetOrAddColumn(_columnIndex);
+        var cell = column.AddCell(Style, table.Rows.Count - 1);
         config(cell);
         Cells.Add(cell);
         _columnIndex++;
@@ -45,20 +32,25 @@ public class TableRow : IDrawable
 
     public SKSize Measure(SKSize available)
     {
-        var width = available.Width / ColumnCount;
-        var cellAvailable = new SKSize(width, available.Height);
-        var height = Cells.Max(cell => cell.Measure(cellAvailable).Height);
-        return new SKSize(width, height);
+        float height = 0;
+        foreach (var cell in Cells)
+        {
+            var width = table.GetColumnWidth(available.Width, cell.ColumnIndex);
+            var cellSize = cell.Measure(new SKSize(width, available.Height));
+            height = Math.Max(height, cellSize.Height);
+        }
+
+        return new SKSize(available.Width, height);
     }
 
     public void Draw(PageLayout page, SKRect rect)
     {
-        var columnWidth = rect.Width / ColumnCount;
         var top = rect.Top;
         var left = rect.Left;
         var height = Measure(rect.Size).Height;
         foreach (var cell in Cells)
         {
+            var columnWidth = table.GetColumnWidth(rect.Width, cell.ColumnIndex);
             cell.Draw(page, new SKRect(left, top, left + columnWidth, top + height));
             left += columnWidth;
         }

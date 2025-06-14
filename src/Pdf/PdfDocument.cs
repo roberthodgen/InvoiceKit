@@ -29,10 +29,10 @@ public class PdfDocument : IDisposable
     /// <summary>
     /// Adds a page break.
     /// </summary>
-    public void AddPageBreak()
+    public PdfDocument AddPageBreak()
     {
-        EndPage();
-        BeginNewPage();
+        _blocks.Add(new PageBreak());
+        return this;
     }
 
     public PdfDocument DefaultFont(string fontPath, float fontSize = TextStyle.DefaultFontSize, SKColor? color = null)

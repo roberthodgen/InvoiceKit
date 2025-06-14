@@ -52,17 +52,6 @@ public class PageLayout : IDisposable
         }
     }
 
-    public void DrawBlock(IDrawable block)
-    {
-        var measured = block.Measure(Available.Size);
-        if (measured.Height > Available.Height || measured.Width > Available.Width)
-        {
-            throw new NotImplementedException("TODO page break logic"); // delegate to PdfDocumentBuilder to end page, begin new one, reset cursor
-        }
-
-        block.Draw(this, Available);
-    }
-
     public bool TryAllocateRect(SKSize size, out SKRect rect)
     {
         if (size.Height > Available.Height || size.Width > Available.Width)

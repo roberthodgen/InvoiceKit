@@ -11,13 +11,18 @@ public class TableCell : IDrawable
 {
     public TextStyle Style { get; private set; }
 
+    public int RowIndex { get; }
+
+    public int ColumnIndex { get; }
+
     /// <summary>
     /// Table cells should be created by the <see cref="TableColumn"/> to ensure property tracking and assignment.
     /// </summary>
-    /// <param name="style">Default text styling for this cell.</param>
-    internal TableCell(TextStyle style)
+    internal TableCell(TextStyle style, int rowIndex, int columnIndex)
     {
         Style = style;
+        RowIndex = rowIndex;
+        ColumnIndex = columnIndex;
     }
 
     public string Text { get; private set; } = "";
