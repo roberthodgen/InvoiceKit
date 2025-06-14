@@ -2,22 +2,32 @@ namespace InvoiceKit.Pdf.Styles.Text;
 
 using SkiaSharp;
 
-public sealed record TextStyle
+public readonly record struct TextStyle()
 {
-    public string? FontPath { get; init; }
+    public const float DefaultFontSize = 12f;
 
-    public float LineHeight { get; init; } = 1.25f;
+    public string? FontPath { get; init; } = null;
 
-    public float FontSize { get; init; } = 16f;
+    public float LineHeight { get; init; } = 1.1f;
+
+    public float FontSize { get; init; } = DefaultFontSize;
 
     public SKColor Color { get; init; } = SKColors.Black;
 
     /// <summary>
     /// Additional vertical space between paragraphs (not wrapped lines).
     /// </summary>
-    public ParagraphSpacing ParagraphSpacing { get; init; } = new (0f, 8f);
+    public ParagraphSpacing ParagraphSpacing { get; init; } = new ();
 
-    public float Height => FontSize * LineHeight;
+    /// <summary>
+    /// The product of the <see cref="FontSize"/> and the <see cref="ParagraphSpacing.Before"/>.
+    /// </summary>
+    public float ParagraphSpacingBefore => (FontSize * ParagraphSpacing.Before) - FontSize;
+
+    /// <summary>
+    /// The product of the <see cref="FontSize"/> and the <see cref="ParagraphSpacing.After"/>.
+    /// </summary>
+    public float ParagraphSpacingAfter => (FontSize * ParagraphSpacing.After) - FontSize;
 
     public SKPaint ToPaint()
     {

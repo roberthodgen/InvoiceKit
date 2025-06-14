@@ -3,6 +3,12 @@ namespace InvoiceKit.Pdf.Layouts.Text;
 using SkiaSharp;
 using Styles.Text;
 
+/// <summary>
+/// A text block represents a single paragraph's text. Line breaks may be added to prevent paragraph spacing.
+/// </summary>
+/// <remarks>
+/// If multiple paragraphs are required, add them to <see cref="Stacks.VStack"/>.
+/// </remarks>
 public class TextBlock : IDrawable
 {
     public TextStyle Style { get; }
@@ -29,36 +35,22 @@ public class TextBlock : IDrawable
 
     public SKSize Measure(SKSize available)
     {
-        float totalHeight = Style.Height + Style.ParagraphSpacing.Total;
-
+        var totalHeight = _lines.First().Style.ParagraphSpacingBefore;
         foreach (var line in _lines)
         {
             var wrapped = WrapText(line.Text, line.Style, available.Width);
-            totalHeight += (wrapped.Count * line.Style.Height);
+            var font = line.Style.ToFont();
+            var renderedHeight = font.Metrics.Descent - font.Metrics.Ascent;
+            var lineHeight = renderedHeight + ((line.Style.LineHeight * line.Style.FontSize) - line.Style.FontSize);
+            totalHeight += lineHeight * wrapped.Count;
         }
 
+        totalHeight += _lines.Last().Style.ParagraphSpacingAfter;
         return new SKSize(available.Width, totalHeight);
     }
 
     public void Draw(PageLayout page, SKRect rect)
     {
-        var top = rect.Top;
-        foreach (var line in _lines)
-        {
-            var paint = line.Style.ToPaint();
-            var font = line.Style.ToFont();
-            var wrappedLines = WrapText(line.Text, line.Style, rect.Width);
-            top += line.Style.ParagraphSpacing.Before;
-
-            foreach (var wrapped in wrappedLines)
-            {
-                top += line.Style.Height;
-                page.Canvas.DrawText(wrapped, rect.Left, top, SKTextAlign.Left, font, paint);
-            }
-
-            top += line.Style.ParagraphSpacing.After;
-        }
-
         if (page.Debug)
         {
             page.Canvas.DrawRect(
@@ -69,6 +61,35 @@ public class TextBlock : IDrawable
                     Color = SKColors.Cyan,
                     StrokeWidth = .5f,
                 });
+        }
+
+        var top = rect.Top + _lines.First().Style.ParagraphSpacingBefore;
+        foreach (var line in _lines)
+        {
+            var paint = line.Style.ToPaint();
+            var font = line.Style.ToFont();
+            var wrappedLines = WrapText(line.Text, line.Style, rect.Width);
+            foreach (var wrapped in wrappedLines)
+            {
+                var halfLineHeightAddition = ((line.Style.LineHeight * line.Style.FontSize) - line.Style.FontSize) / 2;
+                top += halfLineHeightAddition - font.Metrics.Ascent; // baseline adjustment
+
+                if (page.Debug)
+                {
+                    page.Canvas.DrawLine(
+                        new SKPoint(rect.Left, top),
+                        new SKPoint(rect.Right, top),
+                        new SKPaint
+                        {
+                            Style = SKPaintStyle.Stroke,
+                            Color = SKColors.LightGray,
+                            StrokeWidth = .5f,
+                        });
+                }
+
+                page.Canvas.DrawText(wrapped, rect.Left, top, SKTextAlign.Left, font, paint);
+                top += halfLineHeightAddition + font.Metrics.Descent; // for the next line: corrects baseline adjustment
+            }
         }
     }
 

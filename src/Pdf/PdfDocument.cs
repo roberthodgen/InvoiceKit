@@ -35,7 +35,7 @@ public class PdfDocument : IDisposable
         BeginNewPage();
     }
 
-    public PdfDocument DefaultFont(string fontPath, float fontSize = 12f, SKColor? color = null)
+    public PdfDocument DefaultFont(string fontPath, float fontSize = TextStyle.DefaultFontSize, SKColor? color = null)
     {
         DefaultTextStyle = new TextStyle
         {

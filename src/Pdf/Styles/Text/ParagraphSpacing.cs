@@ -1,16 +1,17 @@
 namespace InvoiceKit.Pdf.Styles.Text;
 
-public record struct ParagraphSpacing
+/// <summary>
+/// Paragraph spacing relative to the font size.
+/// </summary>
+public readonly record struct ParagraphSpacing()
 {
-    public float Before { get; init; } = 8f;
+    /// <summary>
+    /// The relative amount of spacing before paragraphs.
+    /// </summary>
+    public float Before { get; init; } = 1.25f;
 
-    public float After { get; init; } = 8f;
-
-    public float Total => Before + After;
-
-    public ParagraphSpacing(float before, float after)
-    {
-        Before = before;
-        After = after;
-    }
+    /// <summary>
+    /// The relative amount of spacing after paragraphs.
+    /// </summary>
+    public float After { get; init; } = 1.25f;
 }

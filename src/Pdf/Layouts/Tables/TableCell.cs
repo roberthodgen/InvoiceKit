@@ -38,11 +38,11 @@ public class TableCell : IDrawable
 
     public SKSize Measure(SKSize available)
     {
-        return new TextBlock(Style).Measure(available);
+        return new TextBlock(Style).AddLine(Text).Measure(available);
     }
 
     public void Draw(PageLayout page, SKRect rect)
     {
-        new TextBlock(Style).Draw(page, rect);
+        new TextBlock(Style).AddLine(Text).Draw(page, rect);
     }
 }
