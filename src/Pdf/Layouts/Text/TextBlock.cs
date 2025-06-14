@@ -29,12 +29,12 @@ public class TextBlock : IDrawable
 
     public SKSize Measure(SKSize available)
     {
-        float totalHeight = 0;
+        float totalHeight = Style.Height + Style.ParagraphSpacing.Total;
 
         foreach (var line in _lines)
         {
             var wrapped = WrapText(line.Text, line.Style, available.Width);
-            totalHeight += (wrapped.Count * line.Style.Height) + line.Style.ParagraphSpacing.Total;
+            totalHeight += (wrapped.Count * line.Style.Height);
         }
 
         return new SKSize(available.Width, totalHeight);

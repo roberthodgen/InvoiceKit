@@ -19,18 +19,18 @@ public class DocumentTests(ITestOutputHelper testOutputHelper)
         var pdfBytes = builder
             .DefaultFont("Open Sans/Regular")
             .AddBlock(doc => new HStack()
-                .Add(
+                .AddColumn(
                     new TextBlock(doc.DefaultTextStyle)
                         .AddLine("Test Document", text => text.Font("Open Sans/Bold").FontSize(24))
                         .AddLine("123 Main Street")
                         .AddLine("Anytown, XX 12345"))
-                .Add(
+                .AddColumn(
                     new TextBlock(doc.DefaultTextStyle)
                         .AddLine("Customer Co.", text => text.Font("Open Sans/Bold"))
                         .AddLine("Invoice No.: 123")
                         .AddLine("Due: July 1, 2025")))
             .AddBlock(doc => new HStack()
-                .Add(
+                .AddColumn(
                     new TextBlock(doc.DefaultTextStyle)
                         .AddLine("Footer")))
             .AddBlock(_ => ImageBlock.CreateSvg(Path.Combine(Directory.GetCurrentDirectory(), "Images/circle.svg")))
@@ -49,29 +49,6 @@ public class DocumentTests(ITestOutputHelper testOutputHelper)
                 .AddLine(
                     "Suspendisse dictum faucibus justo, sit amet sollicitudin orci fermentum ac. Etiam placerat velit lacus, eget gravida magna luctus vitae. Donec facilisis nibh nulla, at mattis mauris interdum eleifend. Donec euismod enim commodo, porta enim eget, sollicitudin est. Morbi imperdiet tortor eget ex semper, sed viverra augue tincidunt. Pellentesque non scelerisque nisi, sit amet lacinia leo. Nam quis purus vitae eros tempor tristique eu vel libero. Nam et quam feugiat, placerat nunc sit amet, egestas velit. In pellentesque commodo enim, a ultrices odio tincidunt in. Nullam vel quam justo."))
             .Build();
-        // .UseTable(table =>
-        // {
-        //     table.AddHeader(header =>
-        //     {
-        //         header.UseText(text => text.Font("Open Sans/Bold"))
-        //             .AddCell(cell => cell.AddText("Description"))
-        //             .AddCell(cell => cell.AddText("Qty"))
-        //             .AddCell(cell => cell.AddText("Price"));
-        //     });
-        //
-        //     foreach (var nthProduct in Enumerable.Range(1, 100))
-        //     {
-        //         table.AddRow(row =>
-        //         {
-        //             row.AddCell(cell => cell.AddText(
-        //                     $"Product {nthProduct}",
-        //                     text => text.Font("Open Sans/SemiBold")))
-        //                 .AddCell(cell => cell.AddText("1"))
-        //                 .AddCell(cell => cell.AddText("$ 10.00"));
-        //         });
-        //     }
-        // })
-        // .Build();
 
         stream.Write(pdfBytes);
         testOutputHelper.WriteLine($"PDF created: {fileName}");

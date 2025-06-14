@@ -3,7 +3,7 @@ namespace InvoiceKit.Pdf.Layouts.Stacks;
 using SkiaSharp;
 
 /// <summary>
-/// Renders content horizontally.
+/// Renders content horizontally. Each column is rendered side-by-side.
 /// </summary>
 public class HStack : IDrawable
 {
@@ -36,7 +36,7 @@ public class HStack : IDrawable
     /// <summary>
     /// Add another horizontal block to the current stack.
     /// </summary>
-    public HStack Add(IDrawable column)
+    public HStack AddColumn(IDrawable column)
     {
         _columns.Add(column);
         return this;
