@@ -17,10 +17,10 @@ jobs:
     steps:
     - name: ➡️ Checkout
       uses: actions/checkout@v4
-    - name: ⚙️ Install `libfontconfig1`
+    - name: ⚙️ Install Linux Dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y libfontconfig1
+        sudo apt-get install -y libfontconfig1 libfreetype6
     - name: ⚙️ Setup .NET 8
       uses: actions/setup-dotnet@v4
       with:
