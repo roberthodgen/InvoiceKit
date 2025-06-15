@@ -22,8 +22,8 @@ jobs:
       with:
         dotnet-version: 8.0.x
     - name: 📦 NuGet Restore
-      run: dotnet restore -r linux-x64
+      run: dotnet restore --runtime linux-x64
     - name: 🛠️ Build
-      run: dotnet build -r linux-x64 --no-restore
+      run: dotnet build --no-restore
     - name: ✅ Test
-      run: dotnet test -r linux-x64 --no-build --verbosity normal
+      run: dotnet test --no-build --verbosity normal
