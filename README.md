@@ -29,7 +29,7 @@ invoice.SaveAsPdf("invoice.pdf");
 
 - [ ] Define core domain models (Invoice, LineItem, Customer, Theme)
 - [ ] Unit tests
-- [ ] Build PDF rendering engine
+- [x] Build PDF rendering engine
 - [ ] Publish SDK on NuGet
 - [ ] Add multiple themes
    - [ ] Contemporary
