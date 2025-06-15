@@ -17,16 +17,12 @@ jobs:
     steps:
     - name: ➡️ Checkout
       uses: actions/checkout@v4
-    - name: Install native dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y libfontconfig1 libfreetype6 libpng-dev libharfbuzz0b libicu-dev libglib2.0-0
     - name: ⚙️ Setup .NET 8
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
     - name: 📦 NuGet Restore
-      run: dotnet restore --runtime linux-x64
+      run: dotnet restore
     - name: 🛠️ Build
       run: dotnet build --no-restore
     - name: ✅ Test
