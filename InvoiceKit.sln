@@ -8,6 +8,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution", "Solution", "{C3
 		.gitignore = .gitignore
 		LICENSE = LICENSE
 		README.md = README.md
+		dotnet.yml = .github/workflows/dotnet.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{3ADE9587-E679-40EB-BE30-4E1C9BC858EA}"
