@@ -17,17 +17,13 @@ jobs:
     steps:
     - name: ➡️ Checkout
       uses: actions/checkout@v4
-    - name: ⚙️ Install Linux Dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y libfontconfig1 libfreetype6
     - name: ⚙️ Setup .NET 8
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
     - name: 📦 NuGet Restore
-      run: dotnet restore
+      run: dotnet restore -r linux-x64
     - name: 🛠️ Build
-      run: dotnet build --no-restore
+      run: dotnet build -r linux-x64 --no-restore
     - name: ✅ Test
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet test -r linux-x64 --no-build --verbosity normal
