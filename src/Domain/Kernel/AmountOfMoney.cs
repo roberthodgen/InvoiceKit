@@ -1,27 +1,16 @@
 namespace InvoiceKit.Domain.Kernel;
 
-public sealed record AmountOfMoney
+using System.Globalization;
+
+public readonly record struct AmountOfMoney(decimal Amount, Currency Currency = Currency.Unknown)
 {
-    public decimal Amount { get; }
-
-    public Currency Currency { get; }
-
-    internal AmountOfMoney(decimal amount, Currency currency)
-    {
-        Amount = amount;
-        Currency = currency;
-    }
-
     /// <summary>
     /// Formats the amount of money for display in the correct format for its <see cref="Currency"/>.
     /// </summary>
-    public override string ToString()
+    public override string ToString() => Currency switch
     {
-        if (Currency == Currency.UnitedStatesDollar)
-        {
-            return $"{Amount:C,en-us}";
-        }
-
-        return $"{Amount} {Currency}";
-    }
+        Currency.UnitedStatesDollar => string.Format(new CultureInfo("en-US"), "{0:C}", Amount),
+        Currency.Unknown => $"{Amount:C}",
+        _ => throw new NotImplementedException("Currency not supported."),
+    };
 }

@@ -1,6 +1,6 @@
 namespace InvoiceKit.Domain.Kernel;
 
-public readonly record struct Currency
+public enum Currency
 {
     /// <summary>
     /// United States Dollar
@@ -8,22 +8,14 @@ public readonly record struct Currency
     /// <remarks>
     /// Formats currencies for the United States, e.g.: <c>$1,234.56</c>.
     /// </remarks>
-    public static Currency UnitedStatesDollar => new ("USD");
+    UnitedStatesDollar,
 
-    public string Value { get; }
-
-    private Currency(string value)
-    {
-        Value = value;
-    }
-
-    public AmountOfMoney Create(decimal amount)
-    {
-        return new AmountOfMoney(amount, this);
-    }
-
-    public override string ToString()
-    {
-        return Value;
-    }
+    /// <summary>
+    /// The default when no other is specified. Uses the local culture to format currency strings.
+    /// </summary>
+    /// <remarks>
+    /// If a currency you'd like to use isn't available on this <see cref="Currency"/> object utilize
+    /// <see cref="Unknown"/> and ensure the runtime's culture is correctly configured.
+    /// </remarks>
+    Unknown,
 }
