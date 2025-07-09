@@ -8,15 +8,15 @@ using Xunit.Abstractions;
 
 public class DocumentTests(ITestOutputHelper testOutputHelper)
 {
+    private const string fileName = "document.pdf";
+
     [Fact]
-    public void Sample()
+    public async Task Document_EndToEnd_Test()
     {
-        const string fileName = "test.pdf";
         File.Delete(fileName);
 
-        using var stream = File.OpenWrite(fileName);
         using var builder = PdfDocument.UsLetter;
-        var pdfBytes = builder
+        await builder
             // .DisplayLayoutGuidelines()
             .DefaultFont("Open Sans/Regular")
             .AddBlock(doc => new HStack()
@@ -45,9 +45,8 @@ public class DocumentTests(ITestOutputHelper testOutputHelper)
             .AddBlock(doc => new TextBlock(doc.DefaultTextStyle)
                 .AddLine(
                     "Suspendisse dictum faucibus justo, sit amet sollicitudin orci fermentum ac. Etiam placerat velit lacus, eget gravida magna luctus vitae. Donec facilisis nibh nulla, at mattis mauris interdum eleifend. Donec euismod enim commodo, porta enim eget, sollicitudin est. Morbi imperdiet tortor eget ex semper, sed viverra augue tincidunt. Pellentesque non scelerisque nisi, sit amet lacinia leo. Nam quis purus vitae eros tempor tristique eu vel libero. Nam et quam feugiat, placerat nunc sit amet, egestas velit. In pellentesque commodo enim, a ultrices odio tincidunt in. Nullam vel quam justo."))
-            .Build();
+            .SaveAsPdfAsync(fileName);
 
-        stream.Write(pdfBytes);
         testOutputHelper.WriteLine($"PDF created: {Path.GetFullPath(fileName)}");
         File.Exists(fileName).ShouldBeTrue();
     }

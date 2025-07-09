@@ -8,16 +8,16 @@ using Xunit.Abstractions;
 
 public class TextBlockTests(ITestOutputHelper testOutputHelper)
 {
+    private const string fileName = "text-block.pdf";
+
     [Fact]
-    public void TextBlock_NoMarginNoParagraphSpacing_Test()
+    public async Task TextBlock_NoMarginNoParagraphSpacing_Test()
     {
-        const string fileName = "text-block.pdf";
         File.Delete(fileName);
 
-        using var stream = File.OpenWrite(fileName);
         using var builder = PdfDocument.UsLetter;
-        var pdfBytes = builder
-            .DisplayLayoutGuidelines()
+        await builder
+            // .DisplayLayoutGuidelines()
             .AddBlock(doc => new TextBlock(doc.DefaultTextStyle)
                 .AddLine("Test Document", text => text.Font("Open Sans/Bold").FontSize(24f))
                 .AddLine(
@@ -64,9 +64,8 @@ public class TextBlockTests(ITestOutputHelper testOutputHelper)
             .AddBlock(doc => new TextBlock(doc.DefaultTextStyle)
                 .AddLine(
                     "Aenean dui mauris, sagittis ac dapibus et, commodo sit amet tortor. Vestibulum porttitor feugiat sem, at fermentum ex laoreet at. Curabitur lobortis finibus tincidunt. Morbi mattis quam nec nulla dapibus luctus. Quisque mattis nunc risus, quis pellentesque felis molestie ut. Donec rhoncus accumsan aliquam. Nulla vestibulum dolor eget sapien aliquet, a volutpat urna efficitur. Proin erat lorem, auctor placerat tincidunt eu, porta nec dui. Ut dapibus tortor sit amet tortor tristique, tempus pharetra nunc sagittis. Aenean pretium vulputate quam, at rutrum nisi commodo eu. Curabitur vitae erat nec lacus placerat suscipit iaculis et nunc."))
-            .Build();
+            .SaveAsPdfAsync(fileName);
 
-        stream.Write(pdfBytes);
         testOutputHelper.WriteLine($"PDF created: {Path.GetFullPath(fileName)}");
         File.Exists(fileName).ShouldBeTrue();
     }

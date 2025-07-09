@@ -22,7 +22,7 @@ var invoice = new InvoiceBuilder()
     .WithDueDate(DateTime.UtcNow.AddDays(30))
     .Build();
 
-invoice.SaveAsPdf("invoice.pdf");
+await invoice.SaveAsPdfAsync("invoice.pdf");
 ```
 
 ## 🚀 Roadmap to v1

@@ -7,15 +7,15 @@ using Xunit.Abstractions;
 
 public class TableTests(ITestOutputHelper testOutputHelper)
 {
+    private const string fileName = "table.pdf";
+
     [Fact]
-    public void Table_EndToEnd_Test()
+    public async Task Table_EndToEnd_Test()
     {
-        const string fileName = "table.pdf";
         File.Delete(fileName);
 
-        using var stream = File.OpenWrite(fileName);
         using var builder = PdfDocument.UsLetter;
-        var pdfBytes = builder
+        await builder
             // .DisplayLayoutGuidelines()
             .AddBlock(doc => new TextBlock(doc.DefaultTextStyle)
                 .AddLine("Simple Table", text => text.Font("Open Sans/Bold").FontSize(24f)))
@@ -83,9 +83,8 @@ public class TableTests(ITestOutputHelper testOutputHelper)
                     row.AddCell(cell => cell.AddText("Product Two - The quick brown fox jumps over the lazy dog."))
                         .AddCell(cell => cell.AddText("1"))
                         .AddCell(cell => cell.AddText("$ 20.00"))))
-            .Build();
+            .SaveAsPdfAsync(fileName);
 
-        stream.Write(pdfBytes);
         testOutputHelper.WriteLine($"PDF created: {Path.GetFullPath(fileName)}");
         File.Exists(fileName).ShouldBeTrue();
     }

@@ -57,7 +57,25 @@ public class PdfDocument : IDisposable
         return this;
     }
 
-    public byte[] Build()
+    public async Task SaveAsPdfAsync(string path, CancellationToken ct = default)
+    {
+        var bytes = Build();
+        await File.WriteAllBytesAsync(path, bytes, ct);
+    }
+
+    public PdfDocument DisplayLayoutGuidelines()
+    {
+        _debug = true;
+        return this;
+    }
+
+    public void Dispose()
+    {
+        _stream.Dispose();
+        _document.Dispose();
+    }
+
+    private byte[] Build()
     {
         var page = BeginNewPage(); // TODO handle dispose/using
 
@@ -80,18 +98,6 @@ public class PdfDocument : IDisposable
         EndPage();
         _document.Close();
         return _stream.ToArray();
-    }
-    
-    public PdfDocument DisplayLayoutGuidelines()
-    {
-        _debug = true;
-        return this;
-    }
-
-    public void Dispose()
-    {
-        _stream.Dispose();
-        _document.Dispose();
     }
 
     private PageLayout BeginNewPage()
