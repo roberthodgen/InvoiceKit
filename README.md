@@ -27,15 +27,21 @@ invoice.SaveAsPdf("invoice.pdf");
 
 ## 🚀 Roadmap to v1
 
-- [ ] Define core domain models (Invoice, LineItem, Customer, Theme)
-- [ ] Unit tests
 - [x] Build PDF rendering engine
+  - [ ] Enhance PDF rendering blocks with fluent-API
+  - [ ] Enhance multi-page support
+- [ ] Define core domain models (Invoice, Line Items, Customer) w/ unit tests
+- [ ] Create SDK fluent API
+- [ ] Documentation
 - [ ] Publish SDK on NuGet
-- [ ] Add multiple themes
+
+Nice to have:
+- [ ] Figure out PDF unit test strategy
+- [ ] Add theme support with built-in defaults:
    - [ ] Contemporary
    - [ ] Modern
    - [ ] Classic
-- [ ] Documentation
+- [ ] Custom unit formatters and localization
 
 ## 📝 License and OSS
 
