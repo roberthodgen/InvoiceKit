@@ -1,0 +1,16 @@
+namespace InvoiceKit.Domain.Company;
+
+public record CompanyName
+{
+    public string Value { get; }
+    
+    public CompanyName(string input)
+    {
+        Value = input;
+    }
+
+    public override string ToString()
+    {
+        return Value;
+    }
+}

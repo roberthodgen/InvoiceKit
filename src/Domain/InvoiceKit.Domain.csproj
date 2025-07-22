@@ -7,9 +7,4 @@
     <WarningsAsErrors>Nullable</WarningsAsErrors>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="Client\" />
-    <Folder Include="Company\" />
-  </ItemGroup>
-
 </Project>
