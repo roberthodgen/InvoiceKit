@@ -1,4 +1,9 @@
+using InvoiceKit.Domain.Invoice;
+
 namespace InvoiceKit.Domain.Company;
+
+using Client;
+using Invoice;
 
 public sealed class Company
 {
@@ -11,19 +16,23 @@ public sealed class Company
     public CompanyPhone Phone { get; }
     
     public CompanyAddress Address { get; }
+    
+    public Client Client { get; }
 
     private Company(
         CompanyName name, 
         CompanyContactName contactName, 
         CompanyEmail email, 
         CompanyPhone phone, 
-        CompanyAddress address)
+        CompanyAddress address,
+        Client client)
     {
         Name = name;
         ContactName = contactName;
         Email = email;
         Phone = phone;
-        Address = address;   
+        Address = address;
+        Client = client;
     }
 
     public static Company CreateNew(
@@ -31,8 +40,14 @@ public sealed class Company
         CompanyContactName contactName, 
         CompanyEmail email, 
         CompanyPhone phone, 
-        CompanyAddress address)
+        CompanyAddress address,
+        Client client)
     {
-        return new Company(name, contactName, email, phone, address);
+        return new Company(name, contactName, email, phone, address, client);
+    }
+
+    public Invoice CreateInvoiceForClient(Client client, InvoiceDueDate dueDate, InvoiceNumber invoiceNumber)
+    {
+        return Invoice.CreateNew(invoiceNumber, dueDate, client, this);   
     }
 }

@@ -1,6 +1,6 @@
 namespace InvoiceKit.Tests.Domain.InvoiceTests;
 
-public sealed class InvoiceLineItemTests
+public class InvoiceStandardTermsTests
 {
     
 }

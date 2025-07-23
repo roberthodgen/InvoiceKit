@@ -1,6 +1,13 @@
+using InvoiceKit.Domain.Invoice;
+
 namespace InvoiceKit.Tests.Domain.InvoiceTests;
 
-public class InvoiceLineItemQuantityTests
+public sealed class InvoiceLineItemQuantityTests
 {
-    
+    [Fact]
+    public void Quantity_SetsValue()
+    {
+        var quantity = InvoiceLineItemQuantity.CreateNew(10);
+        quantity.Value.ShouldBe(10);
+    }
 }
