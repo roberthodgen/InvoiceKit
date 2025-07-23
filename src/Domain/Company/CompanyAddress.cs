@@ -2,7 +2,7 @@ using InvoiceKit.Domain.Shared.Kernel;
 
 namespace InvoiceKit.Domain.Company;
 
-public record CompanyAddress : Address
+public sealed record CompanyAddress : Address
 {
     private CompanyAddress(
         string address1, 

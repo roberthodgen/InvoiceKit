@@ -2,7 +2,7 @@ using InvoiceKit.Domain.Shared.Kernel;
 
 namespace InvoiceKit.Domain.Invoice;
 
-public class InvoiceLineItem
+public sealed class InvoiceLineItem
 {
     internal AmountOfMoney SubTotal => InvoiceLineItemSubTotal.CreateNew(PerUnitPrice.Amount * Quantity.Value);
 
@@ -22,7 +22,7 @@ public class InvoiceLineItem
         Quantity = quantity;
     }
 
-    internal static InvoiceLineItem CreateNew(
+    public static InvoiceLineItem CreateNew(
         InvoiceLineItemDescription description,
         InvoiceLineItemPerUnitPrice perUnitPrice, 
         InvoiceLineItemQuantity quantity)

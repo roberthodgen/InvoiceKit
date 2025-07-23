@@ -1,6 +1,6 @@
 namespace InvoiceKit.Domain.Shared.Kernel;
 
-public record Email
+public abstract record Email
 {
     public string Value { get; }
 

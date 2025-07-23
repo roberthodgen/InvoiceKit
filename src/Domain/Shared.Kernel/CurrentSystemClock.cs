@@ -3,26 +3,14 @@ namespace InvoiceKit.Domain.Shared.Kernel;
 /// <summary>
 /// Singleton for only having one instance of a DateTime object from the ISystemClock.
 /// </summary>
-public class CurrentSystemClock : ISystemClock
+public sealed class CurrentSystemClock : ISystemClock
 {
-    private static CurrentSystemClock? _instance;
+    public static CurrentSystemClock Instance { get; } = new ();
     
-    private static readonly object Lock = new();
-    
-    public static CurrentSystemClock Instance
+    public DateTime Now => DateTime.UtcNow;
+
+    private CurrentSystemClock()
     {
-        get
-        {
-            if (_instance == null)
-            {
-                lock (Lock)
-                {
-                    _instance ??= new CurrentSystemClock();
-                }
-            }
-            return _instance;
-        }
+        
     }
-    
-    private CurrentSystemClock() { }
 }

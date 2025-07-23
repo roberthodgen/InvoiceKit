@@ -1,6 +1,6 @@
 namespace InvoiceKit.Domain.Client;
 
-public class Client
+public sealed class Client
 {
     public ClientName Name { get; }
     
@@ -34,10 +34,9 @@ public class Client
     {
         return new Client(name, contactName, email, phone, address);
     }
-
-    // Todo: Fix formatting
+    
     public override string ToString()
     {
-        throw new NotImplementedException();
+        return $"{Name}, {ContactName}, {Email}, {Phone}, {Address}";
     }
 }

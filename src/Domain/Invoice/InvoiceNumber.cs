@@ -1,14 +1,15 @@
 namespace InvoiceKit.Domain.Invoice;
 
-public record InvoiceNumber
+public sealed record InvoiceNumber
 {
     public string Value { get; }
+    
     private InvoiceNumber(string input)
     {
         Value = input;
     }
 
-    internal static InvoiceNumber CreateNew(string input)
+    public static InvoiceNumber CreateNew(string input)
     {
         return new InvoiceNumber(input);
     }

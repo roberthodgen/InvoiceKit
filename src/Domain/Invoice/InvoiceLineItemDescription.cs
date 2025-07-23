@@ -1,6 +1,6 @@
 namespace InvoiceKit.Domain.Invoice;
 
-public record InvoiceLineItemDescription
+public sealed record InvoiceLineItemDescription
 {
     public string Value { get; }
     
@@ -9,7 +9,7 @@ public record InvoiceLineItemDescription
         Value = input;
     }
 
-    internal static InvoiceLineItemDescription CreateNew(string input)
+    public static InvoiceLineItemDescription CreateNew(string input)
     {
         return new InvoiceLineItemDescription(input);
     }

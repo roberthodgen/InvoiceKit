@@ -1,6 +1,6 @@
 namespace InvoiceKit.Domain.Company;
 
-public record CompanyName
+public sealed record CompanyName
 {
     public string Value { get; }
     

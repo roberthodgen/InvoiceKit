@@ -2,7 +2,7 @@ using System.Globalization;
 
 namespace InvoiceKit.Domain.Shared.Kernel;
 
-public record AmountOfMoney
+public abstract record AmountOfMoney
 {
     public decimal Amount { get; }
 

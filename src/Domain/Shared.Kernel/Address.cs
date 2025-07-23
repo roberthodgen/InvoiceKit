@@ -1,6 +1,6 @@
 namespace InvoiceKit.Domain.Shared.Kernel;
 
-public record Address
+public abstract record Address
 {
     public string Address1 { get; }
     public string? Address2 { get; }

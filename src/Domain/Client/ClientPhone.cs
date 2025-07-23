@@ -2,7 +2,7 @@ using InvoiceKit.Domain.Shared.Kernel;
 
 namespace InvoiceKit.Domain.Client;
 
-public record ClientPhone : Phone
+public sealed record ClientPhone : Phone
 {
     private ClientPhone(string input) : base(input)
     {

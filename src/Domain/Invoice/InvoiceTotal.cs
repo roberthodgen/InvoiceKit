@@ -2,13 +2,14 @@ using InvoiceKit.Domain.Shared.Kernel;
 
 namespace InvoiceKit.Domain.Invoice;
 
-public record InvoiceTotal : AmountOfMoney
+public sealed record InvoiceTotal : AmountOfMoney
 {
     private InvoiceTotal(decimal input) : base(input)
     {
+        
     }
 
-    private static InvoiceTotal CreateNew(decimal input)
+    internal static InvoiceTotal CreateNew(decimal input)
     {
         return new InvoiceTotal(input);  
     }

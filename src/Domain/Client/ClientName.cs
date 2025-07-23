@@ -1,6 +1,6 @@
 namespace InvoiceKit.Domain.Client;
 
-public record ClientName
+public sealed record ClientName
 {
     public string Value { get; }
 

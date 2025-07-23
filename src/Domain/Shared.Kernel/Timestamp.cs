@@ -1,12 +1,16 @@
 namespace InvoiceKit.Domain.Shared.Kernel;
 
-public record Timestamp
+public abstract record Timestamp
 {
     public DateTime Value { get; }
 
-    protected Timestamp(DateTime input)
+    protected Timestamp(DateTime value)
     {
-        Value = input.ToUniversalTime();  
+        if (value.Kind != DateTimeKind.Utc)
+        {
+            throw new ArgumentException("Timestamp must be in UTC."); 
+        }
+        Value = value;  
     }
 
     /// <summary>
@@ -17,5 +21,7 @@ public record Timestamp
     {
         return Value.ToString("o");
     }
+    
+    // Todo: More overloads for the toString methods for different date formats
     
 }

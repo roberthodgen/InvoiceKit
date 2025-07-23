@@ -1,6 +1,6 @@
 namespace InvoiceKit.Domain.Invoice;
 
-public record InvoiceLineItemQuantity
+public sealed record InvoiceLineItemQuantity
 {
     public decimal Value { get; }
     
@@ -9,7 +9,7 @@ public record InvoiceLineItemQuantity
         Value = quantity;
     }
 
-    internal static InvoiceLineItemQuantity CreateNew(decimal input)
+    public static InvoiceLineItemQuantity CreateNew(decimal input)
     {
         return new InvoiceLineItemQuantity(input);
     }
