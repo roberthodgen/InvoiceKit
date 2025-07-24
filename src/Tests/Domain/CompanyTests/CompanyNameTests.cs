@@ -1,6 +1,13 @@
+using InvoiceKit.Domain.Company;
+
 namespace InvoiceKit.Tests.Domain.CompanyTests;
 
-public class CompanyNameTests
+public sealed class CompanyNameTests
 {
-    
+    [Fact]
+    public void CompanyName_Constructor_SetsValue()
+    {
+        var name = new CompanyName("Company Name");
+        name.Value.ShouldBe("Company Name");
+    }
 }
