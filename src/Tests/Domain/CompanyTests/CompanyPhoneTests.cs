@@ -18,4 +18,11 @@ public sealed class CompanyPhoneTests
         var phone = CompanyPhone.CreateNew("123-456-7890");
         phone.Value.ShouldBe("123-456-7890");
     }
+    
+    [Fact]
+    public void CompanyPhone_ToString_ReturnsValue()
+    {
+        var phone = CompanyPhone.CreateNew("123-456-7890");
+        phone.ToString().ShouldBe("(123)456-7890");
+    }
 }

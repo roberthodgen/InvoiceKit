@@ -19,7 +19,7 @@ public abstract record Address
         Country = country ?? string.Empty;
     }
 
-    public override string ToString()
+    public sealed override string ToString()
     {
         return $"{Address1}, {Address2}, {City}, {State}, {ZipCode}, {Country}";
     }

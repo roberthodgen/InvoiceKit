@@ -11,7 +11,7 @@ public abstract record Phone
     
     /// <summary>Outputs a formatted phone number</summary>
     /// <returns> (###)###-#### </returns>
-    public override string ToString()
+    public sealed override string ToString()
     {
         // Return early if there is no string
         if (string.IsNullOrEmpty(Value))
@@ -23,7 +23,7 @@ public abstract record Phone
         if(digitsOnly.Length != 10){return Value;}
         
         // Returns formatted phone number
-        return $"({digitsOnly[..3]}) {digitsOnly[3..6]}-{digitsOnly[6..]}";
+        return $"({digitsOnly[..3]}){digitsOnly[3..6]}-{digitsOnly[6..]}";
 
         // Todo: Could add a country code
     }

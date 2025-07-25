@@ -17,7 +17,7 @@ public abstract record Timestamp
     /// Returns the Value field DateTime object into a string format.
     /// </summary>
     /// <returns>ISO 8601 format yyyy-MM-ddTHH:mm:ss.fffffffK</returns>
-    public override string ToString()
+    public sealed override string ToString()
     {
         return Value.ToString("o");
     }

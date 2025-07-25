@@ -20,4 +20,17 @@ public sealed class ClientTests
         client.Phone.Value.ShouldBe("123-456-7890");
         client.Address.ShouldBeSameAs(address);
     }
+
+    [Fact]
+    public void Client_ToString_ReturnsValue()
+    {
+        var address = ClientAddress.CreateNew("123 street", "apartment", "city", "state", "zip", "US");
+        var client = Client.CreateNew(
+            new ClientName("Name"), 
+            new ClientContactName("The Client"), 
+            ClientEmail.CreateNew("Name@mail.com"), 
+            ClientPhone.CreateNew("123-456-7890"),
+            address);
+        client.ToString().ShouldBe("Name, The Client, name@mail.com, (123)456-7890, 123 street, apartment, city, state, zip, US");
+    }
 }

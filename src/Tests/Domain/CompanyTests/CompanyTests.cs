@@ -58,6 +58,6 @@ public sealed class CompanyTests
             InvoiceNumber.CreateNew("abc123"));
         invoice.Client.ShouldBe(company.Client);
         invoice.Company.ShouldBe(company);
-        invoice.DueDate.Value.ShouldBe(systemClock.Now.AddDays(10));
+        invoice.DueDate.Value.Date.ShouldBe(systemClock.Now.Date.AddDays(10));
     }
 }

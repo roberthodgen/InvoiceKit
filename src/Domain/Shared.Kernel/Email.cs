@@ -9,7 +9,7 @@ public abstract record Email
         Value = input;   
     }
 
-    public override string ToString()
+    public sealed override string ToString()
     {
         return string.IsNullOrEmpty(Value) ? string.Empty : Value.ToLowerInvariant();
     }

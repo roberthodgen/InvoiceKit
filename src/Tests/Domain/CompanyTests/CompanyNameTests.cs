@@ -10,4 +10,11 @@ public sealed class CompanyNameTests
         var name = new CompanyName("Company Name");
         name.Value.ShouldBe("Company Name");
     }
+    
+    [Fact]
+    public void CompanyName_ToString_ReturnsValue()
+    {
+        var name = new CompanyName("Company Name");
+        name.ToString().ShouldBe("Company Name");
+    }
 }

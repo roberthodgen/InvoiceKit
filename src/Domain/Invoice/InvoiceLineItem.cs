@@ -4,7 +4,7 @@ namespace InvoiceKit.Domain.Invoice;
 
 public sealed class InvoiceLineItem
 {
-    internal AmountOfMoney SubTotal => InvoiceLineItemSubTotal.CreateNew(PerUnitPrice.Amount * Quantity.Value);
+    public AmountOfMoney SubTotal => InvoiceLineItemSubTotal.CreateNew(PerUnitPrice.Amount * Quantity.Value);
 
     public InvoiceLineItemDescription Description { get; }
 

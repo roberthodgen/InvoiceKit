@@ -15,6 +15,6 @@ public sealed record InvoiceDueDate : Timestamp
 
     public static InvoiceDueDate CreateNew(IInvoiceTerms terms)
     {
-        return new InvoiceDueDate(terms.GetDueDate);
+        return new InvoiceDueDate(terms.GetDueDate.Date);
     }
 }

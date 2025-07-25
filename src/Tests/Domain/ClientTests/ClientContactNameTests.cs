@@ -10,4 +10,11 @@ public sealed class ClientContactNameTests
         var contactName = new ClientContactName("Name");
         contactName.Value.ShouldBe("Name");
     }
+    
+    [Fact]
+    public void ClientContactName_ToString_ReturnsValue()
+    {
+        var contactName = new ClientContactName("Name");
+        contactName.ToString().ShouldBe("Name");
+    }
 }

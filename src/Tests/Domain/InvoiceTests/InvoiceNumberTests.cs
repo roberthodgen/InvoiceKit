@@ -10,4 +10,11 @@ public sealed class InvoiceNumberTests
         var number = InvoiceNumber.CreateNew("abc123");
         number.Value.ShouldBe("abc123");
     }
+    
+    [Fact]
+    public void Number_ToString_ReturnsValue()
+    {
+        var number = InvoiceNumber.CreateNew("abc123");
+        number.ToString().ShouldBe("abc123");
+    }
 }

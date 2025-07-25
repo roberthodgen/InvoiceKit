@@ -18,4 +18,11 @@ public sealed class ClientEmailTests
         var email = ClientEmail.CreateNew("name@mail.com");
         email.Value.ShouldBe("name@mail.com");
     }
+
+    [Fact]
+    public void ClientEmail_ToString_ReturnsValue()
+    {
+        var email = ClientEmail.CreateNew("name@mail.com");
+        email.ToString().ShouldBe("name@mail.com");
+    }
 }
