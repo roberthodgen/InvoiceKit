@@ -6,7 +6,7 @@ namespace InvoiceKit.Tests.Domain.InvoiceTests;
 public class InvoiceStandardTermsTests
 {
     [Fact]
-    public void Terms_CreateNew_SetsValue()
+    public void InvoiceStandardTerms_CreateNew_SetsValue()
     {
         var systemClock = ManualSystemClock.CreateNew(DateTime.UtcNow);
         var terms = InvoiceStandardTerms.CreateNewDaysFromNow(systemClock, 10);
@@ -15,7 +15,7 @@ public class InvoiceStandardTermsTests
     }
     
     [Fact]
-    public void Terms_CreateNew_ThrowsException()
+    public void InvoiceStandardTerms_CreateNew_ThrowsException()
     {
         var systemClock = ManualSystemClock.CreateNew(DateTime.UtcNow);
         Assert.Throws<ArgumentOutOfRangeException>(() => InvoiceStandardTerms.CreateNewDaysFromNow(systemClock, -1));

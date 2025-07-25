@@ -23,7 +23,7 @@ public sealed class InvoiceTests
     private static readonly IInvoiceTerms Terms = InvoiceStandardTerms.CreateNewDaysFromNow(SystemClock, 10);
 
     [Fact]
-    public void Invoice_AddLineItem_CreatesALineItem()
+    public void Invoice_AddLineItem_CreatesLineItem()
     {
         var invoice = _company.CreateInvoiceForClient(
             _company.Client, 

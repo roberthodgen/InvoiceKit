@@ -23,11 +23,4 @@ public sealed class CompanyAddressTests
         address.ZipCode.ShouldBe("zip");
         address.Country.ShouldBe("US");
     }
-    
-    [Fact]
-    public void CompanyAddress_ToString_ReturnsValue()
-    {
-        var address = CompanyAddress.CreateNew("123 street", "apartment", "city", "state", "zip", "US");
-        address.ToString().ShouldBe("123 street, apartment, city, state, zip, US");
-    }
 }

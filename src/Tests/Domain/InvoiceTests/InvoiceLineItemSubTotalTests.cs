@@ -8,7 +8,7 @@ namespace InvoiceKit.Tests.Domain.InvoiceTests;
 public sealed class InvoiceLineItemSubTotalTests
 {
     [Fact]
-    public void SubTotal_IsA_AmountOfMoney()
+    public void InvoiceLineItemSubTotal_IsA_AmountOfMoney()
     {
         var lineItem = InvoiceLineItem.CreateNew(
             InvoiceLineItemDescription.CreateNew("Ten items at 10.50 each."), 
@@ -18,7 +18,7 @@ public sealed class InvoiceLineItemSubTotalTests
     }
     
     [Fact]
-    public void SubTotal_SetsValue()
+    public void InvoiceLineItemSubTotal_CreateNew_SetsValue()
     {
         var lineItem = InvoiceLineItem.CreateNew(
             InvoiceLineItemDescription.CreateNew("Ten items at 10.50 each."), 

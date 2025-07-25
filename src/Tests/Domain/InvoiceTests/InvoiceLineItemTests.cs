@@ -5,7 +5,7 @@ namespace InvoiceKit.Tests.Domain.InvoiceTests;
 public sealed class InvoiceLineItemTests
 {
     [Fact]
-    public void LineItem_CreateNew_SetsValues()
+    public void InvoiceLineItem_CreateNew_SetsValues()
     {
         var lineItem = InvoiceLineItem.CreateNew(
             InvoiceLineItemDescription.CreateNew("This is a description."), 

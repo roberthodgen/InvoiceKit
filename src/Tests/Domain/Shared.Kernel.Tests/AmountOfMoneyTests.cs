@@ -14,7 +14,7 @@ public sealed record AmountOfMoneyTests
     }
     
     [Fact]
-    public void AmountOfMoneyBase_ZeroMoney_Exists()
+    public void AmountOfMoney_ZeroAmountOfMoney_IsAssignableToAmountOfMoney()
     {
         typeof(AmountOfMoney.ZeroAmountOfMoney).IsAssignableTo(typeof(AmountOfMoney)).ShouldBeTrue();
     }

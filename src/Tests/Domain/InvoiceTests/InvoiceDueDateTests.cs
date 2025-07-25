@@ -6,7 +6,7 @@ namespace InvoiceKit.Tests.Domain.InvoiceTests;
 public class InvoiceDueDateTests
 {
     [Fact]
-    public void DueDate_SetsValue()
+    public void InvoiceDueDate_CreateNew_SetsValue()
     {
         var systemClock = ManualSystemClock.CreateNew(DateTime.UtcNow);
         var invoiceTerms = InvoiceStandardTerms.CreateNewDaysFromNow(systemClock, 10);

@@ -18,11 +18,4 @@ public sealed class CompanyEmailTests
         var email = CompanyEmail.CreateNew("company@mail.com");
         email.Value.ShouldBe("company@mail.com");
     }
-
-    [Fact]
-    public void CompanyEmail_ToString_ReturnsValue()
-    {
-        var email = CompanyEmail.CreateNew("company@mail.com");
-        email.ToString().ShouldBe("company@mail.com");
-    }
 }

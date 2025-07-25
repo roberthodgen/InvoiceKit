@@ -23,7 +23,7 @@ public sealed class InvoiceTotalTests
     private static readonly IInvoiceTerms Terms = InvoiceStandardTerms.CreateNewDaysFromNow(SystemClock, 10);
     
     [Fact]
-    public void Total_IsA_AmountOfMoney()
+    public void InvoiceTotal_IsA_AmountOfMoney()
     {
         var invoice = _company.CreateInvoiceForClient(
             _company.Client, 
@@ -37,7 +37,7 @@ public sealed class InvoiceTotalTests
     }
     
     [Fact]
-    public void Total_SetsValue()
+    public void InvoiceTotal_CreateNew_SetsValue()
     {
         var invoice = _company.CreateInvoiceForClient(
             _company.Client, 
