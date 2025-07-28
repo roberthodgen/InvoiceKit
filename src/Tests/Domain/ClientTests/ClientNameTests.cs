@@ -14,7 +14,7 @@ public sealed class ClientNameTests
     [Fact]
     public void ClientName_Constructor_ThrowsException()
     {
-        Assert.Throws<ArgumentException>(() => new ClientName(String.Empty));
+        Should.Throw<ArgumentException>(() => new ClientName(String.Empty));
     }
     
     [Fact]

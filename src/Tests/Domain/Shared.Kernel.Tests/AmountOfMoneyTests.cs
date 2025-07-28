@@ -6,23 +6,13 @@ public sealed record AmountOfMoneyTests
 {
     private sealed record AmountOfMoneyTest : AmountOfMoney
     {
-        public AmountOfMoneyTest(decimal amount) 
-            : base(amount)
-        {
-            
-        }
+        public AmountOfMoneyTest(decimal amount) : base(amount) { }
     }
     
     [Fact]
     public void AmountOfMoney_ZeroAmountOfMoney_IsAssignableToAmountOfMoney()
     {
         typeof(AmountOfMoney.ZeroAmountOfMoney).IsAssignableTo(typeof(AmountOfMoney)).ShouldBeTrue();
-    }
-
-    [Fact]
-    public void AmountOfMoney_ZeroAmountOfMoney_ReturnsZero()
-    {
-       AmountOfMoney.ZeroAmountOfMoney.GetInstance.Amount.ShouldBe(0);
     }
     
     [Fact]

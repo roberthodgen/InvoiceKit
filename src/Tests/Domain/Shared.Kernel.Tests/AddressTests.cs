@@ -6,9 +6,8 @@ public sealed class AddressTests
 {
     private sealed record AddressTest : Address
     {
-        public AddressTest(string address1, string? address2, string city, string state, string zipCode, string? country) : base(address1, address2, city, state, zipCode, country)
-        {
-        }
+        public AddressTest(string address1, string? address2, string city, string state, string zipCode, string? country)
+            : base(address1, address2, city, state, zipCode, country) { }
     }
     
     [Fact]

@@ -1,6 +1,6 @@
-using InvoiceKit.Domain.Shared.Kernel;
-
 namespace InvoiceKit.Domain.Invoice;
+
+using Shared.Kernel;
 
 /// <summary>
 /// The number of standard days to compute the invoice due date from.
@@ -28,5 +28,4 @@ public sealed record InvoiceStandardTerms : IInvoiceTerms
     {
         return new InvoiceStandardTerms(systemClock, days);
     }
-
 }

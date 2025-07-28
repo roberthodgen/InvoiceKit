@@ -17,5 +17,4 @@ public sealed record ClientName
     {
         return Value;  
     }
-    
 }

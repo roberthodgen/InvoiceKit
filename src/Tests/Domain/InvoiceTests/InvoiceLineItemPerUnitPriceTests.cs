@@ -8,8 +8,7 @@ public sealed class InvoiceLineItemPerUnitPriceTests
     [Fact]
     public void InvoiceLineItemPerUnitPrice_IsA_AmountOfMoney()
     {
-        var perUnitPrice = InvoiceLineItemPerUnitPrice.CreateNew(100);
-        Assert.IsAssignableFrom<AmountOfMoney>(perUnitPrice);
+        typeof(InvoiceLineItemPerUnitPrice).IsAssignableTo(typeof(AmountOfMoney)).ShouldBeTrue();
     }
 
     [Fact]

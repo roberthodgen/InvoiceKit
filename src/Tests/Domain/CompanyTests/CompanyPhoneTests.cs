@@ -8,8 +8,7 @@ public sealed class CompanyPhoneTests
     [Fact]
     public void CompanyPhone_IsA_Phone()
     {
-        var phone = CompanyPhone.CreateNew("123-456-7890");
-        Assert.IsAssignableFrom<Phone>(phone);
+        typeof(CompanyPhone).IsAssignableTo(typeof(Phone)).ShouldBeTrue();
     }
     
     [Fact]

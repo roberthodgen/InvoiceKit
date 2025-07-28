@@ -8,8 +8,7 @@ public sealed class ClientAddressTests
     [Fact]
     public void ClientAddress_IsA_Address()
     {
-        var clientAddress = ClientAddress.CreateNew("123 street", "apartment", "city", "state", "zip", "US");
-        Assert.IsAssignableFrom<Address>(clientAddress);
+        typeof(ClientAddress).IsAssignableTo(typeof(Address)).ShouldBeTrue();
     }
     
     [Fact]

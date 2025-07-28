@@ -8,7 +8,7 @@ public sealed class CurrentSystemClockTests
     public void CurrentSystemClock_IsFrom_ISystemClock()
     {
         var dateTime = CurrentSystemClock.Instance;
-        Assert.IsAssignableFrom<ISystemClock>(dateTime);
+        dateTime.ShouldBeOfType<ISystemClock>();
     }
 
     [Fact]

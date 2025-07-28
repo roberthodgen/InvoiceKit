@@ -1,13 +1,10 @@
-using InvoiceKit.Domain.Shared.Kernel;
-
 namespace InvoiceKit.Domain.Invoice;
+
+using Shared.Kernel;
 
 public sealed record InvoiceTotal : AmountOfMoney
 {
-    private InvoiceTotal(decimal value) : base(value)
-    {
-        
-    }
+    private InvoiceTotal(decimal value) : base(value) { }
 
     internal static InvoiceTotal CreateNew(decimal value)
     {

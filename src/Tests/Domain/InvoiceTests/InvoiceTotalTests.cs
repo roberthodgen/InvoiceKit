@@ -25,15 +25,7 @@ public sealed class InvoiceTotalTests
     [Fact]
     public void InvoiceTotal_IsA_AmountOfMoney()
     {
-        var invoice = _company.CreateInvoiceForClient(
-            _company.Client, 
-            InvoiceDueDate.CreateNew(Terms), 
-            InvoiceNumber.CreateNew("abc123"));
-        invoice.AddLineItem(InvoiceLineItem.CreateNew(
-            InvoiceLineItemDescription.CreateNew("Ten items at $10.50 each."), 
-            InvoiceLineItemPerUnitPrice.CreateNew(10.50m), 
-            InvoiceLineItemQuantity.CreateNew(10)));
-        Assert.IsAssignableFrom<AmountOfMoney>(invoice.Total);
+        typeof(InvoiceTotal).IsAssignableTo(typeof(AmountOfMoney)).ShouldBeTrue();
     }
     
     [Fact]

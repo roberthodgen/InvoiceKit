@@ -8,8 +8,7 @@ public sealed class CompanyAddressTests
     [Fact]
     public void CompanyAddress_IsA_Address()
     {
-        var address = CompanyAddress.CreateNew("123 street", "apartment", "city", "state", "zip", "US");
-        Assert.IsAssignableFrom<Address>(address);
+        typeof(CompanyAddress).IsAssignableTo(typeof(Address)).ShouldBeTrue();
     }
     
     [Fact]

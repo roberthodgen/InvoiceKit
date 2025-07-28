@@ -1,6 +1,6 @@
-using InvoiceKit.Domain.Shared.Kernel;
-
 namespace InvoiceKit.Domain.Client;
+
+using Shared.Kernel;
 
 public sealed record ClientAddress : Address
 {
@@ -11,10 +11,7 @@ public sealed record ClientAddress : Address
         string state, 
         string zipCode, 
         string? country) 
-        : base(address1, address2, city, state, zipCode, country)
-    {
-        
-    }
+        : base(address1, address2, city, state, zipCode, country) { }
 
     public static ClientAddress CreateNew(
         string address1, 
@@ -26,5 +23,4 @@ public sealed record ClientAddress : Address
     {
         return new ClientAddress(address1, address2, city, state, zipCode, country);
     }
-    
 }

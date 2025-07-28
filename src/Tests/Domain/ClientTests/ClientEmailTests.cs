@@ -8,8 +8,7 @@ public sealed class ClientEmailTests
     [Fact]
     public void ClientEmail_IsA_EmailAddress()
     {
-        var email = ClientEmail.CreateNew("name@mail.com");
-        Assert.IsAssignableFrom<Email>(email);
+        typeof(ClientEmail).IsAssignableTo(typeof(Email)).ShouldBeTrue();
     }
 
     [Fact]

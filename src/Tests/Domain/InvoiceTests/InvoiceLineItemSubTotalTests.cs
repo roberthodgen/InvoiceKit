@@ -10,11 +10,7 @@ public sealed class InvoiceLineItemSubTotalTests
     [Fact]
     public void InvoiceLineItemSubTotal_IsA_AmountOfMoney()
     {
-        var lineItem = InvoiceLineItem.CreateNew(
-            InvoiceLineItemDescription.CreateNew("Ten items at 10.50 each."), 
-            InvoiceLineItemPerUnitPrice.CreateNew(10.50m), 
-            InvoiceLineItemQuantity.CreateNew(10));
-        Assert.IsAssignableFrom<AmountOfMoney>(lineItem.SubTotal);
+        typeof(InvoiceLineItemSubTotal).IsAssignableTo(typeof(AmountOfMoney)).ShouldBeTrue();
     }
     
     [Fact]

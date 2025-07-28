@@ -18,6 +18,6 @@ public class InvoiceStandardTermsTests
     public void InvoiceStandardTerms_CreateNew_ThrowsException()
     {
         var systemClock = ManualSystemClock.CreateNew(DateTime.UtcNow);
-        Assert.Throws<ArgumentOutOfRangeException>(() => InvoiceStandardTerms.CreateNewDaysFromNow(systemClock, -1));
+        Should.Throw<ArgumentOutOfRangeException>(() => InvoiceStandardTerms.CreateNewDaysFromNow(systemClock, -1));
     }
 }

@@ -14,7 +14,7 @@ public sealed class CompanyContactNameTests
     [Fact]
     public void CompanyContactName_Constructor_ThrowsException()
     {
-        Assert.Throws<ArgumentException>(() => new CompanyContactName(String.Empty));
+        Should.Throw<ArgumentException>(() => new CompanyContactName(String.Empty));
     }
     
     [Fact]

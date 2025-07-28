@@ -10,6 +10,12 @@ public sealed class ClientContactNameTests
         var contactName = new ClientContactName("Name");
         contactName.Value.ShouldBe("Name");
     }
+
+    [Fact]
+    public void ClientContactName_Constructor_ThrowsException()
+    {
+        Should.Throw<ArgumentException>(() => new ClientContactName(String.Empty));
+    }
     
     [Fact]
     public void ClientContactName_ToString_ReturnsValue()

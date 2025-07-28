@@ -1,6 +1,6 @@
-using InvoiceKit.Domain.Shared.Kernel;
-
 namespace InvoiceKit.Domain.Company;
+
+using Shared.Kernel;
 
 public sealed record CompanyAddress : Address
 {
@@ -11,10 +11,7 @@ public sealed record CompanyAddress : Address
         string state, 
         string zipCode, 
         string? country) 
-        : base(address1, address2, city, state, zipCode, country)
-    {
-        
-    }
+        : base(address1, address2, city, state, zipCode, country) { }
 
     public static CompanyAddress CreateNew(
         string address1,

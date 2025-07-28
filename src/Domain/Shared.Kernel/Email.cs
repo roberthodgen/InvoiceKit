@@ -17,5 +17,4 @@ public abstract record Email
     {
         return string.IsNullOrEmpty(Value) ? string.Empty : Value.ToLowerInvariant();
     }
-    
 }

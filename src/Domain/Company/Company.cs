@@ -1,5 +1,3 @@
-using InvoiceKit.Domain.Invoice;
-
 namespace InvoiceKit.Domain.Company;
 
 using Client;
@@ -51,7 +49,7 @@ public sealed class Company
         return Invoice.CreateNew(invoiceNumber, dueDate, client, this);   
     }
     
-    public sealed override string ToString()
+    public override string ToString()
     {
         return Name.ToString();
     }

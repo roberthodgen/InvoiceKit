@@ -1,6 +1,6 @@
-using System.Globalization;
-
 namespace InvoiceKit.Domain.Shared.Kernel;
+
+using System.Globalization;
 
 public abstract record AmountOfMoney
 {
@@ -8,7 +8,6 @@ public abstract record AmountOfMoney
     
     public static AmountOfMoney Zero => new ZeroAmountOfMoney();
 
-    // Todo: Add currencies / currency converter
     protected AmountOfMoney(decimal amount)
     {
         Amount = amount;
@@ -23,11 +22,6 @@ public abstract record AmountOfMoney
 
     public sealed record ZeroAmountOfMoney : AmountOfMoney
     {
-        internal ZeroAmountOfMoney() : base(0)
-        {
-            
-        }
-
-        public static ZeroAmountOfMoney GetInstance => new();
+        internal ZeroAmountOfMoney() : base(0) { }
     }
 }

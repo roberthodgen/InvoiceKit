@@ -8,8 +8,7 @@ public sealed class CompanyEmailTests
     [Fact]
     public void CompanyEmail_IsA_Email()
     {
-        var email = CompanyEmail.CreateNew("company@mail.com");
-        Assert.IsAssignableFrom<Email>(email);
+        typeof(CompanyEmail).IsAssignableTo(typeof(Email)).ShouldBeTrue();
     }
     
     [Fact]

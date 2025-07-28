@@ -21,7 +21,7 @@ public sealed class EmailTests
     [Fact]
     public void Email_Constructor_ThrowsException()
     {
-        Assert.Throws<ArgumentException>(() => new EmailTest(String.Empty));
+        Should.Throw<ArgumentException>(() => new EmailTest(String.Empty));
     }
 
     [Fact]

@@ -22,7 +22,7 @@ public sealed class PhoneTests
     [Fact]
     public void Phone_Constructor_NullOrEmpty()
     {
-        Assert.Throws<ArgumentException>(() => new PhoneTest(String.Empty));
+        Should.Throw<ArgumentException>(() => new PhoneTest(String.Empty));
     }
     
     [Fact]

@@ -36,6 +36,6 @@ public class TimestampTests
     {
         var systemClock = ManualSystemClock.CreateNew(DateTime.Now);
         var invoiceTerms = InvoiceStandardTerms.CreateNewDaysFromNow(systemClock, 10);
-        Assert.Throws<ArgumentException>(() => InvoiceDueDate.CreateNew(invoiceTerms));
+        Should.Throw<ArgumentException>(() => InvoiceDueDate.CreateNew(invoiceTerms));
     }
 }

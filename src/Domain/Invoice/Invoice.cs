@@ -1,6 +1,5 @@
-using System.Reflection;
-
 namespace InvoiceKit.Domain.Invoice;
+
 using Client;
 using Company;
 

@@ -1,6 +1,6 @@
-using InvoiceKit.Domain.Shared.Kernel;
-
 namespace InvoiceKit.Domain.Invoice;
+
+using Shared.Kernel;
 
 public sealed class InvoiceLineItem
 {

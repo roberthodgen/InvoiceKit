@@ -9,8 +9,5 @@ public sealed class CurrentSystemClock : ISystemClock
     
     public DateTime Now => DateTime.UtcNow;
 
-    private CurrentSystemClock()
-    {
-        
-    }
+    private CurrentSystemClock() { }
 }

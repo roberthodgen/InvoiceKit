@@ -14,7 +14,7 @@ public sealed class CompanyNameTests
     [Fact]
     public void CompanyName_Constructor_ThrowsException()
     {
-        Assert.Throws<ArgumentException>(() => new CompanyName(String.Empty));
+        Should.Throw<ArgumentException>(() => new CompanyName(String.Empty));
     }
     
     [Fact]
