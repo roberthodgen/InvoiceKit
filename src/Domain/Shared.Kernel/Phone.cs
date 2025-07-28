@@ -9,7 +9,7 @@ public abstract record Phone
         Value = input;   
     }
     
-    /// <summary>Outputs a formatted phone number</summary>
+    /// <summary>Outputs a formatted phone number based on the number of integers given.</summary>
     /// <returns> (###)###-#### </returns>
     public sealed override string ToString()
     {
