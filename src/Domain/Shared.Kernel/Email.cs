@@ -4,9 +4,9 @@ public abstract record Email
 {
     public string Value { get; }
 
-    protected Email(string input)
+    protected Email(string value)
     {
-        Value = input;   
+        Value = value;   
     }
 
     public sealed override string ToString()

@@ -4,9 +4,9 @@ public abstract record Phone
 {
     public string Value { get; }
 
-    protected Phone(string input)
+    protected Phone(string value)
     {
-        Value = input;   
+        Value = value;   
     }
     
     /// <summary>Outputs a formatted phone number based on the number of integers given.</summary>
