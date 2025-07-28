@@ -4,9 +4,9 @@ public sealed record CompanyContactName
 {
     public string Value { get; }
     
-    public CompanyContactName(string input)
+    public CompanyContactName(string value)
     {
-        Value = input;   
+        Value = value;   
     }
 
     public override string ToString()

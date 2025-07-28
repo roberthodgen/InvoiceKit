@@ -4,9 +4,9 @@ public sealed record InvoiceLineItemQuantity
 {
     public decimal Value { get; }
     
-    private InvoiceLineItemQuantity(decimal quantity)
+    private InvoiceLineItemQuantity(decimal value)
     {
-        Value = quantity;
+        Value = value;
     }
 
     public static InvoiceLineItemQuantity CreateNew(decimal input)

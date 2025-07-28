@@ -4,13 +4,13 @@ namespace InvoiceKit.Domain.Company;
 
 public sealed record CompanyEmail : Email
 {
-    private CompanyEmail(string input) : base(input)
+    private CompanyEmail(string value) : base(value)
     {
         
     }
 
-    public static CompanyEmail CreateNew(string input)
+    public static CompanyEmail CreateNew(string value)
     {
-        return new CompanyEmail(input);
+        return new CompanyEmail(value);
     }
 }

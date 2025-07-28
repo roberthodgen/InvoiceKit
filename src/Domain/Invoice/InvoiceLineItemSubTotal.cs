@@ -4,7 +4,7 @@ namespace InvoiceKit.Domain.Invoice;
 
 public sealed record InvoiceLineItemSubTotal : AmountOfMoney
 {
-    private InvoiceLineItemSubTotal(decimal input) : base(input)
+    private InvoiceLineItemSubTotal(decimal value) : base(value)
     {
     }
 

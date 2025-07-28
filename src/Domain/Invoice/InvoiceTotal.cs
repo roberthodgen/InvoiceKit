@@ -4,14 +4,14 @@ namespace InvoiceKit.Domain.Invoice;
 
 public sealed record InvoiceTotal : AmountOfMoney
 {
-    private InvoiceTotal(decimal input) : base(input)
+    private InvoiceTotal(decimal value) : base(value)
     {
         
     }
 
-    internal static InvoiceTotal CreateNew(decimal input)
+    internal static InvoiceTotal CreateNew(decimal value)
     {
-        return new InvoiceTotal(input);  
+        return new InvoiceTotal(value);  
     }
 
     /// <summary>

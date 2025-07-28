@@ -4,9 +4,9 @@ public sealed record InvoiceLineItemDescription
 {
     public string Value { get; }
     
-    private InvoiceLineItemDescription(string input)
+    private InvoiceLineItemDescription(string value)
     {
-        Value = input;
+        Value = value;
     }
 
     public static InvoiceLineItemDescription CreateNew(string input)

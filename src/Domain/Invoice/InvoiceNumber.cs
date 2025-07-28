@@ -4,14 +4,14 @@ public sealed record InvoiceNumber
 {
     public string Value { get; }
     
-    private InvoiceNumber(string input)
+    private InvoiceNumber(string value)
     {
-        Value = input;
+        Value = value;
     }
 
-    public static InvoiceNumber CreateNew(string input)
+    public static InvoiceNumber CreateNew(string value)
     {
-        return new InvoiceNumber(input);
+        return new InvoiceNumber(value);
     }
 
     public override string ToString()

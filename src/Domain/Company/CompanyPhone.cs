@@ -4,13 +4,13 @@ namespace InvoiceKit.Domain.Company;
 
 public sealed record CompanyPhone : Phone
 {
-    private CompanyPhone(string input) : base(input)
+    private CompanyPhone(string value) : base(value)
     {
         
     }
 
-    public static CompanyPhone CreateNew(string input)
+    public static CompanyPhone CreateNew(string value)
     {
-        return new CompanyPhone(input);
+        return new CompanyPhone(value);
     }
 }
