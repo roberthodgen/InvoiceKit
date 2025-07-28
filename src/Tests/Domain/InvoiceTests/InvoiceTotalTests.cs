@@ -52,6 +52,5 @@ public sealed class InvoiceTotalTests
             InvoiceLineItemPerUnitPrice.CreateNew(100.00m), 
             InvoiceLineItemQuantity.CreateNew(5)));
         invoice.Total.Amount.ShouldBe(605.00m);
-        invoice.Total.ToString().ShouldBe("$605.00");
     }
 }

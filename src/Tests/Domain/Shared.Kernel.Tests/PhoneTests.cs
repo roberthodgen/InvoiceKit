@@ -32,4 +32,11 @@ public sealed class PhoneTests
         var phone = new PhoneTest("123-456-789000");
         phone.ToString().ShouldBe("123-456-789000");
     }
+
+    [Fact]
+    public void Phone_ToString_NullOrEmpty()
+    {
+        var phone = new PhoneTest(String.Empty);
+        phone.ToString().ShouldBe(String.Empty);
+    }
 }

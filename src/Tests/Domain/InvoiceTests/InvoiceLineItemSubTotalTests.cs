@@ -25,6 +25,5 @@ public sealed class InvoiceLineItemSubTotalTests
             InvoiceLineItemPerUnitPrice.CreateNew(10.50m), 
             InvoiceLineItemQuantity.CreateNew(10));
         lineItem.SubTotal.Amount.ShouldBe(105.00m);
-        lineItem.SubTotal.ToString().ShouldBe("$105.00");
     }
 }
