@@ -17,6 +17,12 @@ public sealed class EmailTests
         var email = new EmailTest("User@Mail.com");
         email.Value.ShouldBe("User@Mail.com");
     }
+    
+    [Fact]
+    public void Email_Constructor_ThrowsException()
+    {
+        Assert.Throws<ArgumentException>(() => new EmailTest(String.Empty));
+    }
 
     [Fact]
     public void Email_ToString_ReturnsFormattedString()

@@ -6,6 +6,10 @@ public sealed record CompanyContactName
     
     public CompanyContactName(string value)
     {
+        if (string.IsNullOrEmpty(value))
+        {
+            throw new ArgumentException("Company contact name is required.", nameof(value)); 
+        }
         Value = value;   
     }
 

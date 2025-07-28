@@ -12,6 +12,12 @@ public sealed class CompanyContactNameTests
     }
     
     [Fact]
+    public void CompanyContactName_Constructor_ThrowsException()
+    {
+        Assert.Throws<ArgumentException>(() => new CompanyContactName(String.Empty));
+    }
+    
+    [Fact]
     public void CompanyContactName_ToString_ReturnsValue()
     {
         var contactName = new CompanyContactName("contact name");

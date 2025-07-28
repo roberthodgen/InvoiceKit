@@ -50,4 +50,9 @@ public sealed class Company
     {
         return Invoice.CreateNew(invoiceNumber, dueDate, client, this);   
     }
+    
+    public sealed override string ToString()
+    {
+        return Name.ToString();
+    }
 }

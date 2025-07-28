@@ -60,4 +60,22 @@ public sealed class CompanyTests
         invoice.Company.ShouldBe(company);
         invoice.DueDate.Value.Date.ShouldBe(systemClock.Now.Date.AddDays(10));
     }
+
+    [Fact]
+    public void Company_ToString_ReturnsName()
+    {
+        var company = Company.CreateNew(
+            new CompanyName("Company LLC"),
+            new CompanyContactName("The Company"),
+            CompanyEmail.CreateNew("company@company.com"),
+            CompanyPhone.CreateNew("123-456-7890"),
+            CompanyAddress.CreateNew("123 street", null, "city", "state", "zip", "US"),
+            Client.CreateNew(
+                new ClientName("Client"),
+                new ClientContactName("The Client"),
+                ClientEmail.CreateNew("client@mail.com"),
+                ClientPhone.CreateNew("123-456-7890"),
+                ClientAddress.CreateNew("321 street", null, "city", "state", "zip", "US")));
+        company.ToString().ShouldBe("Company LLC");
+    }
 }

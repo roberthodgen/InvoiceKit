@@ -5,7 +5,7 @@ namespace InvoiceKit.Domain.Shared.Kernel;
 /// </summary>
 /// <remarks>Useful for creating an invoice for a past date or future date.</remarks>
 /// <returns>A fixed system clock.</returns>
-public class ManualSystemClock : ISystemClock
+public sealed class ManualSystemClock : ISystemClock
 {
     private readonly DateTime _fixedTime;
 

@@ -26,6 +26,13 @@ public sealed record AmountOfMoneyTests
     }
     
     [Fact]
+    public void AmountOfMoney_Zero_ReturnsZero()
+    {
+        var test = AmountOfMoney.Zero;
+        test.Amount.ShouldBe(0m);
+    }
+    
+    [Fact]
     public void AmountOfMoney_CreateNew_SetsValue()
     {
         var test = new AmountOfMoneyTest(100m);

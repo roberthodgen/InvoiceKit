@@ -5,6 +5,8 @@ namespace InvoiceKit.Domain.Shared.Kernel;
 public abstract record AmountOfMoney
 {
     public decimal Amount { get; }
+    
+    public static AmountOfMoney Zero => new ZeroAmountOfMoney();
 
     // Todo: Add currencies / currency converter
     protected AmountOfMoney(decimal amount)
@@ -19,13 +21,13 @@ public abstract record AmountOfMoney
         return Amount.ToString("C2", CultureInfo.CurrentCulture);
     }
 
-    public record ZeroAmountOfMoney : AmountOfMoney
+    public sealed record ZeroAmountOfMoney : AmountOfMoney
     {
-        private ZeroAmountOfMoney(decimal value) : base(value)
+        internal ZeroAmountOfMoney() : base(0)
         {
             
         }
 
-        public static ZeroAmountOfMoney GetInstance => new(0);
+        public static ZeroAmountOfMoney GetInstance => new();
     }
 }

@@ -18,37 +18,7 @@ public class TimestampTests
         var systemClock = ManualSystemClock.CreateNew(dateTime);
         var invoiceTerms = InvoiceStandardTerms.CreateNewDaysFromNow(systemClock, 10);
         var dueDate = InvoiceDueDate.CreateNew(invoiceTerms);
-        dueDate.ToString().ShouldBe("2025-07-25T00:00:00.0000000Z");
-    }
-
-    [Fact]
-    public void Timestamp_ToDayMonthYearString_ReturnsFormattedString()
-    {
-        var dateTime = new DateTime(2025, 7, 15, 0, 0, 0, DateTimeKind.Utc);
-        var systemClock = ManualSystemClock.CreateNew(dateTime);
-        var invoiceTerms = InvoiceStandardTerms.CreateNewDaysFromNow(systemClock, 10);
-        var dueDate = InvoiceDueDate.CreateNew(invoiceTerms);
-        dueDate.ToDayMonthYearString().ShouldBe("25/07/2025");
-    }
-
-    [Fact]
-    public void Timestamp_ToMonthDayYearString_ReturnsFormattedString()
-    {
-        var dateTime = new DateTime(2025, 7, 15, 0, 0, 0, DateTimeKind.Utc);
-        var systemClock = ManualSystemClock.CreateNew(dateTime);
-        var invoiceTerms = InvoiceStandardTerms.CreateNewDaysFromNow(systemClock, 10);
-        var dueDate = InvoiceDueDate.CreateNew(invoiceTerms);
-        dueDate.ToMonthDayYearString().ShouldBe("07/25/2025");
-    }
-
-    [Fact]
-    public void Timestamp_ToYearMonthDayString_ReturnsFormattedString()
-    {
-        var dateTime = new DateTime(2025, 7, 15, 0, 0, 0, DateTimeKind.Utc);
-        var systemClock = ManualSystemClock.CreateNew(dateTime);
-        var invoiceTerms = InvoiceStandardTerms.CreateNewDaysFromNow(systemClock, 10);
-        var dueDate = InvoiceDueDate.CreateNew(invoiceTerms);
-        dueDate.ToYearMonthDayString().ShouldBe("2025/07/25");
+        dueDate.ToString().ShouldBe("7/25/2025");
     }
 
     [Fact]

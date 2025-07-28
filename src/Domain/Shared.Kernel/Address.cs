@@ -21,6 +21,11 @@ public abstract record Address
 
     public sealed override string ToString()
     {
-        return $"{Address1}, {Address2}, {City}, {State}, {ZipCode}, {Country}";
+        return $"""
+                {Address1}
+                {Address2}
+                {City}, {State} {ZipCode}
+                {Country}
+                """;
     }
 }

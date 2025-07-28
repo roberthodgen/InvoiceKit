@@ -16,7 +16,6 @@ public sealed record InvoiceNumber
 
     public override string ToString()
     {
-        // Todo: Create the string format for displaying an invoice number.
         return Value;
     }
 }

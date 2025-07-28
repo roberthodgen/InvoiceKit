@@ -37,6 +37,6 @@ public sealed class Client
     
     public override string ToString()
     {
-        return $"{Name}, {ContactName}, {Email}, {Phone}, {Address}";
+        return Name.ToString();
     }
 }

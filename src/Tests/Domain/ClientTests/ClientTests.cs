@@ -31,6 +31,6 @@ public sealed class ClientTests
             ClientEmail.CreateNew("Name@mail.com"), 
             ClientPhone.CreateNew("123-456-7890"),
             address);
-        client.ToString().ShouldBe("Name, The Client, name@mail.com, (123)456-7890, 123 street, apartment, city, state, zip, US");
+        client.ToString().ShouldBe("Name");
     }
 }

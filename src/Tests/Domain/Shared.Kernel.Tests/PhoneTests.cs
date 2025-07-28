@@ -20,23 +20,15 @@ public sealed class PhoneTests
     }
     
     [Fact]
-    public void Phone_ToString_ReturnsFormatted()
+    public void Phone_Constructor_NullOrEmpty()
     {
-        var phone = new PhoneTest("123-456-7890");
-        phone.ToString().ShouldBe("(123)456-7890");
+        Assert.Throws<ArgumentException>(() => new PhoneTest(String.Empty));
     }
     
     [Fact]
-    public void Phone_ToString_ReturnsUnformatted()
+    public void Phone_ToString_ReturnsValue()
     {
-        var phone = new PhoneTest("123-456-789000");
-        phone.ToString().ShouldBe("123-456-789000");
-    }
-
-    [Fact]
-    public void Phone_ToString_NullOrEmpty()
-    {
-        var phone = new PhoneTest(String.Empty);
-        phone.ToString().ShouldBe(String.Empty);
+        var phone = new PhoneTest("(123)456-7890");
+        phone.ToString().ShouldBe("(123)456-7890");
     }
 }

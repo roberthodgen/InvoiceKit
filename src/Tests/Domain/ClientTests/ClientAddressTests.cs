@@ -22,4 +22,11 @@ public sealed class ClientAddressTests
         clientAddress.State.ShouldBe("state");
         clientAddress.ZipCode.ShouldBe("zip");
     }
+
+    [Fact]
+    public void ClientAddress_ToString_ReturnsFormattedString()
+    {
+        var clientAddress = ClientAddress.CreateNew("123 street", "apartment", "city", "state", "zip", "US");
+        clientAddress.ToString().ShouldBe("123 street\napartment\ncity, state zip\nUS");   
+    }
 }

@@ -16,7 +16,6 @@ public sealed record InvoiceLineItemDescription
 
     public override string ToString()
     {
-        // Todo: Implement the string format for a description.
         return Value;
     }
 }

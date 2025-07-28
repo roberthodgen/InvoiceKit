@@ -6,6 +6,10 @@ public abstract record Email
 
     protected Email(string value)
     {
+        if (string.IsNullOrEmpty(value) || !value.Contains('@'))
+        {
+            throw new ArgumentException("Email is required.", nameof(value));
+        }
         Value = value;   
     }
 
