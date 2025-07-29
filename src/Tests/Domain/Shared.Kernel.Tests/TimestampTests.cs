@@ -18,7 +18,7 @@ public class TimestampTests
         var systemClock = ManualSystemClock.CreateNew(dateTime);
         var invoiceTerms = InvoiceStandardTerms.CreateNewDaysFromNow(systemClock, 10);
         var dueDate = InvoiceDueDate.CreateNew(invoiceTerms);
-        dueDate.ToString().ShouldBeOneOf("7/25/2025", "07/25/2025", "2025-07-25");
+        dueDate.ToString().ShouldBe("7/25/2025");
     }
 
     [Fact]

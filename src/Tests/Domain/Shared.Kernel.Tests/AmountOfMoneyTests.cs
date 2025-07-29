@@ -33,6 +33,6 @@ public sealed record AmountOfMoneyTests
     public void AmountOfMoney_ToString_ReturnsFormattedString()
     {
         var test = new AmountOfMoneyTest(1000.10m);
-        test.ToString().ShouldBeOneOf("$1,000.10", "¤1,000.10");
+        test.ToString().ShouldBe("$1,000.10");
     }
 }
