@@ -99,7 +99,7 @@ public class PdfDocument : IDisposable
         return new PageLayout(
             _document.BeginPage(_pageSize.Width, _pageSize.Height),
             _pageSize,
-            SKRect.Create(Margin, Margin, _pageSize.Width - (Margin * 2), _pageSize.Height - (Margin * 2)),
+            SKRect.Create(Margin, Margin, _pageSize.Width - Margin, _pageSize.Height - Margin),
             _debug);
     }
 
