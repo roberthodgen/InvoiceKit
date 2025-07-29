@@ -6,7 +6,7 @@ public sealed record InvoiceLineItemDescription
     
     private InvoiceLineItemDescription(string value)
     {
-        if (string.IsNullOrEmpty(value))
+        if (string.IsNullOrWhiteSpace(value))
         {
             throw new ArgumentException("Invoice line item description is required.", nameof(value));
         }

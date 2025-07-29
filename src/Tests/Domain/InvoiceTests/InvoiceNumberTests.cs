@@ -10,6 +10,15 @@ public sealed class InvoiceNumberTests
         var number = InvoiceNumber.CreateNew("abc123");
         number.Value.ShouldBe("abc123");
     }
+
+    [Theory]
+    [InlineData("")]
+    [InlineData("  ")]
+    [InlineData("\t\t")]
+    public void InvoiceNumber_CreateNew_ThrowsException(string value)
+    {
+        Should.Throw<ArgumentException>(() => InvoiceNumber.CreateNew(value));
+    }
     
     [Fact]
     public void InvoiceNumber_ToString_ReturnsValue()

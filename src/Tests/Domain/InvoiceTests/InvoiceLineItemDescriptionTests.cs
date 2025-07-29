@@ -11,10 +11,13 @@ public sealed class InvoiceLineItemDescriptionTests
         description.Value.ShouldBe("This is a description");
     }
 
-    [Fact]
-    public void InvoiceLineItemDescription_CreateNew_ThrowsExceptionForEmptyValue()
+    [Theory]
+    [InlineData("")]
+    [InlineData("  ")]
+    [InlineData("\t\t")]
+    public void InvoiceLineItemDescription_CreateNew_ThrowsExceptionForEmptyValue(string value)
     {
-        Should.Throw<ArgumentException>(() => InvoiceLineItemDescription.CreateNew(String.Empty));
+        Should.Throw<ArgumentException>(() => InvoiceLineItemDescription.CreateNew(value));
     }
     
     [Fact]

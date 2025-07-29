@@ -6,7 +6,7 @@ public sealed record ClientName
 
     public ClientName(string value)
     {
-        if (string.IsNullOrEmpty(value))
+        if (string.IsNullOrWhiteSpace(value))
         {
             throw new ArgumentException("Client name is required.", nameof(value));   
         }

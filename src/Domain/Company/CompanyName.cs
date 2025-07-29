@@ -6,7 +6,7 @@ public sealed record CompanyName
     
     public CompanyName(string value)
     {
-        if (string.IsNullOrEmpty(value))
+        if (string.IsNullOrWhiteSpace(value))
         {
             throw new ArgumentException("Company name is required.", nameof(value));
         }

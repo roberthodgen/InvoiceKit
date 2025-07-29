@@ -12,11 +12,11 @@ public abstract record Address
     protected Address(string address1, string? address2, string city, string state, string zipCode, string? country)
     {
         Address1 = address1;
-        Address2 = address2 ?? string.Empty;
+        Address2 = address2 ?? null;
         City = city;
         State = state;
         ZipCode = zipCode;
-        Country = country ?? string.Empty;
+        Country = country ?? null;
     }
 
     public sealed override string ToString()

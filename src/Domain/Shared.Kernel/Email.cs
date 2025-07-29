@@ -6,7 +6,7 @@ public abstract record Email
 
     protected Email(string value)
     {
-        if (string.IsNullOrEmpty(value) || !value.Contains('@'))
+        if (string.IsNullOrWhiteSpace(value) || !value.Contains('@'))
         {
             throw new ArgumentException("Email is required.", nameof(value));
         }
@@ -15,6 +15,6 @@ public abstract record Email
 
     public sealed override string ToString()
     {
-        return string.IsNullOrEmpty(Value) ? string.Empty : Value.ToLowerInvariant();
+        return Value.ToLowerInvariant();
     }
 }

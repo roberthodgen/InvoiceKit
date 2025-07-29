@@ -19,10 +19,13 @@ public sealed class PhoneTests
         phone.Value.ShouldBe("123456789");
     }
     
-    [Fact]
-    public void Phone_Constructor_NullOrEmpty()
+    [Theory]
+    [InlineData("")]
+    [InlineData("  ")]
+    [InlineData("\t\t")]
+    public void Phone_Constructor_NullOrEmpty(string value)
     {
-        Should.Throw<ArgumentException>(() => new PhoneTest(String.Empty));
+        Should.Throw<ArgumentException>(() => new PhoneTest(value));
     }
     
     [Fact]

@@ -18,10 +18,13 @@ public sealed class EmailTests
         email.Value.ShouldBe("User@Mail.com");
     }
     
-    [Fact]
-    public void Email_Constructor_ThrowsException()
+    [Theory]
+    [InlineData("")]
+    [InlineData("  ")]
+    [InlineData("\t\t")]
+    public void Email_Constructor_ThrowsException(string value)
     {
-        Should.Throw<ArgumentException>(() => new EmailTest(String.Empty));
+        Should.Throw<ArgumentException>(() => new EmailTest(value));
     }
 
     [Fact]

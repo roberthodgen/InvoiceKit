@@ -11,10 +11,13 @@ public sealed class CompanyNameTests
         name.Value.ShouldBe("Company Name");
     }
     
-    [Fact]
-    public void CompanyName_Constructor_ThrowsException()
+    [Theory]
+    [InlineData("")]
+    [InlineData("  ")]
+    [InlineData("\t\t")]
+    public void CompanyName_Constructor_ThrowsException(string value)
     {
-        Should.Throw<ArgumentException>(() => new CompanyName(String.Empty));
+        Should.Throw<ArgumentException>(() => new CompanyName(value));
     }
     
     [Fact]

@@ -11,10 +11,13 @@ public sealed class ClientNameTests
         name.Value.ShouldBe("Name");
     }
     
-    [Fact]
-    public void ClientName_Constructor_ThrowsException()
+    [Theory]
+    [InlineData("")]
+    [InlineData("  ")]
+    [InlineData("\t\t")]
+    public void ClientName_Constructor_ThrowsException(string value)
     {
-        Should.Throw<ArgumentException>(() => new ClientName(String.Empty));
+        Should.Throw<ArgumentException>(() => new ClientName(value));
     }
     
     [Fact]

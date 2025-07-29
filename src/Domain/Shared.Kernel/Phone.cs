@@ -6,7 +6,7 @@ public abstract record Phone
 
     protected Phone(string value)
     {
-        if (string.IsNullOrEmpty(value))
+        if (string.IsNullOrWhiteSpace(value))
         {
             throw new ArgumentException("Phone number is required.", nameof(value));
         }
