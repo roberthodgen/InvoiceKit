@@ -86,7 +86,7 @@ public class TableTests(ITestOutputHelper testOutputHelper)
             .Build();
 
         stream.Write(pdfBytes);
-        testOutputHelper.WriteLine($"PDF created: {fileName}");
+        testOutputHelper.WriteLine($"PDF created: {Path.GetFullPath(fileName)}");
         File.Exists(fileName).ShouldBeTrue();
     }
 }
