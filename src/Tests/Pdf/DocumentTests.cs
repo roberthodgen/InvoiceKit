@@ -17,7 +17,7 @@ public class DocumentTests(ITestOutputHelper testOutputHelper)
         using var stream = File.OpenWrite(fileName);
         using var builder = PdfDocument.UsLetter;
         var pdfBytes = builder
-            // .DisplayLayoutGuidelines()
+            .DisplayLayoutGuidelines()
             .DefaultFont("Open Sans/Regular")
             .AddBlock(doc => new HStack()
                 .AddColumn(
@@ -48,7 +48,7 @@ public class DocumentTests(ITestOutputHelper testOutputHelper)
             .Build();
 
         stream.Write(pdfBytes);
-        testOutputHelper.WriteLine($"PDF created: {fileName}");
+        testOutputHelper.WriteLine($"PDF created: {Path.GetFullPath(fileName)}");
         File.Exists(fileName).ShouldBeTrue();
     }
 }

@@ -30,7 +30,7 @@ invoice.SaveAsPdf("invoice.pdf");
 - [x] Build PDF rendering engine
   - [ ] Enhance PDF rendering blocks with fluent-API
   - [ ] Enhance multi-page support
-- [ ] Define core domain models (Invoice, Line Items, Customer) w/ unit tests
+- [x] Define core domain models (Invoice, Line Items, Customer) w/ unit tests
 - [ ] Create SDK fluent API
 - [ ] Documentation
 - [ ] Publish SDK on NuGet
