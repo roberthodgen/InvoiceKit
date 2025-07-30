@@ -5,7 +5,7 @@ using Styles.Text;
 
 /// <summary>
 /// A text block represents a single paragraph's text. Line breaks may be added to prevent paragraph spacing. Automatic
-/// new lines added as needed.
+/// new lines are added as needed.
 /// </summary>
 /// <remarks>
 /// If multiple paragraphs are required, add them to <see cref="Stacks.VStack"/>.

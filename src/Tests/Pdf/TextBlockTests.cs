@@ -1,8 +1,6 @@
 namespace InvoiceKit.Tests.Pdf;
 
 using InvoiceKit.Pdf;
-using InvoiceKit.Pdf.Layouts.Text;
-using InvoiceKit.Pdf.Styles.Text;
 using SkiaSharp;
 using Xunit.Abstractions;
 
