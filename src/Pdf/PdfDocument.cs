@@ -1,3 +1,5 @@
+using InvoiceKit.Pdf.Layouts.Text;
+
 namespace InvoiceKit.Pdf;
 
 using Layouts;
@@ -53,6 +55,17 @@ public class PdfDocument : IDisposable
     public PdfDocument AddBlock(Func<PdfDocument, IDrawable> blockFactory)
     {
         var block = blockFactory(this);
+        _blocks.Add(block);
+        return this;
+    }
+
+    /// <summary>
+    /// Adds a new text block.
+    /// </summary>
+    public PdfDocument AddTextBlock(Action<TextBlock> configureTextBlock)
+    {
+        var block = new TextBlock(DefaultTextStyle);
+        configureTextBlock(block);
         _blocks.Add(block);
         return this;
     }

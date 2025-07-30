@@ -12,13 +12,25 @@ using Styles.Text;
 /// </remarks>
 public class TextBlock : IDrawable
 {
-    public TextStyle Style { get; }
+    public TextStyle Style { get; private set; }
 
     private readonly List<TextLine> _lines = new();
 
     public TextBlock(TextStyle style)
     {
         Style = style;
+    }
+
+    public TextBlock ParagraphSpacing(float before = 1.25f, float after = 1.25f)
+    {
+        Style = Style with { ParagraphSpacing = new() { Before = before, After = after } };
+        return this;
+    }
+
+    public TextBlock LineHeight(float height = 1.1f)
+    {
+        Style = Style with { LineHeight = height };
+        return this;
     }
 
     public TextBlock AddLine(string text)

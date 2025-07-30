@@ -18,35 +18,22 @@ public class TextBlockTests(ITestOutputHelper testOutputHelper)
         using var builder = PdfDocument.UsLetter;
         var pdfBytes = builder
             .DisplayLayoutGuidelines()
-            .AddTextBlockBlock(text => text
+            .AddTextBlock(text => text
                 .AddLine("Test Document", line => line.Font("Open Sans/Bold").FontSize(24f))
                 .AddLine(
                     "Sample document for text block layout and rendering.",
                     line => line.Color(SKColors.DimGray)))
-            .AddTextBlock(text => text.AddLine("Default: The quick brown fox jumps over the lazy dog."))
             .AddTextBlock(text => text
-                .ParagaphSpacing(
-                    new ParagraphSpacing
-                    {
-                        After = 2f,
-                    })
+                .AddLine("Default: The quick brown fox jumps over the lazy dog."))
+            .AddTextBlock(text => text
+                .ParagraphSpacing(before: 1.25f, after: 2f)
                 .AddLine("Spacing after: The quick brown fox jumps over the lazy dog."))
             .AddTextBlock(text => text
-                .ParagaphSpacing(
-                    new ParagraphSpacing
-                    {
-                        Before = 1f,
-                        After = 1f,
-                    })
+                .ParagraphSpacing(before: 1f, after: 1f)
                 .LineHeight(1f)
                 .AddLine("None: The quick brown fox jumps over the lazy dog."))
             .AddTextBlock(text => text
-                .ParagaphSpacing(
-                    new ParagraphSpacing
-                    {
-                        Before = 2f,
-                        After = 1f,
-                    })
+                .ParagraphSpacing(before: 2f, after: 1f)
                 .AddLine("Spacing before: The quick brown fox jumps over the lazy dog."))
             .AddTextBlock(text => text
                 .LineHeight(2f)
