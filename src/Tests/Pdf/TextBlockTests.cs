@@ -26,7 +26,7 @@ public class TextBlockTests(ITestOutputHelper testOutputHelper)
             .AddTextBlock(text => text
                 .AddLine("Default: The quick brown fox jumps over the lazy dog."))
             .AddTextBlock(text => text
-                .ParagraphSpacing(before: 1.25f, after: 2f)
+                .ParagraphSpacing(after: 2f)
                 .AddLine("Spacing after: The quick brown fox jumps over the lazy dog."))
             .AddTextBlock(text => text
                 .ParagraphSpacing(before: 1f, after: 1f)
