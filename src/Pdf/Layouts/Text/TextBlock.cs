@@ -5,20 +5,32 @@ using Styles.Text;
 
 /// <summary>
 /// A text block represents a single paragraph's text. Line breaks may be added to prevent paragraph spacing. Automatic
-/// new lines added as needed.
+/// new lines are added as needed.
 /// </summary>
 /// <remarks>
 /// If multiple paragraphs are required, add them to <see cref="Stacks.VStack"/>.
 /// </remarks>
 public class TextBlock : IDrawable
 {
-    public TextStyle Style { get; }
+    public TextStyle Style { get; private set; }
 
     private readonly List<TextLine> _lines = new();
 
     public TextBlock(TextStyle style)
     {
         Style = style;
+    }
+
+    public TextBlock ParagraphSpacing(float before = 1.25f, float after = 1.25f)
+    {
+        Style = Style with { ParagraphSpacing = new() { Before = before, After = after } };
+        return this;
+    }
+
+    public TextBlock LineHeight(float height = 1.1f)
+    {
+        Style = Style with { LineHeight = height };
+        return this;
     }
 
     public TextBlock AddLine(string text)

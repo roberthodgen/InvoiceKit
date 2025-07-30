@@ -1,5 +1,6 @@
 namespace InvoiceKit.Pdf;
 
+using Layouts.Text;
 using Layouts;
 using SkiaSharp;
 using Styles.Text;
@@ -57,6 +58,17 @@ public class PdfDocument : IDisposable
         return this;
     }
 
+    /// <summary>
+    /// Adds a new text block.
+    /// </summary>
+    public PdfDocument AddTextBlock(Action<TextBlock> configureTextBlock)
+    {
+        var block = new TextBlock(DefaultTextStyle);
+        configureTextBlock(block);
+        _blocks.Add(block);
+        return this;
+    }
+
     public byte[] Build()
     {
         var page = BeginNewPage(); // TODO handle dispose/using
@@ -99,7 +111,7 @@ public class PdfDocument : IDisposable
         return new PageLayout(
             _document.BeginPage(_pageSize.Width, _pageSize.Height),
             _pageSize,
-            SKRect.Create(Margin, Margin, _pageSize.Width - (Margin * 2), _pageSize.Height - (Margin * 2)),
+            SKRect.Create(Margin, Margin, _pageSize.Width - Margin, _pageSize.Height - Margin),
             _debug);
     }
 
