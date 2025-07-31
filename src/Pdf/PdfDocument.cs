@@ -2,8 +2,11 @@ namespace InvoiceKit.Pdf;
 
 using Layouts.Text;
 using Layouts;
+using Layouts.Images;
+using Layouts.Stacks;
 using SkiaSharp;
 using Styles.Text;
+using Svg.Skia;
 
 public class PdfDocument : IDisposable
 {
@@ -65,6 +68,48 @@ public class PdfDocument : IDisposable
     {
         var block = new TextBlock(DefaultTextStyle);
         configureTextBlock(block);
+        _blocks.Add(block);
+        return this;
+    }
+
+    /// <summary>
+    /// Adds a new image block.
+    /// </summary>
+    public PdfDocument AddImageBlock(string imagePath)
+    {
+        var block = ImageBlock.CreateSvg(imagePath);
+        _blocks.Add(block);
+        return this;
+    }
+
+    /// <summary>
+    /// Adds a new horizontal rule.
+    /// </summary>
+    public PdfDocument AddHorizontalRule()
+    {
+        var block = new HorizontalRule();
+        _blocks.Add(block);
+        return this;
+    }
+
+    /// <summary>
+    /// Adds a stack of columns.
+    /// </summary>
+    public PdfDocument AddColumnStack(Action<HStack> configureColumnStack)
+    {
+        var block = new HStack();
+        configureColumnStack(block);
+        _blocks.Add(block);
+        return this;
+    }
+
+    /// <summary>
+    /// Adds spacing between blocks.
+    /// </summary>
+    /// <param name="height">Float for the amount of spacing. Default of 5f.</param>
+    public PdfDocument AddSpacingBlock(float height = 5f)
+    {
+        var block = new SpacingBlock(height);
         _blocks.Add(block);
         return this;
     }
