@@ -50,14 +50,14 @@ public class TableTests(ITestOutputHelper testOutputHelper)
                     .AddCell(cell => cell.AddText("Description"))
                     .AddCell(cell => cell.AddText("Qty"))
                     .AddCell(cell => cell.AddText("Price")))
-                .AddRow(row =>
-                    row.AddCell(cell => cell.AddText("Product One - The quick brown fox jumps over the lazy dog."))
-                        .AddCell(cell => cell.AddText("1"))
-                        .AddCell(cell => cell.AddText("$ 10.00")))
-                .AddRow(row =>
-                    row.AddCell(cell => cell.AddText("Product Two - The quick brown fox jumps over the lazy dog."))
-                        .AddCell(cell => cell.AddText("1"))
-                        .AddCell(cell => cell.AddText("$ 20.00"))))
+                .AddRow(row => row
+                    .AddCell(cell => cell.AddText("Product One - The quick brown fox jumps over the lazy dog."))
+                    .AddCell(cell => cell.AddText("1"))
+                    .AddCell(cell => cell.AddText("$ 10.00")))
+                .AddRow(row => row
+                    .AddCell(cell => cell.AddText("Product Two - The quick brown fox jumps over the lazy dog."))
+                    .AddCell(cell => cell.AddText("1"))
+                    .AddCell(cell => cell.AddText("$ 20.00"))))
             // .AddPageBreak()
             .AddTextBlock(table => table
                 .AddLine("Consistent Row Heights", text => text.Font("Open Sans/Bold").FontSize(24f)))
@@ -75,14 +75,14 @@ public class TableTests(ITestOutputHelper testOutputHelper)
                     .AddCell(cell => cell.AddText("Description"))
                     .AddCell(cell => cell.AddText("Qty"))
                     .AddCell(cell => cell.AddText("Price")))
-                .AddRow(row =>
-                    row.AddCell(cell => cell.AddText("Product One - The quick brown fox jumps over the lazy dog."))
-                        .AddCell(cell => cell.AddText("1"))
-                        .AddCell(cell => cell.AddText("$ 10.00")))
-                .AddRow(row =>
-                    row.AddCell(cell => cell.AddText("Product Two - The quick brown fox jumps over the lazy dog."))
-                        .AddCell(cell => cell.AddText("1"))
-                        .AddCell(cell => cell.AddText("$ 20.00"))))
+                .AddRow(row => row
+                    .AddCell(cell => cell.AddText("Product One - The quick brown fox jumps over the lazy dog."))
+                    .AddCell(cell => cell.AddText("1"))
+                    .AddCell(cell => cell.AddText("$ 10.00")))
+                .AddRow(row => row
+                    .AddCell(cell => cell.AddText("Product Two - The quick brown fox jumps over the lazy dog."))
+                    .AddCell(cell => cell.AddText("1"))
+                    .AddCell(cell => cell.AddText("$ 20.00"))))
             .Build();
 
         stream.Write(pdfBytes);
