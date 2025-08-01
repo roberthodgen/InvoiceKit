@@ -4,6 +4,7 @@ using Layouts.Text;
 using Layouts;
 using Layouts.Images;
 using Layouts.Stacks;
+using Layouts.Tables;
 using SkiaSharp;
 using Styles.Text;
 using Svg.Skia;
@@ -110,6 +111,16 @@ public class PdfDocument : IDisposable
     public PdfDocument AddSpacingBlock(float height = 5f)
     {
         var block = new SpacingBlock(height);
+        _blocks.Add(block);
+        return this;
+    }
+    /// <summary>
+    /// Adds a new table block.
+    /// </summary>
+    public PdfDocument AddTableBlock(Action<TableLayoutBuilder> configureTableBlock)
+    {
+        var block = new TableLayoutBuilder(DefaultTextStyle);
+        configureTableBlock(block);
         _blocks.Add(block);
         return this;
     }
