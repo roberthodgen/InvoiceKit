@@ -1,13 +1,18 @@
 namespace InvoiceKit.Pdf.Layouts.Stacks;
 
 using SkiaSharp;
+using Styles.Text;
 
 /// <summary>
 /// Renders content vertically. Each row is rendered on a new line.
 /// </summary>
-public class VStack : IDrawable
+public class VStack : LayoutBuilderBase, IDrawable
 {
-    private readonly List<IDrawable> _rows = [];
+    private List<IDrawable> _children = [];
+    internal VStack(TextStyle defaultTextStyle)
+        : base(defaultTextStyle)
+    {
+    }
 
     public SKSize Measure(SKSize available)
     {
@@ -16,24 +21,18 @@ public class VStack : IDrawable
 
     public void Draw(PageLayout page, SKRect rect)
     {
-        if (_rows.Count == 0)
+        if (_children.Count == 0)
         {
             return;
         }
 
-        var childHeight = rect.Height / _rows.Count;
+        var childHeight = rect.Height / _children.Count;
         var top = rect.Top;
-        foreach (var _row in _rows)
+        foreach (var child in _children)
         {
             var childRect = new SKRect(rect.Left, top, rect.Right, top + childHeight);
-            _row.Draw(page, childRect);
+            child.Draw(page, childRect);
             top += childHeight;
         }
-    }
-
-    public VStack AddRow(IDrawable row)
-    {
-        _rows.Add(row);
-        return this;
     }
 }

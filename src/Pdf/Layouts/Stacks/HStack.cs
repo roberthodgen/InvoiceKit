@@ -1,26 +1,32 @@
 namespace InvoiceKit.Pdf.Layouts.Stacks;
 
 using SkiaSharp;
+using Styles.Text;
 
 /// <summary>
 /// Renders content horizontally. Each column is rendered side-by-side.
 /// </summary>
-public class HStack : IDrawable
+public class HStack : LayoutBuilderBase, IDrawable
 {
-    private readonly List<IDrawable> _columns = [];
+    private List<IDrawable> _children = [];
+
+    internal HStack(TextStyle defaultTextStyle)
+        : base(defaultTextStyle)
+    {
+    }
 
     public SKSize Measure(SKSize available)
     {
-        var columnWidth = available.Width / _columns.Count;
+        var columnWidth = available.Width / _children.Count;
         var columnSize = new SKSize(columnWidth, 0);
-        var maxHeight = _columns.Max(child => child.Measure(columnSize).Height);
+        var maxHeight = _children.Max(child => child.Measure(columnSize).Height);
         return new SKSize(available.Width, maxHeight);
     }
 
     public void Draw(PageLayout page, SKRect rect)
     {
-        var columnWidth = rect.Width / _columns.Count;
-        foreach (var (column, index) in _columns.Select((column, index) => (column, index)))
+        var columnWidth = rect.Width / _children.Count;
+        foreach (var (column, index) in _children.Select((column, index) => (column, index)))
         {
             var colRect = new SKRect(
                 rect.Left + (index * columnWidth),
@@ -31,14 +37,5 @@ public class HStack : IDrawable
 
             column.Draw(page, colRect);
         }
-    }
-
-    /// <summary>
-    /// Add another horizontal block to the current stack.
-    /// </summary>
-    public HStack AddColumn(IDrawable column)
-    {
-        _columns.Add(column);
-        return this;
     }
 }
