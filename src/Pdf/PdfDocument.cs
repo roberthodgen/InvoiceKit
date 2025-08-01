@@ -2,6 +2,7 @@ namespace InvoiceKit.Pdf;
 
 using Layouts.Text;
 using Layouts;
+using Layouts.Tables;
 using SkiaSharp;
 using Styles.Text;
 
@@ -65,6 +66,17 @@ public class PdfDocument : IDisposable
     {
         var block = new TextBlock(DefaultTextStyle);
         configureTextBlock(block);
+        _blocks.Add(block);
+        return this;
+    }
+
+    /// <summary>
+    /// Adds a new table block.
+    /// </summary>
+    public PdfDocument AddTableBlock(Action<TableLayoutBuilder> configureTableBlock)
+    {
+        var block = new TableLayoutBuilder(DefaultTextStyle);
+        configureTableBlock(block);
         _blocks.Add(block);
         return this;
     }
