@@ -38,12 +38,16 @@ public class DocumentTests(ITestOutputHelper testOutputHelper)
                     "Nulla id aliquam orci. Etiam id magna eget metus bibendum sodales. Suspendisse maximus ullamcorper ipsum. Quisque vel sagittis sapien. Integer finibus tellus eu rutrum pretium. Sed congue auctor posuere. Pellentesque tortor orci, molestie in turpis non, mattis pharetra eros. Aliquam vitae lacus sit amet augue varius auctor. Aenean ipsum diam, sodales sit amet nibh scelerisque, pellentesque sagittis dui.")
                 .AddLine(
                     "Integer ac placerat neque. Vivamus tempus felis sodales lacus pretium, ut finibus nibh porttitor. Nullam eleifend risus sit amet porttitor congue. Nullam a sem lacinia est tincidunt feugiat. Vestibulum sed mi pulvinar lectus maximus congue at nec justo. Quisque enim tortor, ultrices ut suscipit sed, pulvinar vitae turpis. Vestibulum a quam ligula."))
-            .AddTextBlock(text => text.AddLine("Before default page spacing of 5f."))
+            .AddTextBlock(text => text
+                .AddLine("Before default page spacing of 5f."))
             .AddSpacingBlock()
-            .AddTextBlock(text => text.AddLine("After default page spacing of 5f."))
-            .AddTextBlock(text => text.AddLine("Before custom page spacing of 3f."))
+            .AddTextBlock(text => text
+                .AddLine("After default page spacing of 5f."))
+            .AddTextBlock(text => text
+                .AddLine("Before custom page spacing of 3f."))
             .AddSpacingBlock(3f)
-            .AddTextBlock(text => text.AddLine("After custom page spacing of 3f."))
+            .AddTextBlock(text => text
+                .AddLine("After custom page spacing of 3f."))
             .AddPageBreak()
             .AddTextBlock(text => text
                 .AddLine("New page?"))
