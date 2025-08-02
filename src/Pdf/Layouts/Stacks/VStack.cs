@@ -1,39 +1,40 @@
 namespace InvoiceKit.Pdf.Layouts.Stacks;
 
 using SkiaSharp;
+using Styles.Text;
 
 /// <summary>
 /// Renders content vertically. Each row is rendered on a new line.
 /// </summary>
-public class VStack : IDrawable
+public class VStack : LayoutBase, IDrawable
 {
-    private readonly List<IDrawable> _rows = [];
-
-    public SKSize Measure(SKSize available)
+    internal VStack(TextStyle defaultTextStyle)
+        : base(defaultTextStyle)
     {
-        return available; // VStack will use all available height
     }
 
-    public void Draw(PageLayout page, SKRect rect)
+    public override SKSize Measure(SKSize available)
     {
-        if (_rows.Count == 0)
+        var childrenSizes = Children.Select(child => child.Measure(available)).ToList();
+        var maxWidth = childrenSizes.Max(child => child.Width);
+        var height = childrenSizes.Sum(child => child.Height);
+        return new SKSize(maxWidth, height);
+    }
+
+    public override void Draw(PageLayout page, SKRect rect, Func<PageLayout> getNextPage)
+    {
+        if (Children.Count == 0)
         {
             return;
         }
 
-        var childHeight = rect.Height / _rows.Count;
         var top = rect.Top;
-        foreach (var _row in _rows)
+        foreach (var child in Children)
         {
-            var childRect = new SKRect(rect.Left, top, rect.Right, top + childHeight);
-            _row.Draw(page, childRect);
-            top += childHeight;
+            var childSize = child.Measure(rect.Size);
+            var childRect = new SKRect(rect.Left, top, rect.Right, top + childSize.Height);
+            child.Draw(page, childRect, getNextPage);
+            top += childSize.Height;
         }
-    }
-
-    public VStack AddRow(IDrawable row)
-    {
-        _rows.Add(row);
-        return this;
     }
 }

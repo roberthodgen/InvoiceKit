@@ -3,7 +3,7 @@ namespace InvoiceKit.Pdf;
 using Layouts;
 using SkiaSharp;
 
-public interface IDrawable
+public interface IDrawable : IDisposable
 {
     /// <summary>
     /// Attempts to fit the content within the available size. Returns the size necessary.
@@ -21,5 +21,5 @@ public interface IDrawable
     /// </summary>
     /// <param name="page">The canvas into which to draw.</param>
     /// <param name="rect">The rectangle into which the content should be drawn.</param>
-    void Draw(PageLayout page, SKRect rect);
+    void Draw(PageLayout page, SKRect rect, Func<PageLayout> getNextPage);
 }
