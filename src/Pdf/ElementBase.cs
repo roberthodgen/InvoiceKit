@@ -1,7 +1,7 @@
 namespace InvoiceKit.Pdf;
 
+using Elements;
 using Elements.Images;
-using Elements.Text;
 using Layouts;
 using Layouts.Stacks;
 using Layouts.Tables;
@@ -40,11 +40,9 @@ public abstract class ElementBase : IElement, IDrawable
         _drawable = table;
     }
 
-    public void WithText(Action<TextBlock> action)
+    public void WithText(Func<TextBuilder, IDrawable> builder)
     {
-        var textBlock = new TextBlock(_defaultTextStyle);
-        action(textBlock);
-        _drawable = textBlock;
+        _drawable = builder(new TextBuilder(_defaultTextStyle));
     }
 
     public void WithImage(Func<ImageBuilder, IDrawable> builder)
@@ -57,9 +55,9 @@ public abstract class ElementBase : IElement, IDrawable
         return _drawable?.Measure(available) ?? SKSize.Empty;
     }
 
-    public void Draw(PageLayout page, SKRect rect)
+    public void Draw(PageLayout page, SKRect rect, Func<PageLayout> getNextPage)
     {
-        _drawable?.Draw(page, rect);
+        _drawable?.Draw(page, rect, getNextPage);
     }
 
     public void Dispose()

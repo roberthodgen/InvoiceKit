@@ -21,5 +21,5 @@ public interface IDrawable : IDisposable
     /// </summary>
     /// <param name="page">The canvas into which to draw.</param>
     /// <param name="rect">The rectangle into which the content should be drawn.</param>
-    void Draw(PageLayout page, SKRect rect);
+    void Draw(PageLayout page, SKRect rect, Func<PageLayout> getNextPage);
 }

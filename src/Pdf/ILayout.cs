@@ -1,7 +1,7 @@
 namespace InvoiceKit.Pdf;
 
+using Elements;
 using Elements.Images;
-using Elements.Text;
 using Layouts.Stacks;
 using Layouts.Tables;
 using Styles.Text;
@@ -17,7 +17,7 @@ public interface ILayout : IDrawable
     /// <summary>
     /// Adds a new text block.
     /// </summary>
-    ILayout AddTextBlock(Action<TextBlock> configureTextBlock);
+    ILayout AddText(Func<TextBuilder, IDrawable> builder);
 
     /// <summary>
     /// Adds a new image.

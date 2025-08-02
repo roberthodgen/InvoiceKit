@@ -24,7 +24,7 @@ internal class SvgImage : IDrawable
         return new SKSize(_svg.Drawable.Bounds.Size.Width, _svg.Drawable.Bounds.Size.Height);
     }
 
-    public void Draw(PageLayout page, SKRect rect)
+    public void Draw(PageLayout page, SKRect rect, Func<PageLayout> getNextPage)
     {
         page.Canvas.DrawPicture(_svg.Picture, rect.Location);
     }

@@ -2,7 +2,6 @@ namespace InvoiceKit.Pdf;
 
 using Elements;
 using Elements.Images;
-using Elements.Text;
 using Layouts;
 using Layouts.Stacks;
 using Layouts.Tables;
@@ -22,12 +21,11 @@ public abstract class LayoutBase : ILayout
 
     public abstract SKSize Measure(SKSize available);
 
-    public abstract void Draw(PageLayout page, SKRect rect);
+    public abstract void Draw(PageLayout page, SKRect rect, Func<PageLayout> getNextPage);
 
-    public ILayout AddTextBlock(Action<TextBlock> configure)
+    public ILayout AddText(Func<TextBuilder, IDrawable> builder)
     {
-        var child = new TextBlock(DefaultTextStyle);
-        configure(child);
+        var child = builder(new TextBuilder(DefaultTextStyle));
         Children.Add(child);
         return this;
     }

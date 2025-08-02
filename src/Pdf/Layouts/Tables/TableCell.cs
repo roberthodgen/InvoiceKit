@@ -1,6 +1,6 @@
 namespace InvoiceKit.Pdf.Layouts.Tables;
 
-using Elements.Text;
+using Elements;
 using Styles.Text;
 
 /// <summary>

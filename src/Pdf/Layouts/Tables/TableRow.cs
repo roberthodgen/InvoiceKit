@@ -24,14 +24,6 @@ public class TableRow(TableLayoutBuilder table, TextStyle defaultTextStyle)
         return this;
     }
 
-    public TableRow UseText(Action<TextOptionsBuilder> options)
-    {
-        var builder = new TextOptionsBuilder(Style);
-        options(builder);
-        Style = builder.Build();
-        return this;
-    }
-
     public SKSize Measure(SKSize available)
     {
         float height = 0;
@@ -45,7 +37,7 @@ public class TableRow(TableLayoutBuilder table, TextStyle defaultTextStyle)
         return new SKSize(available.Width, height);
     }
 
-    public void Draw(PageLayout page, SKRect rect)
+    public void Draw(PageLayout page, SKRect rect, Func<PageLayout> getNextPage)
     {
         var top = rect.Top;
         var left = rect.Left;
@@ -53,7 +45,7 @@ public class TableRow(TableLayoutBuilder table, TextStyle defaultTextStyle)
         foreach (var cell in Cells)
         {
             var columnWidth = table.GetColumnWidth(rect.Width, cell.ColumnIndex);
-            cell.Draw(page, new SKRect(left, top, left + columnWidth, top + height));
+            cell.Draw(page, new SKRect(left, top, left + columnWidth, top + height), getNextPage);
             left += columnWidth;
         }
 

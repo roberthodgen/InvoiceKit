@@ -21,7 +21,7 @@ public class HStack : LayoutBase, IDrawable
         return new SKSize(available.Width, maxHeight);
     }
 
-    public override void Draw(PageLayout page, SKRect rect)
+    public override void Draw(PageLayout page, SKRect rect, Func<PageLayout> getNextPage)
     {
         var columnWidth = rect.Width / Children.Count;
         foreach (var (column, index) in Children.Select((column, index) => (column, index)))
@@ -33,7 +33,7 @@ public class HStack : LayoutBase, IDrawable
                 rect.Bottom
             );
 
-            column.Draw(page, colRect);
+            column.Draw(page, colRect, getNextPage);
         }
     }
 }

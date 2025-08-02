@@ -2,7 +2,6 @@ namespace InvoiceKit.Pdf;
 
 using Elements;
 using Elements.Images;
-using Elements.Text;
 using Layouts;
 using Layouts.Stacks;
 using Layouts.Tables;
@@ -70,7 +69,7 @@ public class PdfDocument : IDisposable
                 }
             }
 
-            child.Draw(page, rect);
+            child.Draw(page, rect, BeginNewPage); // make this more intelligent to track pages and current page
         }
 
         EndPage();
@@ -128,10 +127,9 @@ public class PdfDocument : IDisposable
         return this;
     }
 
-    public PdfDocument WithText(Action<TextBlock> action)
+    public PdfDocument WithText(Func<TextBuilder, IDrawable> builder)
     {
-        var textBlock = new TextBlock(DefaultTextStyle);
-        action(textBlock);
+        var textBlock = builder(new TextBuilder(DefaultTextStyle));
         _children.Add(textBlock);
         return this;
     }

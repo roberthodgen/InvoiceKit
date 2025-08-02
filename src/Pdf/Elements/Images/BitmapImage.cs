@@ -19,7 +19,7 @@ internal class BitmapImage : IDrawable
         return new SKSize(_bitmap.Width, _bitmap.Height);
     }
 
-    public void Draw(PageLayout page, SKRect rect)
+    public void Draw(PageLayout page, SKRect rect, Func<PageLayout> getNextPage)
     {
         page.Canvas.DrawBitmap(_bitmap, rect.Location);
     }

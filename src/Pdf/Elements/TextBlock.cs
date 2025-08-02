@@ -1,4 +1,4 @@
-namespace InvoiceKit.Pdf.Elements.Text;
+namespace InvoiceKit.Pdf.Elements;
 
 using Layouts;
 using Layouts.Stacks;
@@ -16,55 +16,41 @@ public sealed class TextBlock : IDrawable
 {
     public TextStyle Style { get; private set; }
 
-    private readonly List<TextLine> _lines = new();
+    private readonly List<string> _lines = new();
 
-    internal TextBlock(TextStyle style)
+    internal TextBlock(TextStyle style, string text)
     {
         Style = style;
-    }
+        using var reader = new StringReader(text);
+        while (true)
+        {
+            var line = reader.ReadLine();
+            if (line is null)
+            {
+                break;
+            }
 
-    public TextBlock ParagraphSpacing(float before = 1.25f, float after = 1.25f)
-    {
-        Style = Style with { ParagraphSpacing = new() { Before = before, After = after } };
-        return this;
-    }
-
-    public TextBlock LineHeight(float height = 1.1f)
-    {
-        Style = Style with { LineHeight = height };
-        return this;
-    }
-
-    public TextBlock AddLine(string text)
-    {
-        return AddLine(text, _ => { });
-    }
-
-    public TextBlock AddLine(string text, Action<TextOptionsBuilder> options)
-    {
-        var builder = new TextOptionsBuilder(Style);
-        options(builder);
-        _lines.Add(new TextLine { Text = text, Style = builder.Build() });
-        return this;
+            _lines.Add(line);
+        }
     }
 
     public SKSize Measure(SKSize available)
     {
-        var totalHeight = _lines.First().Style.ParagraphSpacingBefore;
+        var totalHeight = Style.ParagraphSpacingBefore;
+        var font = Style.ToFont();
+        var renderedHeight = font.Metrics.Descent - font.Metrics.Ascent;
+        var lineHeight = renderedHeight + ((Style.LineHeight * Style.FontSize) - Style.FontSize);
         foreach (var line in _lines)
         {
-            var wrapped = WrapText(line.Text, line.Style, available.Width);
-            var font = line.Style.ToFont();
-            var renderedHeight = font.Metrics.Descent - font.Metrics.Ascent;
-            var lineHeight = renderedHeight + ((line.Style.LineHeight * line.Style.FontSize) - line.Style.FontSize);
+            var wrapped = WrapText(line, Style, available.Width);
             totalHeight += lineHeight * wrapped.Count;
         }
 
-        totalHeight += _lines.Last().Style.ParagraphSpacingAfter;
+        totalHeight += Style.ParagraphSpacingAfter;
         return new SKSize(available.Width, totalHeight);
     }
 
-    public void Draw(PageLayout page, SKRect rect)
+    public void Draw(PageLayout page, SKRect rect, Func<PageLayout> getNextPage)
     {
         if (page.Debug)
         {
@@ -78,15 +64,15 @@ public sealed class TextBlock : IDrawable
                 });
         }
 
-        var top = rect.Top + _lines.First().Style.ParagraphSpacingBefore;
+        var top = rect.Top + Style.ParagraphSpacingBefore;
+        var paint = Style.ToPaint();
+        var font = Style.ToFont();
+        var halfLineHeightAddition = ((Style.LineHeight * Style.FontSize) - Style.FontSize) / 2;
         foreach (var line in _lines)
         {
-            var paint = line.Style.ToPaint();
-            var font = line.Style.ToFont();
-            var wrappedLines = WrapText(line.Text, line.Style, rect.Width);
+            var wrappedLines = WrapText(line, Style, rect.Width);
             foreach (var wrapped in wrappedLines)
             {
-                var halfLineHeightAddition = ((line.Style.LineHeight * line.Style.FontSize) - line.Style.FontSize) / 2;
                 top += halfLineHeightAddition - font.Metrics.Ascent; // baseline adjustment
 
                 if (page.Debug)

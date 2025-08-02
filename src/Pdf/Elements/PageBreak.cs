@@ -10,7 +10,7 @@ public sealed class PageBreak : IDrawable
         return new SKSize(available.Width, available.Height + 1); // just larger
     }
 
-    public void Draw(PageLayout page, SKRect rect)
+    public void Draw(PageLayout page, SKRect rect, Func<PageLayout> getNextPage)
     {
         // nothing to draw
     }

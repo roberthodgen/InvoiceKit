@@ -21,7 +21,7 @@ public class VStack : LayoutBase, IDrawable
         return new SKSize(maxWidth, height);
     }
 
-    public override void Draw(PageLayout page, SKRect rect)
+    public override void Draw(PageLayout page, SKRect rect, Func<PageLayout> getNextPage)
     {
         if (Children.Count == 0)
         {
@@ -33,7 +33,7 @@ public class VStack : LayoutBase, IDrawable
         {
             var childSize = child.Measure(rect.Size);
             var childRect = new SKRect(rect.Left, top, rect.Right, top + childSize.Height);
-            child.Draw(page, childRect);
+            child.Draw(page, childRect, getNextPage);
             top += childSize.Height;
         }
     }

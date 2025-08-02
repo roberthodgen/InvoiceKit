@@ -17,23 +17,25 @@ public class DocumentTests(ITestOutputHelper testOutputHelper)
             // .DisplayLayoutGuidelines()
             .DefaultFont("Open Sans/Regular")
             .WithVStack(main => main
-                .AddVStack(stack => stack.AddTextBlock(text => text
-                    .AddLine(
-                        "Invoice #123",
-                        style => style.Font("Open Sans/Bold").FontSize(24))
-                    .AddLine("Invoice No.: 123")
-                    .AddLine("Due: July 1, 2025")))
+                .AddText(text => text
+                    .Font("Open Sans/Bold")
+                    .FontSize(24)
+                    .WithText("Invoice #123"))
+                .AddText(text => text.WithText("Invoice No.: 123\nDue: July 1, 2025"))
                 .AddHStack(column => column
                     .AddHStack(hStack => hStack
-                        .AddImage(image => image.WithSvgImage(Path.Combine(Directory.GetCurrentDirectory(), "Images/circle.svg")))
-                        .AddTextBlock(text => text
-                            .AddLine("My Co.", style => style.Font("Open Sans/Bold"))
-                            .AddLine("123 Main Street")
-                            .AddLine("Anytown, XX 12345")))
-                    .AddTextBlock(text => text
-                        .AddLine("Customer Co.", style => style.Font("Open Sans/Bold"))
-                        .AddLine("999 Billto Lane")
-                        .AddLine("Sometime, YY 98765"))))
+                        .AddHStack(cols => cols
+                            .AddImage(image =>
+                                image.WithSvgImage(Path.Combine(Directory.GetCurrentDirectory(), "Images/circle.svg")))
+                            .AddVStack(lines => lines
+                                .AddText(text => text
+                                    .Font("Open Sans/Bold")
+                                    .WithText("My Co."))
+                                .AddText(text => text.WithText("123 Main Street\nAnytown, XX 12345"))))
+                        .AddVStack(lines => lines.AddText(text => text
+                                .Font("Open Sans/Bold")
+                                .WithText("Customer Co."))
+                            .AddText(text => text.WithText("999 Billto Lane\nSometime, YY 98765"))))))
             .Build();
 
         stream.Write(pdfBytes);
@@ -56,10 +58,12 @@ public class DocumentTests(ITestOutputHelper testOutputHelper)
                 .AddHStack(column => column
                     .AddImage(image =>
                         image.WithSvgImage(Path.Combine(Directory.GetCurrentDirectory(), "Images/circle.svg")))
-                    .AddTextBlock(text => text
-                        .AddLine("Customer Co.", style => style.Font("Open Sans/Bold"))
-                        .AddLine("Invoice No.: 123")
-                        .AddLine("Due: July 1, 2025"))))
+                    .AddVStack(stack => stack
+                        .AddText(text => text
+                            .Font("Open Sans/Bold")
+                            .WithText("Customer Co."))
+                        .AddText(text => text
+                            .WithText("Invoice No.: 123\nDue: July 1, 2025")))))
             .Build();
 
         stream.Write(pdfBytes);

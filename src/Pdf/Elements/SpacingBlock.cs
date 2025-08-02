@@ -19,7 +19,7 @@ public sealed class SpacingBlock : IDrawable
         return new SKSize(available.Width, Height);
     }
 
-    public void Draw(PageLayout page, SKRect rect)
+    public void Draw(PageLayout page, SKRect rect, Func<PageLayout> getNextPage)
     {
         if (page.Debug)
         {
