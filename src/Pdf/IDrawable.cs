@@ -3,7 +3,7 @@ namespace InvoiceKit.Pdf;
 using Layouts;
 using SkiaSharp;
 
-public interface IDrawable
+public interface IDrawable : IDisposable
 {
     /// <summary>
     /// Attempts to fit the content within the available size. Returns the size necessary.

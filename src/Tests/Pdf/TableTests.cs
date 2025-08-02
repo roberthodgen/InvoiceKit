@@ -2,7 +2,6 @@ namespace InvoiceKit.Tests.Pdf;
 
 using InvoiceKit.Pdf;
 using InvoiceKit.Pdf.Layouts.Tables;
-using InvoiceKit.Pdf.Layouts.Text;
 using Xunit.Abstractions;
 
 public class TableTests(ITestOutputHelper testOutputHelper)
@@ -10,13 +9,14 @@ public class TableTests(ITestOutputHelper testOutputHelper)
     [Fact]
     public void Table_EndToEnd_Test()
     {
-        const string fileName = "table.pdf";
+        const string fileName = "table-test.pdf";
         File.Delete(fileName);
 
         using var stream = File.OpenWrite(fileName);
         using var builder = PdfDocument.UsLetter;
         var pdfBytes = builder
             // .DisplayLayoutGuidelines()
+            .WithVStack(vStack => vStack
             .AddTextBlock(table => table
                 .AddLine("Simple Table", text => text.Font("Open Sans/Bold").FontSize(24f)))
             .AddTextBlock(table => table
@@ -25,15 +25,15 @@ public class TableTests(ITestOutputHelper testOutputHelper)
                 .UseEquallySpaceColumns()
                 .AddRowSeparators()
                 .AddHeader(header => header
-                    .AddCell(cell => cell.AddTextBlock(text => text.AddLine("Description")))
-                    .AddCell(cell => cell.AddTextBlock(text => text.AddLine("Qty")))
-                    .AddCell(cell => cell.AddTextBlock(text => text.AddLine("Price"))))
-                .AddRow(row => row.AddCell(cell => cell.AddTextBlock(text => text.AddLine("Product One")))
-                    .AddCell(cell => cell.AddTextBlock(text => text.AddLine("1")))
-                    .AddCell(cell => cell.AddTextBlock(text => text.AddLine("$ 10.00"))))
-                .AddRow(row => row.AddCell(cell => cell.AddTextBlock(text => text.AddLine("Product Two")))
-                    .AddCell(cell => cell.AddTextBlock(text => text.AddLine("1")))
-                    .AddCell(cell => cell.AddTextBlock(text => text.AddLine("$ 20.00")))))
+                    .AddCell(cell => cell.WithText(text => text.AddLine("Description")))
+                    .AddCell(cell => cell.WithText(text => text.AddLine("Qty")))
+                    .AddCell(cell => cell.WithText(text => text.AddLine("Price"))))
+                .AddRow(row => row.AddCell(cell => cell.WithText(text => text.AddLine("Product One")))
+                    .AddCell(cell => cell.WithText(text => text.AddLine("1")))
+                    .AddCell(cell => cell.WithText(text => text.AddLine("$ 10.00"))))
+                .AddRow(row => row.AddCell(cell => cell.WithText(text => text.AddLine("Product Two")))
+                    .AddCell(cell => cell.WithText(text => text.AddLine("1")))
+                    .AddCell(cell => cell.WithText(text => text.AddLine("$ 20.00")))))
             // .AddPageBreak()
             .AddTextBlock(table => table
                 .AddLine("Fixed Width Columns", text => text.Font("Open Sans/Bold").FontSize(24f)))
@@ -47,17 +47,17 @@ public class TableTests(ITestOutputHelper testOutputHelper)
                     ColumnWidthPercent.FromPercent(15),
                 ])
                 .AddHeader(header => header
-                    .AddCell(cell => cell.AddTextBlock(text => text.AddLine("Description")))
-                    .AddCell(cell => cell.AddTextBlock(text => text.AddLine("Qty")))
-                    .AddCell(cell => cell.AddTextBlock(text => text.AddLine("Price"))))
+                    .AddCell(cell => cell.WithText(text => text.AddLine("Description")))
+                    .AddCell(cell => cell.WithText(text => text.AddLine("Qty")))
+                    .AddCell(cell => cell.WithText(text => text.AddLine("Price"))))
                 .AddRow(row => row
-                    .AddCell(cell => cell.AddTextBlock(text => text.AddLine("Product One - The quick brown fox jumps over the lazy dog.")))
-                    .AddCell(cell => cell.AddTextBlock(text => text.AddLine("1")))
-                    .AddCell(cell => cell.AddTextBlock(text => text.AddLine("$ 10.00"))))
+                    .AddCell(cell => cell.WithText(text => text.AddLine("Product One - The quick brown fox jumps over the lazy dog.")))
+                    .AddCell(cell => cell.WithText(text => text.AddLine("1")))
+                    .AddCell(cell => cell.WithText(text => text.AddLine("$ 10.00"))))
                 .AddRow(row => row
-                    .AddCell(cell => cell.AddTextBlock(text => text.AddLine("Product Two - The quick brown fox jumps over the lazy dog.")))
-                    .AddCell(cell => cell.AddTextBlock(text => text.AddLine("1")))
-                    .AddCell(cell => cell.AddTextBlock(text => text.AddLine("$ 20.00")))))
+                    .AddCell(cell => cell.WithText(text => text.AddLine("Product Two - The quick brown fox jumps over the lazy dog.")))
+                    .AddCell(cell => cell.WithText(text => text.AddLine("1")))
+                    .AddCell(cell => cell.WithText(text => text.AddLine("$ 20.00")))))
             // .AddPageBreak()
             .AddTextBlock(table => table
                 .AddLine("Consistent Row Heights", text => text.Font("Open Sans/Bold").FontSize(24f)))
@@ -72,17 +72,17 @@ public class TableTests(ITestOutputHelper testOutputHelper)
                 ])
                 .AddRowSeparators()
                 .AddHeader(header => header
-                    .AddCell(cell => cell.AddTextBlock(text => text.AddLine("Description")))
-                    .AddCell(cell => cell.AddTextBlock(text => text.AddLine("Qty")))
-                    .AddCell(cell => cell.AddTextBlock(text => text.AddLine("Price"))))
+                    .AddCell(cell => cell.WithText(text => text.AddLine("Description")))
+                    .AddCell(cell => cell.WithText(text => text.AddLine("Qty")))
+                    .AddCell(cell => cell.WithText(text => text.AddLine("Price"))))
                 .AddRow(row => row
-                    .AddCell(cell => cell.AddTextBlock(text => text.AddLine("Product One - The quick brown fox jumps over the lazy dog.")))
-                    .AddCell(cell => cell.AddTextBlock(text => text.AddLine("1")))
-                    .AddCell(cell => cell.AddTextBlock(text => text.AddLine("$ 10.00"))))
+                    .AddCell(cell => cell.WithText(text => text.AddLine("Product One - The quick brown fox jumps over the lazy dog.")))
+                    .AddCell(cell => cell.WithText(text => text.AddLine("1")))
+                    .AddCell(cell => cell.WithText(text => text.AddLine("$ 10.00"))))
                 .AddRow(row => row
-                    .AddCell(cell => cell.AddTextBlock(text => text.AddLine("Product Two - The quick brown fox jumps over the lazy dog.")))
-                    .AddCell(cell => cell.AddTextBlock(text => text.AddLine("1")))
-                    .AddCell(cell => cell.AddTextBlock(text => text.AddLine("$ 20.00")))))
+                    .AddCell(cell => cell.WithText(text => text.AddLine("Product Two - The quick brown fox jumps over the lazy dog.")))
+                    .AddCell(cell => cell.WithText(text => text.AddLine("1")))
+                    .AddCell(cell => cell.WithText(text => text.AddLine("$ 20.00"))))))
             .Build();
 
         stream.Write(pdfBytes);

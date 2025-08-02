@@ -1,48 +1,52 @@
 namespace InvoiceKit.Pdf;
 
-using Layouts.Images;
+using Elements.Images;
+using Elements.Text;
 using Layouts.Stacks;
 using Layouts.Tables;
-using Layouts.Text;
 using Styles.Text;
 
-public interface ILayoutBuilder
+/// <summary>
+/// A layout is a drawable component that contains one or more children. Layouts are used to compose and create complex
+/// PDF layouts.
+/// </summary>
+public interface ILayout : IDrawable
 {
     TextStyle DefaultTextStyle { get; }
 
     /// <summary>
     /// Adds a new text block.
     /// </summary>
-    ILayoutBuilder AddTextBlock(Action<TextBlock> configureTextBlock);
+    ILayout AddTextBlock(Action<TextBlock> configureTextBlock);
 
     /// <summary>
-    /// Adds a new image block.
+    /// Adds a new image.
     /// </summary>
-    ILayoutBuilder AddImageBlock(string imagePath);
+    ILayout AddImage(Func<ImageBuilder, IDrawable> builder);
 
     /// <summary>
     /// Adds a new horizontal rule.
     /// </summary>
-    ILayoutBuilder AddHorizontalRule();
+    ILayout AddHorizontalRule();
 
     /// <summary>
     /// Adds a stack of columns.
     /// </summary>
-    ILayoutBuilder AddColumnStack(Action<HStack> configureColumnStack);
+    ILayout AddHStack(Action<HStack> configureColumnStack);
 
     /// <summary>
     /// Adds a stack of columns.
     /// </summary>
-    ILayoutBuilder AddRowStack(Action<VStack> configureRowStack);
+    ILayout AddVStack(Action<VStack> configureRowStack);
 
     /// <summary>
     /// Adds spacing between blocks.
     /// </summary>
     /// <param name="height">Float for the amount of spacing. Default of 5f.</param>
-    ILayoutBuilder AddSpacingBlock(float height = 5f);
+    ILayout AddSpacingBlock(float height = 5f);
 
     /// <summary>
     /// Adds a new table block.
     /// </summary>
-    ILayoutBuilder AddTableBlock(Action<TableLayoutBuilder> configureTableBlock);
+    ILayout AddTableBlock(Action<TableLayoutBuilder> configureTableBlock);
 }

@@ -1,4 +1,4 @@
-namespace InvoiceKit.Pdf;
+namespace InvoiceKit.Pdf.Elements;
 
 using Layouts;
 using SkiaSharp;
@@ -20,5 +20,9 @@ public sealed class HorizontalRule : IDrawable
                 Color = SKColors.Black,
                 StrokeWidth = 1f,
             });
+    }
+
+    public void Dispose()
+    {
     }
 }

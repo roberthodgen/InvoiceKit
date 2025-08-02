@@ -1,5 +1,7 @@
-namespace InvoiceKit.Pdf.Layouts.Text;
+namespace InvoiceKit.Pdf.Elements.Text;
 
+using Layouts;
+using Layouts.Stacks;
 using SkiaSharp;
 using Styles.Text;
 
@@ -8,15 +10,15 @@ using Styles.Text;
 /// new lines are added as needed.
 /// </summary>
 /// <remarks>
-/// If multiple paragraphs are required, add them to <see cref="Stacks.VStack"/>.
+/// If multiple paragraphs are required, add them to <see cref="VStack"/>.
 /// </remarks>
-public class TextBlock : IDrawable
+public sealed class TextBlock : IDrawable
 {
     public TextStyle Style { get; private set; }
 
     private readonly List<TextLine> _lines = new();
 
-    public TextBlock(TextStyle style)
+    internal TextBlock(TextStyle style)
     {
         Style = style;
     }
@@ -140,11 +142,8 @@ public class TextBlock : IDrawable
 
         return lines;
     }
-}
 
-internal class TextLine
-{
-    public required string Text { get; init; }
-
-    public required TextStyle Style { get; init; }
+    public void Dispose()
+    {
+    }
 }

@@ -119,4 +119,8 @@ public class TableLayoutBuilder(TextStyle defaultTextStyle) : IDrawable
             ColumnSizing.Auto => throw new NotImplementedException("TODO"),
             _ => throw new NotImplementedException(),
         };
+
+    public void Dispose()
+    {
+    }
 }

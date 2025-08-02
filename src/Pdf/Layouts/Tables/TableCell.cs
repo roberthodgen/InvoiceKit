@@ -1,13 +1,12 @@
 namespace InvoiceKit.Pdf.Layouts.Tables;
 
-using SkiaSharp;
+using Elements.Text;
 using Styles.Text;
-using Text;
 
 /// <summary>
 /// Renders a table cell. Currently only supports text via wrapping <see cref="TextBlock"/>.
 /// </summary>
-public class TableCell : LayoutBuilderBase, IDrawable
+public class TableCell : ElementBase
 {
     public int RowIndex { get; }
 
@@ -21,15 +20,5 @@ public class TableCell : LayoutBuilderBase, IDrawable
     {
         RowIndex = rowIndex;
         ColumnIndex = columnIndex;
-    }
-
-    public SKSize Measure(SKSize available)
-    {
-        return Child?.Measure(available) ?? SKSize.Empty;
-    }
-
-    public void Draw(PageLayout page, SKRect rect)
-    {
-        Child?.Draw(page, rect);
     }
 }

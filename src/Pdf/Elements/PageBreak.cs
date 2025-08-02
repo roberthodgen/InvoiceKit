@@ -1,4 +1,4 @@
-namespace InvoiceKit.Pdf;
+namespace InvoiceKit.Pdf.Elements;
 
 using Layouts;
 using SkiaSharp;
@@ -13,5 +13,9 @@ public sealed class PageBreak : IDrawable
     public void Draw(PageLayout page, SKRect rect)
     {
         // nothing to draw
+    }
+
+    public void Dispose()
+    {
     }
 }

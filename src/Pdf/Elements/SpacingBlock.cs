@@ -1,4 +1,4 @@
-namespace InvoiceKit.Pdf;
+namespace InvoiceKit.Pdf.Elements;
 
 using Layouts;
 using SkiaSharp;
@@ -6,11 +6,11 @@ using SkiaSharp;
 /// <summary>
 /// Used to add spacing in between blocks.
 /// </summary>
-public class SpacingBlock : IDrawable
+public sealed class SpacingBlock : IDrawable
 {
     public float Height { get; }
 
-    public SpacingBlock(float height)
+    internal SpacingBlock(float height)
     {
         Height = height;
     }
@@ -32,5 +32,9 @@ public class SpacingBlock : IDrawable
                     StrokeWidth = .5f,
                 });
         }
+    }
+
+    public void Dispose()
+    {
     }
 }

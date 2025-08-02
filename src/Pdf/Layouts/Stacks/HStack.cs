@@ -6,27 +6,25 @@ using Styles.Text;
 /// <summary>
 /// Renders content horizontally. Each column is rendered side-by-side.
 /// </summary>
-public class HStack : LayoutBuilderBase, IDrawable
+public class HStack : LayoutBase, IDrawable
 {
-    private List<IDrawable> _children = [];
-
     internal HStack(TextStyle defaultTextStyle)
         : base(defaultTextStyle)
     {
     }
 
-    public SKSize Measure(SKSize available)
+    public override SKSize Measure(SKSize available)
     {
-        var columnWidth = available.Width / _children.Count;
+        var columnWidth = available.Width / Children.Count;
         var columnSize = new SKSize(columnWidth, 0);
-        var maxHeight = _children.Max(child => child.Measure(columnSize).Height);
+        var maxHeight = Children.Max(child => child.Measure(columnSize).Height);
         return new SKSize(available.Width, maxHeight);
     }
 
-    public void Draw(PageLayout page, SKRect rect)
+    public override void Draw(PageLayout page, SKRect rect)
     {
-        var columnWidth = rect.Width / _children.Count;
-        foreach (var (column, index) in _children.Select((column, index) => (column, index)))
+        var columnWidth = rect.Width / Children.Count;
+        foreach (var (column, index) in Children.Select((column, index) => (column, index)))
         {
             var colRect = new SKRect(
                 rect.Left + (index * columnWidth),

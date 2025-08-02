@@ -69,4 +69,9 @@ public class TableRow(TableLayoutBuilder table, TextStyle defaultTextStyle)
                 });
         }
     }
+
+    public void Dispose()
+    {
+        table.Dispose();
+    }
 }

@@ -6,33 +6,35 @@ using Styles.Text;
 /// <summary>
 /// Renders content vertically. Each row is rendered on a new line.
 /// </summary>
-public class VStack : LayoutBuilderBase, IDrawable
+public class VStack : LayoutBase, IDrawable
 {
-    private List<IDrawable> _children = [];
     internal VStack(TextStyle defaultTextStyle)
         : base(defaultTextStyle)
     {
     }
 
-    public SKSize Measure(SKSize available)
+    public override SKSize Measure(SKSize available)
     {
-        return available; // VStack will use all available height
+        var childrenSizes = Children.Select(child => child.Measure(available)).ToList();
+        var maxWidth = childrenSizes.Max(child => child.Width);
+        var height = childrenSizes.Sum(child => child.Height);
+        return new SKSize(maxWidth, height);
     }
 
-    public void Draw(PageLayout page, SKRect rect)
+    public override void Draw(PageLayout page, SKRect rect)
     {
-        if (_children.Count == 0)
+        if (Children.Count == 0)
         {
             return;
         }
 
-        var childHeight = rect.Height / _children.Count;
         var top = rect.Top;
-        foreach (var child in _children)
+        foreach (var child in Children)
         {
-            var childRect = new SKRect(rect.Left, top, rect.Right, top + childHeight);
+            var childSize = child.Measure(rect.Size);
+            var childRect = new SKRect(rect.Left, top, rect.Right, top + childSize.Height);
             child.Draw(page, childRect);
-            top += childHeight;
+            top += childSize.Height;
         }
     }
 }
