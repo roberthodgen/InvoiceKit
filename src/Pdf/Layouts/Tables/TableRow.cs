@@ -10,7 +10,7 @@ public class TableRow(TableLayoutBuilder table, TextStyle defaultTextStyle)
 
     public List<TableCell> Cells { get; } = [];
 
-    public TextStyle Style { get; private set; } = defaultTextStyle;
+    public TextStyle Style { get; } = defaultTextStyle;
 
     private bool IsLastRow => table.Rows.Last() == this;
 
@@ -24,20 +24,25 @@ public class TableRow(TableLayoutBuilder table, TextStyle defaultTextStyle)
         return this;
     }
 
+    /// <summary>
+    /// A table row will only return a single size result despite being able to be broken down into smaller pieces. A
+    /// single row is considered the smallest drawable component for a table and the entire row must be rendered on the
+    /// same page.
+    /// </summary>
     public SKSize Measure(SKSize available)
     {
         float height = 0;
         foreach (var cell in Cells)
         {
             var width = table.GetColumnWidth(available.Width, cell.ColumnIndex);
-            var cellSize = cell.Measure(new SKSize(width, available.Height));
-            height = Math.Max(height, cellSize.Height);
+            var tallestCell = cell.Measure(new SKSize(width, available.Height));
+            height = Math.Max(height, tallestCell.Height);
         }
 
         return new SKSize(available.Width, height);
     }
 
-    public void Draw(PageLayout page, SKRect rect, Func<PageLayout> getNextPage)
+    public void Draw(MultiPageContext context, SKRect rect)
     {
         var top = rect.Top;
         var left = rect.Left;
@@ -45,13 +50,13 @@ public class TableRow(TableLayoutBuilder table, TextStyle defaultTextStyle)
         foreach (var cell in Cells)
         {
             var columnWidth = table.GetColumnWidth(rect.Width, cell.ColumnIndex);
-            cell.Draw(page, new SKRect(left, top, left + columnWidth, top + height), getNextPage);
+            cell.Draw(context, new SKRect(left, top, left + columnWidth, top + height));
             left += columnWidth;
         }
 
         if (table.ShowRowSeparators && IsLastRow == false)
         {
-            page.Canvas.DrawLine(
+            context.GetCurrentPage().Canvas.DrawLine(
                 new SKPoint(rect.Left, rect.Bottom),
                 new SKPoint(rect.Right, rect.Bottom),
                 new SKPaint

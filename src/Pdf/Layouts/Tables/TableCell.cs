@@ -4,7 +4,7 @@ using Elements;
 using Styles.Text;
 
 /// <summary>
-/// Renders a table cell. Currently only supports text via wrapping <see cref="TextBlock"/>.
+/// Renders a table cell. Currently only supports text via wrapping <see cref="Text"/>.
 /// </summary>
 public class TableCell : ElementBase
 {

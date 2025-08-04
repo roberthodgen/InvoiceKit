@@ -15,13 +15,11 @@ public class VStack : LayoutBase, IDrawable
 
     public override SKSize Measure(SKSize available)
     {
-        var childrenSizes = Children.Select(child => child.Measure(available)).ToList();
-        var maxWidth = childrenSizes.Max(child => child.Width);
-        var height = childrenSizes.Sum(child => child.Height);
-        return new SKSize(maxWidth, height);
+        var sizes = Children.Select(child => child.Measure(available)).ToList();
+        return new SKSize(available.Width, sizes.Sum(size => size.Height));
     }
 
-    public override void Draw(PageLayout page, SKRect rect, Func<PageLayout> getNextPage)
+    public override void Draw(MultiPageContext context, SKRect rect)
     {
         if (Children.Count == 0)
         {
@@ -31,10 +29,10 @@ public class VStack : LayoutBase, IDrawable
         var top = rect.Top;
         foreach (var child in Children)
         {
-            var childSize = child.Measure(rect.Size);
-            var childRect = new SKRect(rect.Left, top, rect.Right, top + childSize.Height);
-            child.Draw(page, childRect, getNextPage);
-            top += childSize.Height;
+            var size = child.Measure(rect.Size);
+            var childRect = new SKRect(rect.Left, top, rect.Right, top + size.Height);
+            child.Draw(context, childRect);
+            top += size.Height;
         }
     }
 }

@@ -14,7 +14,7 @@ public class TextBuilder
 
     public IDrawable WithText(string text)
     {
-        return new TextBlock(Style, text);
+        return new Text(Style, text);
     }
 
     public TextBuilder ParagraphSpacing(float? before = null, float? after = null)

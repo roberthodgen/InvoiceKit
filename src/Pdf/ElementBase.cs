@@ -2,7 +2,6 @@ namespace InvoiceKit.Pdf;
 
 using Elements;
 using Elements.Images;
-using Layouts;
 using Layouts.Stacks;
 using Layouts.Tables;
 using SkiaSharp;
@@ -55,9 +54,9 @@ public abstract class ElementBase : IElement, IDrawable
         return _drawable?.Measure(available) ?? SKSize.Empty;
     }
 
-    public void Draw(PageLayout page, SKRect rect, Func<PageLayout> getNextPage)
+    public void Draw(MultiPageContext context, SKRect rect)
     {
-        _drawable?.Draw(page, rect, getNextPage);
+        _drawable?.Draw(context, rect);
     }
 
     public void Dispose()

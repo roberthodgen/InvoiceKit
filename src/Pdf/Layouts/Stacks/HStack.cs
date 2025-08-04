@@ -13,15 +13,25 @@ public class HStack : LayoutBase, IDrawable
     {
     }
 
+    /// <summary>
+    /// Returns two sizes: one for each child.
+    /// </summary>
     public override SKSize Measure(SKSize available)
     {
         var columnWidth = available.Width / Children.Count;
-        var columnSize = new SKSize(columnWidth, 0);
-        var maxHeight = Children.Max(child => child.Measure(columnSize).Height);
-        return new SKSize(available.Width, maxHeight);
+        var columnSize = new SKSize(columnWidth, available.Height);
+        var sizes = Children.Select(child => child.Measure(columnSize)).ToList();
+        var width = sizes.Sum(size => size.Width);
+        var height = sizes.Sum(size => size.Height);
+        return new SKSize(width, height);
     }
 
-    public override void Draw(PageLayout page, SKRect rect, Func<PageLayout> getNextPage)
+    // TODO: we should have a two stage drawing for these type of side-by-side elements where we:
+    // 1. Draw each into the current Multi-Page Context with a beginning layout (this should push a layout onto a stack)
+    // 2. Commit or finish that layout (pop the layout off the stack).
+    // Each time Context is called, we use the current starting page for the given layout stack. Sub-renders would begin
+    // with a new current page context. Tracking that at the MultiPageContext object will be key
+    public override void Draw(MultiPageContext context, SKRect rect)
     {
         var columnWidth = rect.Width / Children.Count;
         foreach (var (column, index) in Children.Select((column, index) => (column, index)))
@@ -33,7 +43,7 @@ public class HStack : LayoutBase, IDrawable
                 rect.Bottom
             );
 
-            column.Draw(page, colRect, getNextPage);
+            column.Draw(context, colRect);
         }
     }
 }

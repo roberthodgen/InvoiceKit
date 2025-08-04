@@ -48,13 +48,13 @@ public class TableLayoutBuilder(TextStyle defaultTextStyle) : IDrawable
         return new SKSize(width, height);
     }
 
-    public void Draw(PageLayout page, SKRect rect, Func<PageLayout> getNextPage)
+    public void Draw(MultiPageContext context, SKRect rect)
     {
         var top = rect.Top;
         foreach (var row in _headers)
         {
             var rowHeight = row.Measure(rect.Size).Height;
-            row.Draw(page, new SKRect(rect.Left, top, rect.Left + rect.Width, top + rowHeight), getNextPage);
+            row.Draw(context, new SKRect(rect.Left, top, rect.Left + rect.Width, top + rowHeight));
             top += rowHeight;
         }
 
@@ -62,7 +62,7 @@ public class TableLayoutBuilder(TextStyle defaultTextStyle) : IDrawable
         {
             // TODO detect when page changes and re-draw header row(s)
             var rowHeight = row.Measure(rect.Size).Height;
-            row.Draw(page, new SKRect(rect.Left, top, rect.Left + rect.Width, top + rowHeight), getNextPage);
+            row.Draw(context, new SKRect(rect.Left, top, rect.Left + rect.Width, top + rowHeight));
             top += rowHeight;
         }
     }

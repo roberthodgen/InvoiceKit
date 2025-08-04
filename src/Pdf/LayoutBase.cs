@@ -2,7 +2,6 @@ namespace InvoiceKit.Pdf;
 
 using Elements;
 using Elements.Images;
-using Layouts;
 using Layouts.Stacks;
 using Layouts.Tables;
 using SkiaSharp;
@@ -21,7 +20,7 @@ public abstract class LayoutBase : ILayout
 
     public abstract SKSize Measure(SKSize available);
 
-    public abstract void Draw(PageLayout page, SKRect rect, Func<PageLayout> getNextPage);
+    public abstract void Draw(MultiPageContext page, SKRect rect);
 
     public ILayout AddText(Func<TextBuilder, IDrawable> builder)
     {

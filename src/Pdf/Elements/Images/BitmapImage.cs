@@ -1,6 +1,5 @@
 namespace InvoiceKit.Pdf.Elements.Images;
 
-using Layouts;
 using SkiaSharp;
 
 internal class BitmapImage : IDrawable
@@ -19,9 +18,9 @@ internal class BitmapImage : IDrawable
         return new SKSize(_bitmap.Width, _bitmap.Height);
     }
 
-    public void Draw(PageLayout page, SKRect rect, Func<PageLayout> getNextPage)
+    public void Draw(MultiPageContext context, SKRect rect)
     {
-        page.Canvas.DrawBitmap(_bitmap, rect.Location);
+        context.GetCurrentPage().Canvas.DrawBitmap(_bitmap, rect.Location);
     }
 
     public void Dispose()

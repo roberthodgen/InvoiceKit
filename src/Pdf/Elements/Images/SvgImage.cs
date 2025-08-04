@@ -1,6 +1,5 @@
 namespace InvoiceKit.Pdf.Elements.Images;
 
-using Layouts;
 using SkiaSharp;
 using Svg.Skia;
 
@@ -24,9 +23,9 @@ internal class SvgImage : IDrawable
         return new SKSize(_svg.Drawable.Bounds.Size.Width, _svg.Drawable.Bounds.Size.Height);
     }
 
-    public void Draw(PageLayout page, SKRect rect, Func<PageLayout> getNextPage)
+    public void Draw(MultiPageContext context, SKRect rect)
     {
-        page.Canvas.DrawPicture(_svg.Picture, rect.Location);
+        context.GetCurrentPage().Canvas.DrawPicture(_svg.Picture, rect.Location);
     }
 
     public void Dispose()

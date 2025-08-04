@@ -1,6 +1,5 @@
 namespace InvoiceKit.Pdf.Elements;
 
-using Layouts;
 using SkiaSharp;
 
 /// <summary>
@@ -19,11 +18,11 @@ public sealed class SpacingBlock : IDrawable
         return new SKSize(available.Width, Height);
     }
 
-    public void Draw(PageLayout page, SKRect rect, Func<PageLayout> getNextPage)
+    public void Draw(MultiPageContext context, SKRect rect)
     {
-        if (page.Debug)
+        if (context.Debug)
         {
-            page.Canvas.DrawRect(
+            context.GetCurrentPage().Canvas.DrawRect(
                 rect,
                 new SKPaint
                 {

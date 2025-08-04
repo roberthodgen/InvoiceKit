@@ -1,18 +1,18 @@
 namespace InvoiceKit.Pdf.Elements;
 
-using Layouts;
 using SkiaSharp;
 
 public sealed class PageBreak : IDrawable
 {
     public SKSize Measure(SKSize available)
     {
-        return new SKSize(available.Width, available.Height + 1); // just larger
+        return new SKSize(available.Width, 0);
     }
 
-    public void Draw(PageLayout page, SKRect rect, Func<PageLayout> getNextPage)
+    public void Draw(MultiPageContext context, SKRect rect)
     {
         // nothing to draw
+        context.PageBreak();
     }
 
     public void Dispose()

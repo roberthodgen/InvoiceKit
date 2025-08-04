@@ -16,8 +16,8 @@ public class PdfDocument : IDisposable
     private readonly SKSize _pageSize;
     private readonly MemoryStream _stream = new ();
     private readonly SKDocument _document;
-    private readonly List<IDrawable> _children = [];
 
+    private IDrawable? _drawable;
     private bool _debug = false;
 
     public static PdfDocument UsLetter => new (8.5f * PointsPerInch, 11f * PointsPerInch);
@@ -28,15 +28,6 @@ public class PdfDocument : IDisposable
     {
         _pageSize = new SKSize(width, height);
         _document = SKDocument.CreatePdf(_stream);
-    }
-
-    /// <summary>
-    /// Adds a page break.
-    /// </summary>
-    public PdfDocument AddPageBreak()
-    {
-        _children.Add(new PageBreak());
-        return this;
     }
 
     public PdfDocument DefaultFont(string fontPath, float fontSize = TextStyle.DefaultFontSize, SKColor? color = null)
@@ -53,25 +44,8 @@ public class PdfDocument : IDisposable
 
     public byte[] Build()
     {
-        var page = BeginNewPage(); // TODO handle dispose/using
-
-        foreach (var child in _children)
-        {
-            var size = child.Measure(page.Available.Size);
-            if (!page.TryAllocateRect(size, out var rect))
-            {
-                // TODO temporarily disabled pagination while switching to the VStack child layout
-                // EndPage();
-                // page = BeginNewPage();
-                if (child is not PageBreak)
-                {
-                    page.ForceAllocateRect(size, out rect);
-                }
-            }
-
-            child.Draw(page, rect, BeginNewPage); // make this more intelligent to track pages and current page
-        }
-
+        using var context = new MultiPageContext(BeginNewPage, _debug);
+        _drawable?.Draw(context, context.GetCurrentPage().Available);
         EndPage();
         _document.Close();
         return _stream.ToArray();
@@ -107,7 +81,7 @@ public class PdfDocument : IDisposable
     {
         var hStack = new HStack(DefaultTextStyle);
         action(hStack);
-        _children.Add(hStack);
+        _drawable = hStack;
         return this;
     }
 
@@ -115,7 +89,7 @@ public class PdfDocument : IDisposable
     {
         var vStack = new VStack(DefaultTextStyle);
         action(vStack);
-        _children.Add(vStack);
+        _drawable = vStack;
         return this;
     }
 
@@ -123,21 +97,19 @@ public class PdfDocument : IDisposable
     {
         var table = new TableLayoutBuilder(DefaultTextStyle);
         action(table);
-        _children.Add(table);
+        _drawable = table;
         return this;
     }
 
     public PdfDocument WithText(Func<TextBuilder, IDrawable> builder)
     {
-        var textBlock = builder(new TextBuilder(DefaultTextStyle));
-        _children.Add(textBlock);
+        _drawable = builder(new TextBuilder(DefaultTextStyle));
         return this;
     }
 
     public PdfDocument WithImage(Func<ImageBuilder, IDrawable> builder)
     {
-        var image = builder(new ImageBuilder());
-        _children.Add(image);
+        _drawable = builder(new ImageBuilder());
         return this;
     }
 }
