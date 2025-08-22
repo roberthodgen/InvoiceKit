@@ -24,7 +24,7 @@ public class PageLayout : IDisposable
 
     public SKRect Available => new (_cursor.X, _cursor.Y, Drawable.Width, Drawable.Height);
 
-    public bool Debug { get; }
+    public bool IsFullyDrawn { get; private set; }
 
     /// <summary>
     /// The next available drawing position on the page.
@@ -36,7 +36,6 @@ public class PageLayout : IDisposable
         Canvas = canvas;
         Size = size;
         Drawable = drawable;
-        Debug = debug;
         _cursor = Drawable.Location;
 
         if (debug)
@@ -64,7 +63,7 @@ public class PageLayout : IDisposable
         return true;
     }
 
-    public void ForceAllocateRect(SKSize size, out SKRect rect)
+    private void ForceAllocateRect(SKSize size, out SKRect rect)
     {
         rect = SKRect.Create(Available.Location, size);
         _cursor.Offset(0, size.Height);

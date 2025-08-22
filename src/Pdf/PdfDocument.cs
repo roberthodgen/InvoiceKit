@@ -1,43 +1,33 @@
 namespace InvoiceKit.Pdf;
 
-using Layouts.Text;
+using Elements;
+using Elements.Images;
 using Layouts;
-using Layouts.Images;
 using Layouts.Stacks;
 using Layouts.Tables;
 using SkiaSharp;
 using Styles.Text;
-using Svg.Skia;
 
 public class PdfDocument : IDisposable
 {
     private const float PointsPerInch = 72f;
     private const float Margin = 50f;
 
-    public static PdfDocument UsLetter => new (8.5f * PointsPerInch, 11f * PointsPerInch);
-
     private readonly SKSize _pageSize;
     private readonly MemoryStream _stream = new ();
     private readonly SKDocument _document;
 
-    private List<IDrawable> _blocks = [];
-    private bool _debug = false;
+    private IDrawable? _drawable;
+    private bool _debug;
 
-    public TextStyle DefaultTextStyle { get; private set; } = new ();
+    public static PdfDocument UsLetter => new (8.5f * PointsPerInch, 11f * PointsPerInch);
 
-    public PdfDocument(float width, float height)
+    private TextStyle DefaultTextStyle { get; set; } = new ();
+
+    private PdfDocument(float width, float height)
     {
         _pageSize = new SKSize(width, height);
         _document = SKDocument.CreatePdf(_stream);
-    }
-
-    /// <summary>
-    /// Adds a page break.
-    /// </summary>
-    public PdfDocument AddPageBreak()
-    {
-        _blocks.Add(new PageBreak());
-        return this;
     }
 
     public PdfDocument DefaultFont(string fontPath, float fontSize = TextStyle.DefaultFontSize, SKColor? color = null)
@@ -52,99 +42,10 @@ public class PdfDocument : IDisposable
         return this;
     }
 
-    /// <summary>
-    /// Adds a new block.
-    /// </summary>
-    public PdfDocument AddBlock(Func<PdfDocument, IDrawable> blockFactory)
-    {
-        var block = blockFactory(this);
-        _blocks.Add(block);
-        return this;
-    }
-
-    /// <summary>
-    /// Adds a new text block.
-    /// </summary>
-    public PdfDocument AddTextBlock(Action<TextBlock> configureTextBlock)
-    {
-        var block = new TextBlock(DefaultTextStyle);
-        configureTextBlock(block);
-        _blocks.Add(block);
-        return this;
-    }
-
-    /// <summary>
-    /// Adds a new image block.
-    /// </summary>
-    public PdfDocument AddImageBlock(string imagePath)
-    {
-        var block = ImageBlock.CreateSvg(imagePath);
-        _blocks.Add(block);
-        return this;
-    }
-
-    /// <summary>
-    /// Adds a new horizontal rule.
-    /// </summary>
-    public PdfDocument AddHorizontalRule()
-    {
-        var block = new HorizontalRule();
-        _blocks.Add(block);
-        return this;
-    }
-
-    /// <summary>
-    /// Adds a stack of columns.
-    /// </summary>
-    public PdfDocument AddColumnStack(Action<HStack> configureColumnStack)
-    {
-        var block = new HStack();
-        configureColumnStack(block);
-        _blocks.Add(block);
-        return this;
-    }
-
-    /// <summary>
-    /// Adds spacing between blocks.
-    /// </summary>
-    /// <param name="height">Float for the amount of spacing. Default of 5f.</param>
-    public PdfDocument AddSpacingBlock(float height = 5f)
-    {
-        var block = new SpacingBlock(height);
-        _blocks.Add(block);
-        return this;
-    }
-    /// <summary>
-    /// Adds a new table block.
-    /// </summary>
-    public PdfDocument AddTableBlock(Action<TableLayoutBuilder> configureTableBlock)
-    {
-        var block = new TableLayoutBuilder(DefaultTextStyle);
-        configureTableBlock(block);
-        _blocks.Add(block);
-        return this;
-    }
-
     public byte[] Build()
     {
-        var page = BeginNewPage(); // TODO handle dispose/using
-
-        foreach (var block in _blocks)
-        {
-            var size = block.Measure(page.Available.Size);
-            if (!page.TryAllocateRect(size, out var rect))
-            {
-                EndPage();
-                page = BeginNewPage();
-                if (block is not PageBreak)
-                {
-                    page.ForceAllocateRect(size, out rect);
-                }
-            }
-
-            block.Draw(page, rect);
-        }
-
+        using var context = new MultiPageContext(BeginNewPage, _debug);
+        _drawable?.Draw(context, context.GetCurrentPage().Available);
         EndPage();
         _document.Close();
         return _stream.ToArray();
@@ -158,8 +59,8 @@ public class PdfDocument : IDisposable
 
     public void Dispose()
     {
-        _stream.Dispose();
         _document.Dispose();
+        _stream.Dispose();
     }
 
     private PageLayout BeginNewPage()
@@ -174,5 +75,41 @@ public class PdfDocument : IDisposable
     private void EndPage()
     {
         _document.EndPage();
+    }
+
+    public PdfDocument WithHStack(Action<HStack> action)
+    {
+        var hStack = new HStack(DefaultTextStyle);
+        action(hStack);
+        _drawable = hStack;
+        return this;
+    }
+
+    public PdfDocument WithVStack(Action<VStack> action)
+    {
+        var vStack = new VStack(DefaultTextStyle);
+        action(vStack);
+        _drawable = vStack;
+        return this;
+    }
+
+    public PdfDocument WithTable(Action<TableLayoutBuilder> action)
+    {
+        var table = new TableLayoutBuilder(DefaultTextStyle);
+        action(table);
+        _drawable = table;
+        return this;
+    }
+
+    public PdfDocument WithText(Func<TextBuilder, IDrawable> builder)
+    {
+        _drawable = builder(new TextBuilder(DefaultTextStyle));
+        return this;
+    }
+
+    public PdfDocument WithImage(Func<ImageBuilder, IDrawable> builder)
+    {
+        _drawable = builder(new ImageBuilder());
+        return this;
     }
 }

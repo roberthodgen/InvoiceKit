@@ -1,26 +1,45 @@
 namespace InvoiceKit.Pdf.Layouts.Stacks;
 
 using SkiaSharp;
+using Styles.Text;
 
 /// <summary>
 /// Renders content horizontally. Each column is rendered side-by-side.
 /// </summary>
-public class HStack : IDrawable
+public class HStack : LayoutBase, IDrawable
 {
-    private readonly List<IDrawable> _columns = [];
-
-    public SKSize Measure(SKSize available)
+    internal HStack(TextStyle defaultTextStyle)
+        : base(defaultTextStyle)
     {
-        var columnWidth = available.Width / _columns.Count;
-        var columnSize = new SKSize(columnWidth, 0);
-        var maxHeight = _columns.Max(child => child.Measure(columnSize).Height);
-        return new SKSize(available.Width, maxHeight);
     }
 
-    public void Draw(PageLayout page, SKRect rect)
+    /// <summary>
+    /// Returns two sizes: one for each child.
+    /// </summary>
+    public override SKSize Measure(SKSize available)
     {
-        var columnWidth = rect.Width / _columns.Count;
-        foreach (var (column, index) in _columns.Select((column, index) => (column, index)))
+        var columnWidth = available.Width / Children.Count;
+        var columnSize = new SKSize(columnWidth, available.Height);
+        var sizes = Children.Select(child => child.Measure(columnSize)).ToList();
+        var width = sizes.Sum(size => size.Width);
+        var height = sizes.Sum(size => size.Height);
+        return new SKSize(width, height);
+    }
+
+    // TODO: we should have a two stage drawing for these type of side-by-side elements where we:
+    // 1. Draw each into the current Multi-Page Context with a beginning layout (this should push a layout onto a stack)
+    // 2. Commit or finish that layout (pop the layout off the stack).
+    // Each time Context is called, we use the current starting page for the given layout stack. Sub-renders would begin
+    // with a new current page context. Tracking that at the MultiPageContext object will be key
+    public override void Draw(MultiPageContext context, SKRect rect)
+    {
+        if (Children.Count == 0)
+        {
+            return;
+        }
+
+        var columnWidth = rect.Width / Children.Count;
+        foreach (var (column, index) in Children.Select((column, index) => (column, index)))
         {
             var colRect = new SKRect(
                 rect.Left + (index * columnWidth),
@@ -29,16 +48,7 @@ public class HStack : IDrawable
                 rect.Bottom
             );
 
-            column.Draw(page, colRect);
+            column.Draw(context, colRect);
         }
-    }
-
-    /// <summary>
-    /// Add another horizontal block to the current stack.
-    /// </summary>
-    public HStack AddColumn(IDrawable column)
-    {
-        _columns.Add(column);
-        return this;
     }
 }

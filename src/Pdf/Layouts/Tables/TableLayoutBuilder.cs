@@ -16,27 +16,19 @@ public class TableLayoutBuilder(TextStyle defaultTextStyle) : IDrawable
     /// <summary>
     /// Specifies how column sizes will be computed.
     /// </summary>
-    public ColumnSizing ColumnSizing { get; private set; } = ColumnSizing.Equal;
+    private ColumnSizing ColumnSizing { get; set; } = ColumnSizing.Equal;
 
-    public List<ColumnWidthPercent> ColumnWidthPercentages { get; private set; } = [];
+    private List<ColumnWidthPercent> ColumnWidthPercentages { get; set; } = [];
 
-    public TextStyle TableHeaderStyle { get; } = defaultTextStyle with { FontPath = "Open Sans/Bold", };
+    private TextStyle TableHeaderStyle { get; } = defaultTextStyle with { FontPath = "Open Sans/Bold", };
 
-    public bool ShowRowSeparators { get; set; } = false;
+    public bool ShowRowSeparators { get; private set; } = false;
 
     public TableLayoutBuilder AddHeader(Action<TableRow> config)
     {
         var row = new TableRow(this, TableHeaderStyle);
         config(row);
         _headers.Add(row);
-        return this;
-    }
-
-    public TableLayoutBuilder ConfigureText(Action<TextOptionsBuilder> options)
-    {
-        var builder = new TextOptionsBuilder(_defaultTextStyle);
-        options(builder);
-        _defaultTextStyle = builder.Build();
         return this;
     }
 
@@ -56,13 +48,13 @@ public class TableLayoutBuilder(TextStyle defaultTextStyle) : IDrawable
         return new SKSize(width, height);
     }
 
-    public void Draw(PageLayout page, SKRect rect)
+    public void Draw(MultiPageContext context, SKRect rect)
     {
         var top = rect.Top;
         foreach (var row in _headers)
         {
             var rowHeight = row.Measure(rect.Size).Height;
-            row.Draw(page, new SKRect(rect.Left, top, rect.Left + rect.Width, top + rowHeight));
+            row.Draw(context, new SKRect(rect.Left, top, rect.Left + rect.Width, top + rowHeight));
             top += rowHeight;
         }
 
@@ -70,7 +62,7 @@ public class TableLayoutBuilder(TextStyle defaultTextStyle) : IDrawable
         {
             // TODO detect when page changes and re-draw header row(s)
             var rowHeight = row.Measure(rect.Size).Height;
-            row.Draw(page, new SKRect(rect.Left, top, rect.Left + rect.Width, top + rowHeight));
+            row.Draw(context, new SKRect(rect.Left, top, rect.Left + rect.Width, top + rowHeight));
             top += rowHeight;
         }
     }
@@ -119,4 +111,8 @@ public class TableLayoutBuilder(TextStyle defaultTextStyle) : IDrawable
             ColumnSizing.Auto => throw new NotImplementedException("TODO"),
             _ => throw new NotImplementedException(),
         };
+
+    public void Dispose()
+    {
+    }
 }
