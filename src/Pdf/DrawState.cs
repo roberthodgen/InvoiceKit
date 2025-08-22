@@ -4,9 +4,9 @@ using SkiaSharp;
 
 public class DrawState
 {
-    public int CurrentPage { get; private set; }
+    private int CurrentPage { get; set; }
 
-    public SKPoint Cursor { get; private set; }
+    private SKPoint Cursor { get; set; }
 
     public DrawState()
     {

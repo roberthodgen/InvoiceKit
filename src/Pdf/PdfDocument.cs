@@ -18,11 +18,11 @@ public class PdfDocument : IDisposable
     private readonly SKDocument _document;
 
     private IDrawable? _drawable;
-    private bool _debug = false;
+    private bool _debug;
 
     public static PdfDocument UsLetter => new (8.5f * PointsPerInch, 11f * PointsPerInch);
 
-    public TextStyle DefaultTextStyle { get; private set; } = new ();
+    private TextStyle DefaultTextStyle { get; set; } = new ();
 
     private PdfDocument(float width, float height)
     {
@@ -59,8 +59,8 @@ public class PdfDocument : IDisposable
 
     public void Dispose()
     {
-        _stream.Dispose();
         _document.Dispose();
+        _stream.Dispose();
     }
 
     private PageLayout BeginNewPage()

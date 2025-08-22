@@ -7,7 +7,7 @@ using SkiaSharp;
 /// </summary>
 public sealed class SpacingBlock : IDrawable
 {
-    public float Height { get; }
+    private float Height { get; }
 
     internal SpacingBlock(float height)
     {

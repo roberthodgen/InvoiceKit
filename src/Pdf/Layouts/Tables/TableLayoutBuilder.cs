@@ -16,13 +16,13 @@ public class TableLayoutBuilder(TextStyle defaultTextStyle) : IDrawable
     /// <summary>
     /// Specifies how column sizes will be computed.
     /// </summary>
-    public ColumnSizing ColumnSizing { get; private set; } = ColumnSizing.Equal;
+    private ColumnSizing ColumnSizing { get; set; } = ColumnSizing.Equal;
 
-    public List<ColumnWidthPercent> ColumnWidthPercentages { get; private set; } = [];
+    private List<ColumnWidthPercent> ColumnWidthPercentages { get; set; } = [];
 
-    public TextStyle TableHeaderStyle { get; } = defaultTextStyle with { FontPath = "Open Sans/Bold", };
+    private TextStyle TableHeaderStyle { get; } = defaultTextStyle with { FontPath = "Open Sans/Bold", };
 
-    public bool ShowRowSeparators { get; set; } = false;
+    public bool ShowRowSeparators { get; private set; } = false;
 
     public TableLayoutBuilder AddHeader(Action<TableRow> config)
     {

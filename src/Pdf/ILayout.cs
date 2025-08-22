@@ -49,4 +49,9 @@ public interface ILayout : IDrawable
     /// Adds a new table block.
     /// </summary>
     ILayout AddTableBlock(Action<TableLayoutBuilder> configureTableBlock);
+
+    /// <summary>
+    /// Fills the rest of the page with blank space and starts a new page.
+    /// </summary>
+    ILayout AddPageBreak();
 }

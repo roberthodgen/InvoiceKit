@@ -11,7 +11,7 @@ public abstract class ElementBase : IElement, IDrawable
 {
     private readonly TextStyle _defaultTextStyle;
 
-    protected IDrawable? _drawable;
+    private IDrawable? _drawable;
 
     protected ElementBase(TextStyle defaultTextStyle)
     {

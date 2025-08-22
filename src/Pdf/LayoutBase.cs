@@ -74,6 +74,13 @@ public abstract class LayoutBase : ILayout
         return this;
     }
 
+    public ILayout AddPageBreak()
+    {
+        var child = new PageBreak();
+        Children.Add(child);
+        return this;
+    }
+
     public void Dispose()
     {
         foreach (var child in Children)

@@ -13,7 +13,7 @@ public sealed class TableColumn
     /// <remarks>
     /// Starts at <c>0</c>.
     /// </remarks>
-    public int Index { get; }
+    private int Index { get; }
 
     private readonly List<TableCell> _cells = [];
 

@@ -33,6 +33,11 @@ public class HStack : LayoutBase, IDrawable
     // with a new current page context. Tracking that at the MultiPageContext object will be key
     public override void Draw(MultiPageContext context, SKRect rect)
     {
+        if (Children.Count == 0)
+        {
+            return;
+        }
+
         var columnWidth = rect.Width / Children.Count;
         foreach (var (column, index) in Children.Select((column, index) => (column, index)))
         {

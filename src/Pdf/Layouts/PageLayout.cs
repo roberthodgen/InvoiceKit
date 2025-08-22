@@ -63,7 +63,7 @@ public class PageLayout : IDisposable
         return true;
     }
 
-    public void ForceAllocateRect(SKSize size, out SKRect rect)
+    private void ForceAllocateRect(SKSize size, out SKRect rect)
     {
         rect = SKRect.Create(Available.Location, size);
         _cursor.Offset(0, size.Height);

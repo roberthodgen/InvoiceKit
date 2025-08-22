@@ -1,19 +1,18 @@
 namespace InvoiceKit.Pdf;
 
 using Layouts;
-using ShimSkiaSharp;
 
 public class MultiPageContext : IDisposable
 {
     private readonly Func<PageLayout> _getNextPage;
 
-    private int _currentPageIndex = 0;
+    private int _currentPageIndex;
 
     private readonly Stack<DrawState> _stateStack = new();
 
-    public DrawState Current => _stateStack.Peek();
+    private DrawState Current => _stateStack.Peek();
 
-    public List<PageLayout> Pages { get; } = [];
+    private List<PageLayout> Pages { get; } = [];
 
     public bool Debug { get; }
 
@@ -51,7 +50,7 @@ public class MultiPageContext : IDisposable
     /// Does not advance the current page marker as other blocks (think columns or Z stacks) may still need to render
     /// into the current page.
     /// </remarks>
-    public PageLayout NextPage()
+    private PageLayout NextPage()
     {
         if (_currentPageIndex < Pages.Count - 1)
         {
@@ -70,7 +69,7 @@ public class MultiPageContext : IDisposable
     public DrawState EndBlock()
     {
         var finalized = _stateStack.Pop();
-        // Optionally merge results back to parent
+        // Optionally merge results back to the parent
         if (_stateStack.Count > 0)
         {
             _stateStack.Peek().AdjustAfterChild(finalized);
@@ -92,5 +91,4 @@ public class MultiPageContext : IDisposable
         }
     }
 
-    record LayoutFragment(IDrawable Drawable, int PageNumber, SKRect Rect);
 }

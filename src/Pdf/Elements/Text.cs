@@ -13,9 +13,9 @@ using Styles.Text;
 /// </remarks>
 public sealed class Text : IDrawable
 {
-    public TextStyle Style { get; }
+    private TextStyle Style { get; }
 
-    private readonly List<string> _lines = new();
+    private readonly List<string> _lines = [];
 
     internal Text(TextStyle style, string text)
     {

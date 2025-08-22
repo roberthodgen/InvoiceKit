@@ -5,7 +5,7 @@ using Styles.Text;
 
 public class TextBuilder
 {
-    public TextStyle Style { get; private set; }
+    private TextStyle Style { get; set; }
 
     internal TextBuilder(TextStyle style)
     {
