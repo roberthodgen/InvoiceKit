@@ -17,9 +17,11 @@
 
 ```cs
 var invoice = new InvoiceBuilder()
-    .WithCustomer("Acme Inc.")
-    .AddItem("Widget", 2, 29.99m)
-    .WithDueDate(DateTime.UtcNow.AddDays(30))
+    .WithCustomer("ACME,  Inc.")
+    .AddItem("Widget", item => item
+        .WithQuantity(2)
+        .WithPricePerUnit(29.99m))
+    .WithStandardTerms(days: 30)
     .Build();
 
 invoice.SaveAsPdf("invoice.pdf");
