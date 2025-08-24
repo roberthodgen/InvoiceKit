@@ -28,7 +28,7 @@ invoice.SaveAsPdf("invoice.pdf");
 ## 🚀 Roadmap to v1
 
 - [x] Build PDF rendering engine
-  - [ ] Enhance PDF rendering blocks with fluent-API
+  - [x] Enhance PDF rendering blocks with fluent-API
   - [ ] Enhance multi-page support
 - [x] Define core domain models (Invoice, Line Items, Customer) w/ unit tests
 - [ ] Create SDK fluent API
