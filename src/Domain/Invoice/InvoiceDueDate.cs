@@ -7,7 +7,10 @@ using Shared.Kernel;
 /// </summary>
 public sealed record InvoiceDueDate : Timestamp
 {
-    private InvoiceDueDate(DateTime value) : base(value) { }
+    private InvoiceDueDate(DateTime value)
+        : base(value)
+    {
+    }
 
     public static InvoiceDueDate CreateNew(IInvoiceTerms terms)
     {
