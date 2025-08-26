@@ -1,49 +1,47 @@
 namespace InvoiceKit.Pdf;
 
 using Elements;
+using Elements.Text;
 using Elements.Images;
 using Layouts.Stacks;
 using Layouts.Tables;
 using SkiaSharp;
 using Styles.Text;
+using Layouts;
 
-public abstract class LayoutBase : ILayout
+public abstract class LayoutBuilderBase : ILayoutBuilder
 {
     protected List<IDrawable> Children { get; } = [];
 
     public TextStyle DefaultTextStyle { get; protected set; }
 
-    protected LayoutBase(TextStyle defaultTextStyle)
+    protected LayoutBuilderBase(TextStyle defaultTextStyle)
     {
         DefaultTextStyle = defaultTextStyle;
     }
 
-    public abstract SKSize Measure(SKSize available);
-
-    public abstract void Draw(MultiPageContext page, SKRect rect);
-
-    public ILayout AddText(Func<TextBuilder, IDrawable> builder)
+    public ILayoutBuilder AddText(Func<TextViewBuilder, IDrawable> builder)
     {
-        var child = builder(new TextBuilder(DefaultTextStyle));
+        var child = builder(new TextViewBuilder(DefaultTextStyle));
         Children.Add(child);
         return this;
     }
 
-    public ILayout AddImage(Func<ImageBuilder, IDrawable> builder)
+    public ILayoutBuilder AddImage(Func<ImageBuilder, IDrawable> builder)
     {
         var child = builder(new ImageBuilder());
         Children.Add(child);
         return this;
     }
 
-    public ILayout AddHorizontalRule()
+    public ILayoutBuilder AddHorizontalRule()
     {
-        var child = new HorizontalRule();
+        var child = new HorizontalRuleDrawable();
         Children.Add(child);
         return this;
     }
 
-    public ILayout AddHStack(Action<HStack> configure)
+    public ILayoutBuilder AddHStack(Action<HStack> configure)
     {
         var child = new HStack(DefaultTextStyle);
         configure(child);
@@ -51,7 +49,7 @@ public abstract class LayoutBase : ILayout
         return this;
     }
 
-    public ILayout AddVStack(Action<VStack> configure)
+    public ILayoutBuilder AddVStack(Action<VStack> configure)
     {
         var child = new VStack(DefaultTextStyle);
         configure(child);
@@ -59,14 +57,14 @@ public abstract class LayoutBase : ILayout
         return this;
     }
 
-    public ILayout AddSpacingBlock(float height = 5)
+    public ILayoutBuilder AddSpacingBlock(float height = 5)
     {
         var child = new SpacingBlock(height);
         Children.Add(child);
         return this;
     }
 
-    public ILayout AddTableBlock(Action<TableLayoutBuilder> configure)
+    public ILayoutBuilder AddTableBlock(Action<TableLayoutBuilder> configure)
     {
         var child = new TableLayoutBuilder(DefaultTextStyle);
         configure(child);
@@ -74,7 +72,7 @@ public abstract class LayoutBase : ILayout
         return this;
     }
 
-    public ILayout AddPageBreak()
+    public ILayoutBuilder AddPageBreak()
     {
         var child = new PageBreak();
         Children.Add(child);

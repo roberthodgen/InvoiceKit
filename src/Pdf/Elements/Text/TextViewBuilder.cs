@@ -1,23 +1,23 @@
-namespace InvoiceKit.Pdf.Elements;
+namespace InvoiceKit.Pdf.Elements.Text;
 
 using SkiaSharp;
 using Styles.Text;
 
-public class TextBuilder
+public sealed class TextViewBuilder : IViewBuilder
 {
     private TextStyle Style { get; set; }
 
-    internal TextBuilder(TextStyle style)
+    internal TextViewBuilder(TextStyle style)
     {
         Style = style;
     }
 
-    public IDrawable WithText(string text)
+    public TextLayout WithText(string text)
     {
-        return new Text(Style, text);
+        return new TextLayout(Style, text);
     }
 
-    public TextBuilder ParagraphSpacing(float? before = null, float? after = null)
+    public TextViewBuilder ParagraphSpacing(float? before = null, float? after = null)
     {
         if (before.HasValue)
         {
@@ -32,7 +32,7 @@ public class TextBuilder
         return this;
     }
 
-    public TextBuilder LineHeight(float lineHeight)
+    public TextViewBuilder LineHeight(float lineHeight)
     {
         Style = Style with { LineHeight = lineHeight, };
         return this;
@@ -44,21 +44,26 @@ public class TextBuilder
     /// Sets the font and style to use.
     /// </summary>
     /// <param name="path">Should be specified as <c>Font Name/Style</c>, e.g.: <c>Open Sans/SemiBold</c>.</param>
-    public TextBuilder Font(string path)
+    public TextViewBuilder Font(string path)
     {
         Style = Style with { FontPath = path, };
         return this;
     }
 
-    public TextBuilder FontSize(float size)
+    public TextViewBuilder FontSize(float size)
     {
         Style = Style with { FontSize = size, };
         return this;
     }
 
-    public TextBuilder Color(SKColor color)
+    public TextViewBuilder Color(SKColor color)
     {
         Style = Style with { Color = color, };
         return this;
+    }
+
+    public ILayout ToLayout()
+    {
+        throw new NotImplementedException();
     }
 }

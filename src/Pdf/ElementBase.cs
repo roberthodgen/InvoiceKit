@@ -1,21 +1,24 @@
 namespace InvoiceKit.Pdf;
 
-using Elements;
+using Elements.Text;
 using Elements.Images;
 using Layouts.Stacks;
 using Layouts.Tables;
 using SkiaSharp;
 using Styles.Text;
 
-public abstract class ElementBase : IElement, IDrawable
+public abstract class ElementBase : IElement
 {
     private readonly TextStyle _defaultTextStyle;
 
     private IDrawable? _drawable;
 
-    protected ElementBase(TextStyle defaultTextStyle)
+    private readonly SKRect _rect;
+
+    protected ElementBase(TextStyle defaultTextStyle, SKRect rect)
     {
         _defaultTextStyle = defaultTextStyle;
+        _rect = rect;
     }
 
     public void WithHStack(Action<HStack> action)
@@ -39,28 +42,13 @@ public abstract class ElementBase : IElement, IDrawable
         _drawable = table;
     }
 
-    public void WithText(Func<TextBuilder, IDrawable> builder)
+    public void WithText(Func<TextViewBuilder, IDrawable> builder)
     {
-        _drawable = builder(new TextBuilder(_defaultTextStyle));
+        _drawable = builder(new TextViewBuilder(_defaultTextStyle));
     }
 
     public void WithImage(Func<ImageBuilder, IDrawable> builder)
     {
         _drawable = builder(new ImageBuilder());
-    }
-
-    public SKSize Measure(SKSize available)
-    {
-        return _drawable?.Measure(available) ?? SKSize.Empty;
-    }
-
-    public void Draw(MultiPageContext context, SKRect rect)
-    {
-        _drawable?.Draw(context, rect);
-    }
-
-    public void Dispose()
-    {
-        _drawable?.Dispose();
     }
 }

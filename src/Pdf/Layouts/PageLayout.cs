@@ -5,15 +5,10 @@ using SkiaSharp;
 /// <summary>
 /// Used to render a layout across a single page.
 /// </summary>
-public class PageLayout : IDisposable
+public class PageLayout : IPage, IDisposable
 {
     /// <summary>
-    /// The unmodified original page size, including margins.
-    /// </summary>
-    public SKSize Size { get; }
-
-    /// <summary>
-    /// The unmodified original available drawing area of the page (a subset of <see cref="Size"/> due to margins).
+    /// The unmodified original available drawing area of the page.
     /// </summary>
     private SKRect Drawable { get; }
 
@@ -22,8 +17,24 @@ public class PageLayout : IDisposable
     /// </summary>
     public SKCanvas Canvas { get; }
 
+    /// <summary>
+    /// The current available drawing area as a SKRect.
+    /// </summary>
     public SKRect Available => new (_cursor.X, _cursor.Y, Drawable.Width, Drawable.Height);
 
+    /// <summary>
+    /// Enumerable of drawables that fit onto the page.
+    /// </summary>
+    public IEnumerable<IDrawable> Drawables { get; } = [];
+
+    /// <summary>
+    /// The current available drawing area as a SKSize.
+    /// </summary>
+    public SKSize AvailableSize => Available.Size;
+
+    /// <summary>
+    /// Boolean used to check if the page has been fully drawn.
+    /// </summary>
     public bool IsFullyDrawn { get; private set; }
 
     /// <summary>
@@ -31,10 +42,9 @@ public class PageLayout : IDisposable
     /// </summary>
     private SKPoint _cursor;
 
-    public PageLayout(SKCanvas canvas, SKSize size, SKRect drawable, bool debug)
+    public PageLayout(SKCanvas canvas, SKRect drawable, bool debug)
     {
         Canvas = canvas;
-        Size = size;
         Drawable = drawable;
         _cursor = Drawable.Location;
 
@@ -51,12 +61,16 @@ public class PageLayout : IDisposable
         }
     }
 
+    public void SetFullyDrawn()
+    {
+        IsFullyDrawn = true;
+    }
+
     /// <summary>
     /// Used to determine if a block can be drawn on the current page.
     /// </summary>
-    public bool TryAllocateChild(IDrawable drawable)
+    public bool TryAllocateSize(SKSize size)
     {
-        var size = drawable.Measure(Available.Size);
         if (size.Height > Available.Height || size.Width > Available.Width)
         {
             return false;

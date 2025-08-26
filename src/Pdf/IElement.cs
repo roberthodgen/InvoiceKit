@@ -1,6 +1,6 @@
 namespace InvoiceKit.Pdf;
 
-using Elements;
+using Elements.Text;
 using Elements.Images;
 using Layouts.Stacks;
 using Layouts.Tables;
@@ -13,7 +13,7 @@ public interface IElement
 
     void WithTable(Action<TableLayoutBuilder> action);
 
-    void WithText(Func<TextBuilder, IDrawable> builder);
+    void WithText(Func<TextViewBuilder, IDrawable> builder);
 
     void WithImage(Func<ImageBuilder, IDrawable> builder);
 }

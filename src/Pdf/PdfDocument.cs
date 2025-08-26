@@ -17,7 +17,6 @@ public class PdfDocument : IDisposable
     private readonly MemoryStream _stream = new ();
     private readonly SKDocument _document;
 
-    private IDrawable? _drawable;
     private bool _debug;
 
     public static PdfDocument UsLetter => new (8.5f * PointsPerInch, 11f * PointsPerInch);
@@ -45,7 +44,14 @@ public class PdfDocument : IDisposable
     public byte[] Build()
     {
         using var context = new MultiPageContext(BeginNewPage, _debug);
-        _drawable?.Draw(context, context.GetCurrentPage().Available);
+        // Todo: need to pass all drawables through builder and layout, to go into the context before this call
+        foreach (var page in context.Pages)
+        {
+            foreach (var drawable in page.Drawables)
+            {
+                drawable.Draw(page);
+            }
+        }
         _document.Close();
         return _stream.ToArray();
     }
@@ -66,7 +72,6 @@ public class PdfDocument : IDisposable
     {
         return new PageLayout(
             _document.BeginPage(_pageSize.Width, _pageSize.Height),
-            _pageSize,
             SKRect.Create(Margin, Margin, _pageSize.Width - Margin, _pageSize.Height - Margin),
             _debug);
     }
@@ -93,7 +98,7 @@ public class PdfDocument : IDisposable
         return this;
     }
 
-    // Todo: should remove these from the pdf document
+    // Todo: should remove these from the pdf document, should only start with a VStack or HStack
     // PDF should only have one V stack or H stack to start
     //
     // public PdfDocument WithTable(Action<TableLayoutBuilder> action)

@@ -3,14 +3,13 @@ namespace InvoiceKit.Pdf.Layouts.Tables;
 using SkiaSharp;
 using Styles.Text;
 
-public class TableRow(TableLayoutBuilder table, TextStyle defaultTextStyle)
-    : IDrawable
+public class TableRow(TableLayoutBuilder table, TextStyle defaultTextStyle) : IDrawable
 {
     private int _columnIndex = 0;
 
-    public List<TableCell> Cells { get; } = [];
+    private List<TableCell> Cells { get; } = [];
 
-    public TextStyle Style { get; } = defaultTextStyle;
+    private TextStyle Style { get; } = defaultTextStyle;
 
     private bool IsLastRow => table.Rows.Last() == this;
 

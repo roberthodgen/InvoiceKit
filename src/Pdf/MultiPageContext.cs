@@ -8,9 +8,7 @@ public class MultiPageContext : IDisposable
 
     private int _currentPageIndex;
 
-    private PageLayout Current => Pages.Last();
-
-    private List<PageLayout> Pages { get; } = [];
+    public List<PageLayout> Pages { get; } = [];
 
     public bool Debug { get; }
 

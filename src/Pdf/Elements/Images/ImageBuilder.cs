@@ -1,5 +1,7 @@
 namespace InvoiceKit.Pdf.Elements.Images;
 
+using SkiaSharp;
+
 public sealed class ImageBuilder
 {
     internal ImageBuilder()

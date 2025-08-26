@@ -1,19 +1,24 @@
 namespace InvoiceKit.Pdf.Elements;
 
+using Layouts;
 using SkiaSharp;
 
-public sealed class HorizontalRule : IDrawable
+public sealed class HorizontalRuleDrawable : IDrawable
 {
+    public HorizontalRuleDrawable()
+    {
+    }
+
     public SKSize Measure(SKSize available)
     {
         return new SKSize(available.Width, 1);
     }
 
-    public void Draw(MultiPageContext context, SKRect rect)
+    public void Draw(PageLayout page)
     {
-        context.GetCurrentPage().Canvas.DrawLine(
-            rect.Location,
-            SKPoint.Add(rect.Location, new SKSize(rect.Width, 0)),
+        page.Canvas.DrawLine(
+            page.Available.Location,
+            SKPoint.Add(page.Available.Location, new SKSize(page.Available.Width, 0)),
             new SKPaint
             {
                 Color = SKColors.Black,

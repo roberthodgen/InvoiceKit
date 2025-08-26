@@ -4,7 +4,7 @@ using InvoiceKit.Pdf;
 using SkiaSharp;
 using Xunit.Abstractions;
 
-public class TextTests(ITestOutputHelper testOutputHelper)
+public class TextLayoutTests(ITestOutputHelper testOutputHelper)
 {
     [Fact]
     public void Text_Single_Test()

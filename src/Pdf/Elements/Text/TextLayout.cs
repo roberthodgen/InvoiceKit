@@ -1,4 +1,4 @@
-namespace InvoiceKit.Pdf.Elements;
+namespace InvoiceKit.Pdf.Elements.Text;
 
 using Layouts.Stacks;
 using SkiaSharp;
@@ -11,13 +11,13 @@ using Styles.Text;
 /// <remarks>
 /// If multiple paragraphs are required, add them to <see cref="VStack"/>.
 /// </remarks>
-public sealed class Text : IDrawable
+public sealed class TextLayout : ILayout
 {
     private TextStyle Style { get; }
 
     private readonly List<string> _lines = [];
 
-    internal Text(TextStyle style, string text)
+    internal TextLayout(TextStyle style, string text)
     {
         Style = style;
         using var reader = new StringReader(text);
