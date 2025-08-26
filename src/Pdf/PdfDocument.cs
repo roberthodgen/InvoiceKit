@@ -46,7 +46,6 @@ public class PdfDocument : IDisposable
     {
         using var context = new MultiPageContext(BeginNewPage, _debug);
         _drawable?.Draw(context, context.GetCurrentPage().Available);
-        EndPage();
         _document.Close();
         return _stream.ToArray();
     }
@@ -72,6 +71,7 @@ public class PdfDocument : IDisposable
             _debug);
     }
 
+    // Todo: Remove?
     private void EndPage()
     {
         _document.EndPage();
@@ -93,23 +93,26 @@ public class PdfDocument : IDisposable
         return this;
     }
 
-    public PdfDocument WithTable(Action<TableLayoutBuilder> action)
-    {
-        var table = new TableLayoutBuilder(DefaultTextStyle);
-        action(table);
-        _drawable = table;
-        return this;
-    }
-
-    public PdfDocument WithText(Func<TextBuilder, IDrawable> builder)
-    {
-        _drawable = builder(new TextBuilder(DefaultTextStyle));
-        return this;
-    }
-
-    public PdfDocument WithImage(Func<ImageBuilder, IDrawable> builder)
-    {
-        _drawable = builder(new ImageBuilder());
-        return this;
-    }
+    // Todo: should remove these from the pdf document
+    // PDF should only have one V stack or H stack to start
+    //
+    // public PdfDocument WithTable(Action<TableLayoutBuilder> action)
+    // {
+    //     var table = new TableLayoutBuilder(DefaultTextStyle);
+    //     action(table);
+    //     _drawable = table;
+    //     return this;
+    // }
+    //
+    // public PdfDocument WithText(Func<TextBuilder, IDrawable> builder)
+    // {
+    //     _drawable = builder(new TextBuilder(DefaultTextStyle));
+    //     return this;
+    // }
+    //
+    // public PdfDocument WithImage(Func<ImageBuilder, IDrawable> builder)
+    // {
+    //     _drawable = builder(new ImageBuilder());
+    //     return this;
+    // }
 }

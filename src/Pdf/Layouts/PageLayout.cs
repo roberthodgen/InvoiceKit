@@ -15,7 +15,7 @@ public class PageLayout : IDisposable
     /// <summary>
     /// The unmodified original available drawing area of the page (a subset of <see cref="Size"/> due to margins).
     /// </summary>
-    public SKRect Drawable { get; }
+    private SKRect Drawable { get; }
 
     /// <summary>
     /// The current canvas available for drawing.
@@ -51,21 +51,26 @@ public class PageLayout : IDisposable
         }
     }
 
-    public bool TryAllocateRect(SKSize size, out SKRect rect)
+    /// <summary>
+    /// Used to determine if a block can be drawn on the current page.
+    /// </summary>
+    public bool TryAllocateChild(IDrawable drawable)
     {
+        var size = drawable.Measure(Available.Size);
         if (size.Height > Available.Height || size.Width > Available.Width)
         {
-            rect = SKRect.Empty;
             return false;
         }
 
-        ForceAllocateRect(size, out rect);
+        ForceAllocateSize(size);
         return true;
     }
 
-    private void ForceAllocateRect(SKSize size, out SKRect rect)
+    /// <summary>
+    /// Allocates a rect, even if it overflows the available area.
+    /// </summary>
+    private void ForceAllocateSize(SKSize size)
     {
-        rect = SKRect.Create(Available.Location, size);
         _cursor.Offset(0, size.Height);
     }
 

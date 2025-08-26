@@ -8,9 +8,7 @@ public class MultiPageContext : IDisposable
 
     private int _currentPageIndex;
 
-    private readonly Stack<DrawState> _stateStack = new();
-
-    private DrawState Current => _stateStack.Peek();
+    private PageLayout Current => Pages.Last();
 
     private List<PageLayout> Pages { get; } = [];
 
@@ -33,14 +31,11 @@ public class MultiPageContext : IDisposable
     public PageLayout GetCurrentPage()
     {
         var currentPage = Pages[_currentPageIndex];
-        if (currentPage.IsFullyDrawn)
-        {
-            var nextPage = NextPage();
-            _currentPageIndex++;
-            return nextPage;
-        }
+        if (!currentPage.IsFullyDrawn) return currentPage;
 
-        return currentPage;
+        var nextPage = NextPage();
+        _currentPageIndex++;
+        return nextPage;
     }
 
     /// <summary>
@@ -50,7 +45,7 @@ public class MultiPageContext : IDisposable
     /// Does not advance the current page marker as other blocks (think columns or Z stacks) may still need to render
     /// into the current page.
     /// </remarks>
-    private PageLayout NextPage()
+    public PageLayout NextPage()
     {
         if (_currentPageIndex < Pages.Count - 1)
         {
@@ -60,27 +55,11 @@ public class MultiPageContext : IDisposable
         return Pages[_currentPageIndex + 1];
     }
 
-    public void BeginBlock()
+    public PageLayout NewPage()
     {
-        var newState = new DrawState(Current); // Clone or derive from current
-        _stateStack.Push(newState);
-    }
-
-    public DrawState EndBlock()
-    {
-        var finalized = _stateStack.Pop();
-        // Optionally merge results back to the parent
-        if (_stateStack.Count > 0)
-        {
-            _stateStack.Peek().AdjustAfterChild(finalized);
-        }
-
-        return finalized;
-    }
-
-    public void PageBreak()
-    {
-        Current.StartNewPage();
+        Pages.Add(_getNextPage());
+        _currentPageIndex++;
+        return Pages[_currentPageIndex];
     }
 
     public void Dispose()

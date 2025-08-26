@@ -12,7 +12,7 @@ public sealed class PageBreak : IDrawable
     public void Draw(MultiPageContext context, SKRect rect)
     {
         // nothing to draw
-        context.PageBreak();
+        context.NextPage();
     }
 
     public void Dispose()
