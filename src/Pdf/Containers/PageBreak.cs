@@ -1,6 +1,6 @@
 namespace InvoiceKit.Pdf.Containers;
 
-using Layouts;
+using Containers;
 using SkiaSharp;
 
 public sealed class PageBreak : IViewBuilder

@@ -1,6 +1,5 @@
 namespace InvoiceKit.Pdf.Containers;
 
-using Layouts;
 using SkiaSharp;
 
 /// <summary>
@@ -29,10 +28,6 @@ public sealed class SpacingBlock : IViewBuilder
                 Color = SKColors.Lime,
                 StrokeWidth = .5f,
             });
-    }
-
-    public void Dispose()
-    {
     }
 
     public ILayout ToLayout()
