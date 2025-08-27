@@ -1,30 +1,30 @@
 namespace InvoiceKit.Pdf.Elements.Text;
 
-using Layouts;
+using Containers;
 using SkiaSharp;
 
 public sealed class TextDrawable : IDrawable
 {
-    private string Text { get; }
+    private string TextLine { get; }
 
     public TextDrawable(string text)
     {
-        Text = text;
+        TextLine = text;
     }
 
     public SKSize Measure(SKSize available)
     {
-        throw new NotImplementedException();
+        // Todo: Measure text size. Already implemented somewhere else.
+        return new SKSize();
     }
 
     public void Dispose()
     {
-        throw new NotImplementedException();
     }
 
     public void Draw(PageLayout page)
     {
         // Todo: Replace the new objects with ones from layout parent in the constructor.
-        page.Canvas.DrawText(Text, new SKPoint(), new SKFont(), new SKPaint());
+        page.Canvas.DrawText(TextLine, new SKPoint(), new SKFont(), new SKPaint());
     }
 }

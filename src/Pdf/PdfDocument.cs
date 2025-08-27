@@ -2,9 +2,10 @@ namespace InvoiceKit.Pdf;
 
 using Elements;
 using Elements.Images;
-using Layouts;
-using Layouts.Stacks;
-using Layouts.Tables;
+using Elements.Text;
+using Containers;
+using Containers.Stacks;
+using Containers.Tables;
 using SkiaSharp;
 using Styles.Text;
 
@@ -16,6 +17,8 @@ public class PdfDocument : IDisposable
     private readonly SKSize _pageSize;
     private readonly MemoryStream _stream = new ();
     private readonly SKDocument _document;
+
+    private IViewBuilder? _drawable;
 
     private bool _debug;
 
@@ -98,26 +101,23 @@ public class PdfDocument : IDisposable
         return this;
     }
 
-    // Todo: should remove these from the pdf document, should only start with a VStack or HStack
-    // PDF should only have one V stack or H stack to start
-    //
-    // public PdfDocument WithTable(Action<TableLayoutBuilder> action)
-    // {
-    //     var table = new TableLayoutBuilder(DefaultTextStyle);
-    //     action(table);
-    //     _drawable = table;
-    //     return this;
-    // }
-    //
-    // public PdfDocument WithText(Func<TextBuilder, IDrawable> builder)
-    // {
-    //     _drawable = builder(new TextBuilder(DefaultTextStyle));
-    //     return this;
-    // }
-    //
-    // public PdfDocument WithImage(Func<ImageBuilder, IDrawable> builder)
-    // {
-    //     _drawable = builder(new ImageBuilder());
-    //     return this;
-    // }
+    public PdfDocument WithTable(Action<TableLayoutBuilder> action)
+    {
+        var table = new TableLayoutBuilder(DefaultTextStyle);
+        action(table);
+        _drawable = table;
+        return this;
+    }
+
+    public PdfDocument WithText(Func<TextViewBuilder, IViewBuilder> builder)
+    {
+        _drawable = builder(new TextViewBuilder(DefaultTextStyle));
+        return this;
+    }
+
+    public PdfDocument WithImage(Func<ImageViewBuilder, IViewBuilder> builder)
+    {
+        _drawable = builder(new ImageViewBuilder());
+        return this;
+    }
 }

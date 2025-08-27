@@ -1,6 +1,6 @@
 namespace InvoiceKit.Pdf.Elements;
 
-using Layouts;
+using Containers;
 using SkiaSharp;
 
 public sealed class HorizontalRuleDrawable : IDrawable

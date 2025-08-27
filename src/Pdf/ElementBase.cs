@@ -2,53 +2,49 @@ namespace InvoiceKit.Pdf;
 
 using Elements.Text;
 using Elements.Images;
-using Layouts.Stacks;
-using Layouts.Tables;
-using SkiaSharp;
+using Containers.Stacks;
+using Containers.Tables;
 using Styles.Text;
 
 public abstract class ElementBase : IElement
 {
     private readonly TextStyle _defaultTextStyle;
 
-    private IDrawable? _drawable;
+    private IViewBuilder? _viewBuilder;
 
-    private readonly SKRect _rect;
-
-    protected ElementBase(TextStyle defaultTextStyle, SKRect rect)
+    protected ElementBase(TextStyle defaultTextStyle)
     {
         _defaultTextStyle = defaultTextStyle;
-        _rect = rect;
     }
 
     public void WithHStack(Action<HStack> action)
     {
         var hStack = new HStack(_defaultTextStyle);
         action(hStack);
-        _drawable = hStack;
+        _viewBuilder = hStack;
     }
 
     public void WithVStack(Action<VStack> action)
     {
         var vStack = new VStack(_defaultTextStyle);
         action(vStack);
-        _drawable = vStack;
+        _viewBuilder = vStack;
     }
 
     public void WithTable(Action<TableLayoutBuilder> action)
     {
         var table = new TableLayoutBuilder(_defaultTextStyle);
         action(table);
-        _drawable = table;
+        _viewBuilder = table;
     }
 
-    public void WithText(Func<TextViewBuilder, IDrawable> builder)
+    public void WithText(Func<TextViewBuilder, IViewBuilder> builder)
     {
-        _drawable = builder(new TextViewBuilder(_defaultTextStyle));
+        _viewBuilder = builder(new TextViewBuilder(_defaultTextStyle));
     }
 
-    public void WithImage(Func<ImageBuilder, IDrawable> builder)
+    public void WithImage(Func<ImageViewBuilder, IViewBuilder> builder)
     {
-        _drawable = builder(new ImageBuilder());
+        _viewBuilder = builder(new ImageViewBuilder());
     }
 }

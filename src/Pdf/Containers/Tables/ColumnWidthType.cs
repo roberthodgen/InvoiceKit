@@ -1,4 +1,4 @@
-namespace InvoiceKit.Pdf.Layouts.Tables;
+namespace InvoiceKit.Pdf.Containers.Tables;
 
 /// <summary>
 /// Specifies how a <see cref="ColumnWidthPercent"/> object computes its width.

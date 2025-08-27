@@ -1,4 +1,4 @@
-namespace InvoiceKit.Pdf.Layouts.Tables;
+namespace InvoiceKit.Pdf.Containers.Tables;
 
 using Styles.Text;
 

@@ -1,47 +1,46 @@
 namespace InvoiceKit.Pdf;
 
-using Elements;
 using Elements.Text;
 using Elements.Images;
-using Layouts.Stacks;
-using Layouts.Tables;
-using SkiaSharp;
+using Containers.Stacks;
+using Containers.Tables;
 using Styles.Text;
-using Layouts;
+using Containers;
 
-public abstract class LayoutBuilderBase : ILayoutBuilder
+public abstract class ContainerBase : IContainer
 {
-    protected List<IDrawable> Children { get; } = [];
+    protected List<IViewBuilder> Children { get; } = [];
 
     public TextStyle DefaultTextStyle { get; protected set; }
 
-    protected LayoutBuilderBase(TextStyle defaultTextStyle)
+    protected ContainerBase(TextStyle defaultTextStyle)
     {
         DefaultTextStyle = defaultTextStyle;
     }
 
-    public ILayoutBuilder AddText(Func<TextViewBuilder, IDrawable> builder)
+    public IContainer AddText(Func<TextViewBuilder, IViewBuilder> builder)
     {
         var child = builder(new TextViewBuilder(DefaultTextStyle));
         Children.Add(child);
         return this;
     }
 
-    public ILayoutBuilder AddImage(Func<ImageBuilder, IDrawable> builder)
+    public IContainer AddImage(Func<ImageViewBuilder, IViewBuilder> builder)
     {
-        var child = builder(new ImageBuilder());
+        var child = builder(new ImageViewBuilder());
         Children.Add(child);
         return this;
     }
 
-    public ILayoutBuilder AddHorizontalRule()
+    public IContainer AddHorizontalRule()
     {
-        var child = new HorizontalRuleDrawable();
+        var child = new VStack(DefaultTextStyle);
+        child.AddHorizontalRule();
         Children.Add(child);
         return this;
     }
 
-    public ILayoutBuilder AddHStack(Action<HStack> configure)
+    public IContainer AddHStack(Action<HStack> configure)
     {
         var child = new HStack(DefaultTextStyle);
         configure(child);
@@ -49,7 +48,7 @@ public abstract class LayoutBuilderBase : ILayoutBuilder
         return this;
     }
 
-    public ILayoutBuilder AddVStack(Action<VStack> configure)
+    public IContainer AddVStack(Action<VStack> configure)
     {
         var child = new VStack(DefaultTextStyle);
         configure(child);
@@ -57,14 +56,14 @@ public abstract class LayoutBuilderBase : ILayoutBuilder
         return this;
     }
 
-    public ILayoutBuilder AddSpacingBlock(float height = 5)
+    public IContainer AddSpacingBlock(float height = 5)
     {
         var child = new SpacingBlock(height);
         Children.Add(child);
         return this;
     }
 
-    public ILayoutBuilder AddTableBlock(Action<TableLayoutBuilder> configure)
+    public IContainer AddTableBlock(Action<TableLayoutBuilder> configure)
     {
         var child = new TableLayoutBuilder(DefaultTextStyle);
         configure(child);
@@ -72,18 +71,12 @@ public abstract class LayoutBuilderBase : ILayoutBuilder
         return this;
     }
 
-    public ILayoutBuilder AddPageBreak()
+    public IContainer AddPageBreak()
     {
         var child = new PageBreak();
         Children.Add(child);
         return this;
     }
 
-    public void Dispose()
-    {
-        foreach (var child in Children)
-        {
-            child.Dispose();
-        }
-    }
+    public abstract ILayout ToLayout();
 }

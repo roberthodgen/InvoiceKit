@@ -1,7 +1,7 @@
 namespace InvoiceKit.Tests.Pdf;
 
 using InvoiceKit.Pdf;
-using InvoiceKit.Pdf.Layouts.Tables;
+using InvoiceKit.Pdf.Containers.Tables;
 using Xunit.Abstractions;
 
 public class TableTests(ITestOutputHelper testOutputHelper)

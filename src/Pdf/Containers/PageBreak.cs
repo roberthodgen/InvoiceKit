@@ -1,9 +1,9 @@
-namespace InvoiceKit.Pdf.Elements;
+namespace InvoiceKit.Pdf.Containers;
 
 using Layouts;
 using SkiaSharp;
 
-public sealed class PageBreak : IDrawable
+public sealed class PageBreak : IViewBuilder
 {
     public SKSize Measure(SKSize available)
     {
@@ -18,5 +18,10 @@ public sealed class PageBreak : IDrawable
 
     public void Dispose()
     {
+    }
+
+    public ILayout ToLayout()
+    {
+        throw new NotImplementedException();
     }
 }

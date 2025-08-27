@@ -1,6 +1,6 @@
 namespace InvoiceKit.Pdf.Elements.Text;
 
-using Layouts.Stacks;
+using Containers.Stacks;
 using SkiaSharp;
 using Styles.Text;
 
@@ -144,6 +144,16 @@ public sealed class TextLayout : ILayout
         }
 
         return lines;
+    }
+
+    public List<IDrawable> ConvertToDrawables()
+    {
+        var drawables = new List<IDrawable>();
+        foreach (var line in _lines)
+        {
+            drawables.Add(new TextDrawable(line));
+        }
+        return drawables;
     }
 
     public void Dispose()

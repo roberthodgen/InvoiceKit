@@ -1,9 +1,9 @@
-namespace InvoiceKit.Pdf.Layouts.Tables;
+namespace InvoiceKit.Pdf.Containers.Tables;
 
 using SkiaSharp;
 using Styles.Text;
 
-public class TableLayoutBuilder(TextStyle defaultTextStyle) : IDrawable
+public class TableLayoutBuilder(TextStyle defaultTextStyle) : IViewBuilder
 {
     private readonly List<TableRow> _headers = [];
 
@@ -40,32 +40,32 @@ public class TableLayoutBuilder(TextStyle defaultTextStyle) : IDrawable
         return this;
     }
 
-    public SKSize Measure(SKSize available)
-    {
-        var width = available.Width; // always fills the available width
-        var height = Rows.Sum(row => row.Measure(available).Height);
-        height += _headers.Sum(row => row.Measure(available).Height);
-        return new SKSize(width, height);
-    }
-
-    public void Draw(MultiPageContext context, SKRect rect)
-    {
-        var top = rect.Top;
-        foreach (var row in _headers)
-        {
-            var rowHeight = row.Measure(rect.Size).Height;
-            row.Draw(context, new SKRect(rect.Left, top, rect.Left + rect.Width, top + rowHeight));
-            top += rowHeight;
-        }
-
-        foreach (var row in Rows)
-        {
-            // TODO detect when page changes and re-draw header row(s)
-            var rowHeight = row.Measure(rect.Size).Height;
-            row.Draw(context, new SKRect(rect.Left, top, rect.Left + rect.Width, top + rowHeight));
-            top += rowHeight;
-        }
-    }
+    // public SKSize Measure(SKSize available)
+    // {
+    //     var width = available.Width; // always fills the available width
+    //     var height = Rows.Sum(row => row.Measure(available).Height);
+    //     height += _headers.Sum(row => row.Measure(available).Height);
+    //     return new SKSize(width, height);
+    // }
+    //
+    // public void Draw(PageLayout page)
+    // {
+    //     // var top = page.Available.Top;
+    //     // foreach (var row in _headers)
+    //     // {
+    //     //     var rowHeight = row.Measure(page.Available.Size).Height;
+    //     //     row.Draw(page, new SKRect(page.Available.Left, top, page.Available.Left + page.Available.Width, top + rowHeight));
+    //     //     top += rowHeight;
+    //     // }
+    //     //
+    //     // foreach (var row in Rows)
+    //     // {
+    //     //     // TODO detect when page changes and re-draw header row(s)
+    //     //     var rowHeight = row.Measure(page.Available.Size).Height;
+    //     //     row.Draw(context, new SKRect(page.Available.Left, top, page.Available.Left + page.Available.Width, top + rowHeight));
+    //     //     top += rowHeight;
+    //     // }
+    // }
 
     public TableLayoutBuilder UseEquallySpaceColumns()
     {
@@ -114,5 +114,10 @@ public class TableLayoutBuilder(TextStyle defaultTextStyle) : IDrawable
 
     public void Dispose()
     {
+    }
+
+    public ILayout ToLayout()
+    {
+        throw new NotImplementedException();
     }
 }

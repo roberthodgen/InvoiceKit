@@ -1,4 +1,4 @@
-namespace InvoiceKit.Pdf.Layouts;
+namespace InvoiceKit.Pdf.Containers;
 
 using SkiaSharp;
 

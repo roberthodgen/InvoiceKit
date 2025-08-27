@@ -1,14 +1,14 @@
 namespace InvoiceKit.Pdf.Elements.Images;
 
-using Layouts;
+using Containers;
 using SkiaSharp;
 using Svg.Skia;
 
-internal class SvgImage : IDrawable
+internal class SvgImageDrawable : IDrawable
 {
     private readonly SKSvg _svg;
 
-    public SvgImage(string path)
+    public SvgImageDrawable(string path)
     {
         _svg = new SKSvg();
         _svg.Load(path);

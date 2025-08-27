@@ -12,9 +12,9 @@ public sealed class TextViewBuilder : IViewBuilder
         Style = style;
     }
 
-    public TextLayout WithText(string text)
+    public IViewBuilder WithText(string text)
     {
-        return new TextLayout(Style, text);
+        return new TextView(Style, text);
     }
 
     public TextViewBuilder ParagraphSpacing(float? before = null, float? after = null)
@@ -37,8 +37,6 @@ public sealed class TextViewBuilder : IViewBuilder
         Style = Style with { LineHeight = lineHeight, };
         return this;
     }
-
-
 
     /// <summary>
     /// Sets the font and style to use.

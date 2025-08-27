@@ -1,13 +1,13 @@
 namespace InvoiceKit.Pdf.Elements.Images;
 
-using Layouts;
+using Containers;
 using SkiaSharp;
 
-internal class BitmapImage : IDrawable
+internal class BitmapImageDrawable : IDrawable
 {
     private readonly SKBitmap _bitmap;
 
-    internal BitmapImage(string path)
+    internal BitmapImageDrawable(string path)
     {
         using var data = SKData.Create(path);
         using var codec = SKCodec.Create(data);
