@@ -30,7 +30,7 @@ public sealed class SpacingBlock : IViewBuilder
             });
     }
 
-    public ILayout ToLayout()
+    public ILayout ToLayout(PageLayout page)
     {
         throw new NotImplementedException();
     }

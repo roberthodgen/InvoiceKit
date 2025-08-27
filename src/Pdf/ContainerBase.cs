@@ -78,5 +78,5 @@ public abstract class ContainerBase : IContainer
         return this;
     }
 
-    public abstract ILayout ToLayout();
+    public abstract ILayout ToLayout(PageLayout page);
 }

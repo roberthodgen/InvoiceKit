@@ -61,7 +61,7 @@ public class PageLayout : IPage, IDisposable
         }
     }
 
-    public void SetFullyDrawn()
+    public void MarkFullyDrawn()
     {
         IsFullyDrawn = true;
     }

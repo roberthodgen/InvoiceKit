@@ -1,6 +1,5 @@
 namespace InvoiceKit.Pdf;
 
-using Elements;
 using Elements.Images;
 using Elements.Text;
 using Containers;
@@ -18,7 +17,7 @@ public class PdfDocument : IDisposable
     private readonly MemoryStream _stream = new ();
     private readonly SKDocument _document;
 
-    private IViewBuilder? _drawable;
+    private IViewBuilder? _viewBuilder;
 
     private bool _debug;
 
@@ -47,14 +46,8 @@ public class PdfDocument : IDisposable
     public byte[] Build()
     {
         using var context = new MultiPageContext(BeginNewPage, _debug);
-        // Todo: need to pass all drawables through builder and layout, to go into the context before this call
-        foreach (var page in context.Pages)
-        {
-            foreach (var drawable in page.Drawables)
-            {
-                drawable.Draw(page);
-            }
-        }
+        _viewBuilder?.ToLayout(context.GetCurrentPage());
+        context.DrawAllPages();
         _document.Close();
         return _stream.ToArray();
     }
@@ -79,17 +72,11 @@ public class PdfDocument : IDisposable
             _debug);
     }
 
-    // Todo: Remove?
-    private void EndPage()
-    {
-        _document.EndPage();
-    }
-
     public PdfDocument WithHStack(Action<HStack> action)
     {
         var hStack = new HStack(DefaultTextStyle);
         action(hStack);
-        _drawable = hStack;
+        _viewBuilder = hStack;
         return this;
     }
 
@@ -97,7 +84,7 @@ public class PdfDocument : IDisposable
     {
         var vStack = new VStack(DefaultTextStyle);
         action(vStack);
-        _drawable = vStack;
+        _viewBuilder = vStack;
         return this;
     }
 
@@ -105,19 +92,19 @@ public class PdfDocument : IDisposable
     {
         var table = new TableLayoutBuilder(DefaultTextStyle);
         action(table);
-        _drawable = table;
+        _viewBuilder = table;
         return this;
     }
 
     public PdfDocument WithText(Func<TextViewBuilder, IViewBuilder> builder)
     {
-        _drawable = builder(new TextViewBuilder(DefaultTextStyle));
+        _viewBuilder = builder(new TextViewBuilder(DefaultTextStyle));
         return this;
     }
 
     public PdfDocument WithImage(Func<ImageViewBuilder, IViewBuilder> builder)
     {
-        _drawable = builder(new ImageViewBuilder());
+        _viewBuilder = builder(new ImageViewBuilder());
         return this;
     }
 }

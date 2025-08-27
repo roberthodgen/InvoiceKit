@@ -8,7 +8,7 @@ public class MultiPageContext : IDisposable
 
     private int _currentPageIndex;
 
-    public List<PageLayout> Pages { get; } = [];
+    private List<PageLayout> Pages { get; } = [];
 
     public bool Debug { get; }
 
@@ -17,6 +17,17 @@ public class MultiPageContext : IDisposable
         _getNextPage = getNextPage;
         Pages.Add(getNextPage());
         Debug = debug;
+    }
+
+    public void DrawAllPages()
+    {
+        foreach (var page in Pages)
+        {
+            foreach (var drawable in page.Drawables)
+            {
+                drawable.Draw(page);
+            }
+        }
     }
 
     /// <summary>
@@ -43,7 +54,7 @@ public class MultiPageContext : IDisposable
     /// Does not advance the current page marker as other blocks (think columns or Z stacks) may still need to render
     /// into the current page.
     /// </remarks>
-    public PageLayout NextPage()
+    private PageLayout NextPage()
     {
         if (_currentPageIndex < Pages.Count - 1)
         {
@@ -51,13 +62,6 @@ public class MultiPageContext : IDisposable
         }
 
         return Pages[_currentPageIndex + 1];
-    }
-
-    public PageLayout NewPage()
-    {
-        Pages.Add(_getNextPage());
-        _currentPageIndex++;
-        return Pages[_currentPageIndex];
     }
 
     public void Dispose()

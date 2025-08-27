@@ -1,5 +1,6 @@
 namespace InvoiceKit.Pdf.Elements.Text;
 
+using Containers;
 using Styles.Text;
 
 public class TextView : IViewBuilder
@@ -14,7 +15,7 @@ public class TextView : IViewBuilder
         Text = text;
     }
 
-    public ILayout ToLayout()
+    public ILayout ToLayout(PageLayout page)
     {
         return new TextLayout(_style, Text);
     }

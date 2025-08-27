@@ -1,5 +1,7 @@
 namespace InvoiceKit.Pdf.Elements.Images;
 
+using Containers;
+
 public sealed class ImageViewBuilder : IViewBuilder
 {
     private IDrawable? _drawable;
@@ -20,7 +22,7 @@ public sealed class ImageViewBuilder : IViewBuilder
         return this;
     }
 
-    public ILayout ToLayout()
+    public ILayout ToLayout(PageLayout page)
     {
         throw new NotImplementedException();
     }

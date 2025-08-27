@@ -1,6 +1,5 @@
 namespace InvoiceKit.Pdf.Containers;
 
-using Containers;
 using SkiaSharp;
 
 public sealed class PageBreak : IViewBuilder
@@ -13,14 +12,14 @@ public sealed class PageBreak : IViewBuilder
 
     public void Draw(PageLayout page)
     {
-        page.SetFullyDrawn();
+        page.MarkFullyDrawn();
     }
 
     public void Dispose()
     {
     }
 
-    public ILayout ToLayout()
+    public ILayout ToLayout(PageLayout page)
     {
         throw new NotImplementedException();
     }

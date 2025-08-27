@@ -12,7 +12,7 @@ public class VStack : ContainerBase
     {
     }
 
-    public override ILayout ToLayout()
+    public override ILayout ToLayout(PageLayout page)
     {
         throw new NotImplementedException();
     }

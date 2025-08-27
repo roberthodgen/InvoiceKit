@@ -1,6 +1,5 @@
 namespace InvoiceKit.Pdf.Containers.Tables;
 
-using SkiaSharp;
 using Styles.Text;
 
 public class TableLayoutBuilder(TextStyle defaultTextStyle) : IViewBuilder
@@ -116,7 +115,7 @@ public class TableLayoutBuilder(TextStyle defaultTextStyle) : IViewBuilder
     {
     }
 
-    public ILayout ToLayout()
+    public ILayout ToLayout(PageLayout page)
     {
         throw new NotImplementedException();
     }

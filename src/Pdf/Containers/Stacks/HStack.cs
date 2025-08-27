@@ -12,7 +12,7 @@ public class HStack : ContainerBase
     {
     }
 
-    public override ILayout ToLayout()
+    public override ILayout ToLayout(PageLayout page)
     {
         throw new NotImplementedException();
     }
