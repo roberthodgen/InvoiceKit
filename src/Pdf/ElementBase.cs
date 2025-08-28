@@ -31,9 +31,9 @@ public abstract class ElementBase : IElement
         _viewBuilder = vStack;
     }
 
-    public void WithTable(Action<TableLayoutBuilder> action)
+    public void WithTable(Action<TableViewBuilder> action)
     {
-        var table = new TableLayoutBuilder(_defaultTextStyle);
+        var table = new TableViewBuilder(_defaultTextStyle);
         action(table);
         _viewBuilder = table;
     }

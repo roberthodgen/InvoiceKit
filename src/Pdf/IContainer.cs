@@ -48,7 +48,7 @@ public interface IContainer : IViewBuilder
     /// <summary>
     /// Adds a new table block.
     /// </summary>
-    IContainer AddTableBlock(Action<TableLayoutBuilder> configureTableBlock);
+    IContainer AddTableBlock(Action<TableViewBuilder> configureTableBlock);
 
     /// <summary>
     /// Fills the rest of the page with blank space and starts a new page.

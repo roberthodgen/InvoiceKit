@@ -63,9 +63,9 @@ public abstract class ContainerBase : IContainer
         return this;
     }
 
-    public IContainer AddTableBlock(Action<TableLayoutBuilder> configure)
+    public IContainer AddTableBlock(Action<TableViewBuilder> configure)
     {
-        var child = new TableLayoutBuilder(DefaultTextStyle);
+        var child = new TableViewBuilder(DefaultTextStyle);
         configure(child);
         Children.Add(child);
         return this;
@@ -78,5 +78,5 @@ public abstract class ContainerBase : IContainer
         return this;
     }
 
-    public abstract ILayout ToLayout(PageLayout page);
+    public abstract ILayout ToLayout(MultiPageContext context);
 }

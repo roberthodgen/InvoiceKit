@@ -19,7 +19,7 @@ public sealed class PageBreak : IViewBuilder
     {
     }
 
-    public ILayout ToLayout(PageLayout page)
+    public ILayout ToLayout(MultiPageContext context)
     {
         throw new NotImplementedException();
     }

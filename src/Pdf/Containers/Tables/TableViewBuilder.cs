@@ -1,8 +1,9 @@
 namespace InvoiceKit.Pdf.Containers.Tables;
 
+using SkiaSharp;
 using Styles.Text;
 
-public class TableLayoutBuilder(TextStyle defaultTextStyle) : IViewBuilder
+public class TableViewBuilder(TextStyle defaultTextStyle) : IViewBuilder
 {
     private readonly List<TableRow> _headers = [];
 
@@ -10,7 +11,7 @@ public class TableLayoutBuilder(TextStyle defaultTextStyle) : IViewBuilder
 
     public List<TableRow> Rows { get; } = [];
 
-    public List<TableColumn> Columns = [];
+    private List<TableColumn> Columns = [];
 
     /// <summary>
     /// Specifies how column sizes will be computed.
@@ -23,17 +24,19 @@ public class TableLayoutBuilder(TextStyle defaultTextStyle) : IViewBuilder
 
     public bool ShowRowSeparators { get; private set; } = false;
 
-    public TableLayoutBuilder AddHeader(Action<TableRow> config)
+    public TableViewBuilder AddHeader(Action<TableRow> config)
     {
-        var row = new TableRow(this, TableHeaderStyle);
+        // Todo: fix rect
+        var row = new TableRow(this, TableHeaderStyle, new SKRect());
         config(row);
         _headers.Add(row);
         return this;
     }
 
-    public TableLayoutBuilder AddRow(Action<TableRow> config)
+    public TableViewBuilder AddRow(Action<TableRow> config)
     {
-        var row = new TableRow(this, _defaultTextStyle);
+        // Todo: fix rect
+        var row = new TableRow(this, _defaultTextStyle, new SKRect());
         config(row);
         Rows.Add(row);
         return this;
@@ -66,13 +69,13 @@ public class TableLayoutBuilder(TextStyle defaultTextStyle) : IViewBuilder
     //     // }
     // }
 
-    public TableLayoutBuilder UseEquallySpaceColumns()
+    public TableViewBuilder UseEquallySpaceColumns()
     {
         ColumnSizing = ColumnSizing.Equal;
         return this;
     }
 
-    public TableLayoutBuilder UseFixedColumnWidths(List<ColumnWidthPercent> columnWidths)
+    public TableViewBuilder UseFixedColumnWidths(List<ColumnWidthPercent> columnWidths)
     {
         ColumnSizing = ColumnSizing.FixedPercentage;
         ColumnWidthPercentages = columnWidths;
@@ -82,7 +85,7 @@ public class TableLayoutBuilder(TextStyle defaultTextStyle) : IViewBuilder
     /// <summary>
     /// Adds row separators between rows. 
     /// </summary>
-    public TableLayoutBuilder AddRowSeparators()
+    public TableViewBuilder AddRowSeparators()
     {
         ShowRowSeparators = true;
         return this;
@@ -115,7 +118,7 @@ public class TableLayoutBuilder(TextStyle defaultTextStyle) : IViewBuilder
     {
     }
 
-    public ILayout ToLayout(PageLayout page)
+    public ILayout ToLayout(MultiPageContext context)
     {
         throw new NotImplementedException();
     }

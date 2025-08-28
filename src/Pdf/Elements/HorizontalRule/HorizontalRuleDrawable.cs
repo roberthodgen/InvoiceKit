@@ -5,8 +5,11 @@ using SkiaSharp;
 
 public sealed class HorizontalRuleDrawable : IDrawable
 {
-    public HorizontalRuleDrawable()
+    public SKRect SizeAndLocation { get; }
+
+    public HorizontalRuleDrawable(SKRect rect)
     {
+        SizeAndLocation = rect;
     }
 
     public SKSize Measure(SKSize available)

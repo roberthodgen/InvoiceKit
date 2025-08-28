@@ -61,7 +61,7 @@ public sealed class TextViewBuilder : IViewBuilder
         return this;
     }
 
-    public ILayout ToLayout(PageLayout page)
+    public ILayout ToLayout(MultiPageContext context)
     {
         throw new NotImplementedException();
     }

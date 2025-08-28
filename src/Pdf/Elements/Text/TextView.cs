@@ -7,7 +7,7 @@ public class TextView : IViewBuilder
 {
     private readonly TextStyle _style;
 
-    public string Text { get; }
+    private string Text { get; }
 
     internal TextView(TextStyle style, string text)
     {
@@ -15,7 +15,7 @@ public class TextView : IViewBuilder
         Text = text;
     }
 
-    public ILayout ToLayout(PageLayout page)
+    public ILayout ToLayout(MultiPageContext context)
     {
         return new TextLayout(_style, Text);
     }

@@ -151,7 +151,8 @@ public sealed class TextLayout : ILayout
         var drawables = new List<IDrawable>();
         foreach (var line in _lines)
         {
-            drawables.Add(new TextDrawable(line));
+            // Todo: fill in correct SKRect
+            drawables.Add(new TextDrawable(line, new SKRect()));
         }
         return drawables;
     }

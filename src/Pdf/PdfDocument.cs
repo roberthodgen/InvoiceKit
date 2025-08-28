@@ -46,7 +46,7 @@ public class PdfDocument : IDisposable
     public byte[] Build()
     {
         using var context = new MultiPageContext(BeginNewPage, _debug);
-        _viewBuilder?.ToLayout(context.GetCurrentPage());
+        _viewBuilder?.ToLayout(context);
         context.DrawAllPages();
         _document.Close();
         return _stream.ToArray();
@@ -88,9 +88,9 @@ public class PdfDocument : IDisposable
         return this;
     }
 
-    public PdfDocument WithTable(Action<TableLayoutBuilder> action)
+    public PdfDocument WithTable(Action<TableViewBuilder> action)
     {
-        var table = new TableLayoutBuilder(DefaultTextStyle);
+        var table = new TableViewBuilder(DefaultTextStyle);
         action(table);
         _viewBuilder = table;
         return this;

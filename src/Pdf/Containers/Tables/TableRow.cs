@@ -3,7 +3,7 @@ namespace InvoiceKit.Pdf.Containers.Tables;
 using SkiaSharp;
 using Styles.Text;
 
-public class TableRow(TableLayoutBuilder table, TextStyle defaultTextStyle) : IDrawable
+public class TableRow(TableViewBuilder table, TextStyle defaultTextStyle, SKRect rect) : IDrawable
 {
     private int _columnIndex = 0;
 
@@ -12,6 +12,8 @@ public class TableRow(TableLayoutBuilder table, TextStyle defaultTextStyle) : ID
     private TextStyle Style { get; } = defaultTextStyle;
 
     private bool IsLastRow => table.Rows.Last() == this;
+
+    public SKRect SizeAndLocation { get; } = rect;
 
     public TableRow AddCell(Action<TableCell> config)
     {

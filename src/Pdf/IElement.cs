@@ -11,7 +11,7 @@ public interface IElement
 
     void WithVStack(Action<VStack> action);
 
-    void WithTable(Action<TableLayoutBuilder> action);
+    void WithTable(Action<TableViewBuilder> action);
 
     void WithText(Func<TextViewBuilder, IViewBuilder> builder);
 

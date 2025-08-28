@@ -7,9 +7,12 @@ public sealed class TextDrawable : IDrawable
 {
     private string TextLine { get; }
 
-    public TextDrawable(string text)
+    public SKRect SizeAndLocation { get; }
+
+    public TextDrawable(string text, SKRect rect)
     {
         TextLine = text;
+        SizeAndLocation = rect;
     }
 
     public SKSize Measure(SKSize available)
@@ -21,6 +24,7 @@ public sealed class TextDrawable : IDrawable
     public void Dispose()
     {
     }
+
 
     public void Draw(PageLayout page)
     {
