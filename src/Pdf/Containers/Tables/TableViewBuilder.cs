@@ -118,7 +118,7 @@ public class TableViewBuilder(TextStyle defaultTextStyle) : IViewBuilder
     {
     }
 
-    public ILayout ToLayout(MultiPageContext context)
+    public ILayout ToLayout()
     {
         throw new NotImplementedException();
     }

@@ -12,8 +12,10 @@ public class HStack : ContainerBase
     {
     }
 
-    public override ILayout ToLayout(MultiPageContext context)
+    public override ILayout ToLayout()
     {
-        throw new NotImplementedException();
+        var childrenLayouts = Children.Select(child => child.ToLayout()).ToList();
+        var vStackLayout = new VStackLayout(childrenLayouts);
+        return vStackLayout;
     }
 }

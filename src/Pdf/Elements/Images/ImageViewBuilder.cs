@@ -25,7 +25,7 @@ public sealed class ImageViewBuilder : IViewBuilder
         return this;
     }
 
-    public ILayout ToLayout(MultiPageContext context)
+    public ILayout ToLayout()
     {
         throw new NotImplementedException();
     }

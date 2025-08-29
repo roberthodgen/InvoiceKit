@@ -46,8 +46,16 @@ public class PdfDocument : IDisposable
     public byte[] Build()
     {
         using var context = new MultiPageContext(BeginNewPage, _debug);
-        _viewBuilder?.ToLayout(context);
+
+        // Converts viewBuilders to Layouts
+        var layoutStack = _viewBuilder?.ToLayout() ?? throw new Exception("No ViewBuilder defined");
+
+        // Converts Layouts to Pages that are stored on context
+        layoutStack.LayoutPages(context);
+
+        //Draws all pages from the context
         context.DrawAllPages();
+
         _document.Close();
         return _stream.ToArray();
     }

@@ -2,6 +2,7 @@ namespace InvoiceKit.Pdf.Elements.Text;
 
 using Containers;
 using SkiaSharp;
+using Styles.Text;
 
 public sealed class TextDrawable : IDrawable
 {
@@ -9,10 +10,13 @@ public sealed class TextDrawable : IDrawable
 
     public SKRect SizeAndLocation { get; }
 
-    public TextDrawable(string text, SKRect rect)
+    private TextStyle Style { get; }
+
+    public TextDrawable(string text, SKRect sizeAndLocation, TextStyle style)
     {
         TextLine = text;
-        SizeAndLocation = rect;
+        SizeAndLocation = sizeAndLocation;
+        Style = style;
     }
 
     public SKSize Measure(SKSize available)
@@ -25,10 +29,8 @@ public sealed class TextDrawable : IDrawable
     {
     }
 
-
     public void Draw(PageLayout page)
     {
-        // Todo: Replace the new objects with ones from layout parent in the constructor.
-        page.Canvas.DrawText(TextLine, new SKPoint(), new SKFont(), new SKPaint());
+        page.Canvas.DrawText(TextLine, SizeAndLocation.Left, SizeAndLocation.Top, SKTextAlign.Left, Style.ToFont(), Style.ToPaint());
     }
 }

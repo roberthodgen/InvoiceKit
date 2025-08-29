@@ -39,50 +39,6 @@ public sealed class TextLayout : ILayout
         return new SKSize(available.Width, lines.Sum(line => line.Height));
     }
 
-    public void Draw(MultiPageContext context, SKRect rect)
-    {
-        if (context.Debug)
-        {
-            context.GetCurrentPage().Canvas.DrawRect(
-                rect,
-                new SKPaint
-                {
-                    Style = SKPaintStyle.Stroke,
-                    Color = SKColors.Cyan,
-                    StrokeWidth = .5f,
-                });
-        }
-
-        var top = rect.Top + Style.ParagraphSpacingBefore;
-        var paint = Style.ToPaint();
-        var font = Style.ToFont();
-        var halfLineHeightAddition = ((Style.LineHeight * Style.FontSize) - Style.FontSize) / 2;
-        foreach (var line in _lines)
-        {
-            var wrappedLines = WrapText(line, Style, rect.Width);
-            foreach (var wrapped in wrappedLines)
-            {
-                top += halfLineHeightAddition - font.Metrics.Ascent; // baseline adjustment
-
-                if (context.Debug)
-                {
-                    context.GetCurrentPage().Canvas.DrawLine(
-                        new SKPoint(rect.Left, top),
-                        new SKPoint(rect.Right, top),
-                        new SKPaint
-                        {
-                            Style = SKPaintStyle.Stroke,
-                            Color = SKColors.LightGray,
-                            StrokeWidth = .5f,
-                        });
-                }
-
-                context.GetCurrentPage().Canvas.DrawText(wrapped, rect.Left, top, SKTextAlign.Left, font, paint);
-                top += halfLineHeightAddition + font.Metrics.Descent; // for the next line: corrects baseline adjustment
-            }
-        }
-    }
-
     private List<SKSize> MeasureLines(SKSize available)
     {
         var lines = new List<SKSize>();
@@ -146,18 +102,43 @@ public sealed class TextLayout : ILayout
         return lines;
     }
 
-    public List<IDrawable> ConvertToDrawables()
+    public void LayoutPages(MultiPageContext context)
     {
-        var drawables = new List<IDrawable>();
-        foreach (var line in _lines)
-        {
-            // Todo: fill in correct SKRect
-            drawables.Add(new TextDrawable(line, new SKRect()));
-        }
-        return drawables;
-    }
+        var page = context.GetCurrentPage();
+        var lineMeasurements = MeasureLines(page.Available.Size);
 
-    public void Dispose()
-    {
+        for(int i = 0; i < _lines.Count; i++)
+        {
+            var left = lineMeasurements[i].Width;
+            var top = lineMeasurements[i].Height;
+            var rect = new SKRect(page.Available.Left, page.Available.Top, page.Available.Left + left, page.Available.Top + top);
+
+            // This can probably be optimized.
+            if (page.TryAllocateRect(rect))
+            {
+                page.Drawables.Add(new TextDrawable(_lines[i], rect, Style));
+            }
+            else
+            {
+                page.MarkFullyDrawn();
+                page = context.GetCurrentPage();
+                page.TryAllocateRect(rect);
+                page.Drawables.Add(new TextDrawable(_lines[i], rect, Style));
+            }
+        }
+
+        // Old Code for drawing lines below
+
+        // foreach (var line in _lines)
+        // {
+        //     var wrappedLines = WrapText(line, Style, SizeAndLocation.Width);
+        //     foreach (var wrapped in wrappedLines)
+        //     {
+        //         top += halfLineHeightAddition - font.Metrics.Ascent; // baseline adjustment
+        //
+        //         page.GetCurrentPage().Canvas.DrawText(wrapped, SizeAndLocation.Left, top, SKTextAlign.Left, font, paint);
+        //         top += halfLineHeightAddition + font.Metrics.Descent; // for the next line: corSizeAndLocations baseline adjustment
+        //     }
+        // }
     }
 }
