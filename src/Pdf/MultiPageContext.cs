@@ -56,7 +56,7 @@ public class MultiPageContext : IDisposable
     /// </remarks>
     private PageLayout NextPage()
     {
-        if (_currentPageIndex < Pages.Count - 1)
+        if (_currentPageIndex + 1 >= Pages.Count)
         {
             Pages.Add(_getNextPage());
         }

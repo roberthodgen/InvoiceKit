@@ -105,40 +105,41 @@ public sealed class TextLayout : ILayout
     public void LayoutPages(MultiPageContext context)
     {
         var page = context.GetCurrentPage();
+        var wrappedLines = _lines.SelectMany(line => WrapText(line, Style, page.Available.Width)).ToList();
+        var halfLineHeightAddition = ((Style.LineHeight * Style.ToFont().Size) - Style.ToFont().Size) / 2;
         var lineMeasurements = MeasureLines(page.Available.Size);
+        var top = page.Available.Top + Style.ParagraphSpacingBefore;
 
-        for(int i = 0; i < _lines.Count; i++)
+        for(var i = 0; i < wrappedLines.Count; i++)
         {
-            var left = lineMeasurements[i].Width;
-            var top = lineMeasurements[i].Height;
-            var rect = new SKRect(page.Available.Left, page.Available.Top, page.Available.Left + left, page.Available.Top + top);
+            var lineHeight = lineMeasurements[i].Height;
+            while (true)
+            {
+                top += halfLineHeightAddition - Style.ToFont().Metrics.Ascent;
+                var rectBottom = top + lineHeight + (halfLineHeightAddition + Style.ToFont().Metrics.Descent);
 
-            // This can probably be optimized.
-            if (page.TryAllocateRect(rect))
-            {
-                page.Drawables.Add(new TextDrawable(_lines[i], rect, Style));
-            }
-            else
-            {
+                if (i == wrappedLines.Count - 1)
+                {
+                    rectBottom += Style.ParagraphSpacingAfter;
+                }
+
+                var rect = new SKRect(
+                    page.Available.Left,
+                    top,
+                    page.Available.Right,
+                    rectBottom);
+
+                if (page.TryAllocateRect(rect))
+                {
+                    page.AddDrawable(new TextDrawable(wrappedLines[i], rect, Style));
+                    break;
+                }
+
+                // Will only be hit if the page is full.
                 page.MarkFullyDrawn();
                 page = context.GetCurrentPage();
-                page.TryAllocateRect(rect);
-                page.Drawables.Add(new TextDrawable(_lines[i], rect, Style));
+                top = page.Available.Top;
             }
         }
-
-        // Old Code for drawing lines below
-
-        // foreach (var line in _lines)
-        // {
-        //     var wrappedLines = WrapText(line, Style, SizeAndLocation.Width);
-        //     foreach (var wrapped in wrappedLines)
-        //     {
-        //         top += halfLineHeightAddition - font.Metrics.Ascent; // baseline adjustment
-        //
-        //         page.GetCurrentPage().Canvas.DrawText(wrapped, SizeAndLocation.Left, top, SKTextAlign.Left, font, paint);
-        //         top += halfLineHeightAddition + font.Metrics.Descent; // for the next line: corSizeAndLocations baseline adjustment
-        //     }
-        // }
     }
 }

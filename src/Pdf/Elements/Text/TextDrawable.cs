@@ -21,8 +21,7 @@ public sealed class TextDrawable : IDrawable
 
     public SKSize Measure(SKSize available)
     {
-        // Todo: Measure text size. Already implemented somewhere else.
-        return new SKSize();
+        return new SKSize(SizeAndLocation.Width, SizeAndLocation.Height);
     }
 
     public void Dispose()
@@ -31,6 +30,8 @@ public sealed class TextDrawable : IDrawable
 
     public void Draw(PageLayout page)
     {
-        page.Canvas.DrawText(TextLine, SizeAndLocation.Left, SizeAndLocation.Top, SKTextAlign.Left, Style.ToFont(), Style.ToPaint());
+        var halfLineHeight = ((Style.LineHeight * Style.FontSize) - Style.FontSize) / 2;
+        var top = SizeAndLocation.Top + halfLineHeight + Style.ToFont().Metrics.Ascent + Style.ParagraphSpacingBefore;
+        page.Canvas.DrawText(TextLine, SizeAndLocation.Left, top, SKTextAlign.Left, Style.ToFont(), Style.ToPaint());
     }
 }

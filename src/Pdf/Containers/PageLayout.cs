@@ -20,7 +20,7 @@ public class PageLayout : IPage, IDisposable
     /// <summary>
     /// The current available drawing area as a SKRect.
     /// </summary>
-    public SKRect Available => new (_cursor.X, _cursor.Y, Drawable.Width, Drawable.Height);
+    public SKRect Available => new (_cursor.X, _cursor.Y, Drawable.Right, Drawable.Bottom);
 
     /// <summary>
     /// Enumerable of drawables that fit onto the page.
@@ -64,6 +64,11 @@ public class PageLayout : IPage, IDisposable
     public void MarkFullyDrawn()
     {
         IsFullyDrawn = true;
+    }
+
+    public void AddDrawable(IDrawable drawable)
+    {
+        Drawables.Add(drawable);
     }
 
     /// <summary>
