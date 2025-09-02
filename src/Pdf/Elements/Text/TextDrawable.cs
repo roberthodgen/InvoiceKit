@@ -30,8 +30,6 @@ public sealed class TextDrawable : IDrawable
 
     public void Draw(PageLayout page)
     {
-        var halfLineHeight = ((Style.LineHeight * Style.FontSize) - Style.FontSize) / 2;
-        var top = SizeAndLocation.Top + halfLineHeight + Style.ToFont().Metrics.Ascent + Style.ParagraphSpacingBefore;
-        page.Canvas.DrawText(TextLine, SizeAndLocation.Left, top, SKTextAlign.Left, Style.ToFont(), Style.ToPaint());
+        page.Canvas.DrawText(TextLine, SizeAndLocation.Left, SizeAndLocation.Top, SKTextAlign.Left, Style.ToFont(), Style.ToPaint());
     }
 }
