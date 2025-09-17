@@ -5,6 +5,13 @@ namespace InvoiceKit.Tests.Domain.InvoiceTests;
 public sealed class InvoiceLineItemQuantityTests
 {
     [Fact]
+    public void InvoiceLineItemQuantity_Zero_Exists()
+    {
+        InvoiceLineItemQuantity.Zero.Value.ShouldBe(0);
+        InvoiceLineItemQuantity.Zero.ShouldBeAssignableTo<InvoiceLineItemQuantity>();
+    }
+
+    [Fact]
     public void InvoiceLineItemQuantity_CreateNew_SetsValue()
     {
         var quantity = InvoiceLineItemQuantity.CreateNew(10);
