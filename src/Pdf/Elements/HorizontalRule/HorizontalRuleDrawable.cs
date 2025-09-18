@@ -17,9 +17,9 @@ public sealed class HorizontalRuleDrawable : IDrawable
         return new SKSize(available.Width, 1);
     }
 
-    public void Draw(PageLayout page)
+    public void Draw(SKCanvas canvas, PageLayout page)
     {
-        page.Canvas.DrawLine(
+        canvas.DrawLine(
             page.Available.Location,
             SKPoint.Add(page.Available.Location, new SKSize(page.Available.Width, 0)),
             new SKPaint

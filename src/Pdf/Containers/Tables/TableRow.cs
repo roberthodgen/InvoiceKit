@@ -44,7 +44,7 @@ public class TableRow(TableViewBuilder table, TextStyle defaultTextStyle, SKRect
         // return new SKSize(available.Width, height);
     }
 
-    public void Draw(PageLayout page)
+    public void Draw(SKCanvas canvas, PageLayout page)
     {
         // var top = page.Available.Top;
         // var left = page.Available.Left;

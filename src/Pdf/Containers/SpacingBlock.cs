@@ -18,9 +18,9 @@ public sealed class SpacingBlock : IViewBuilder
         return new SKSize(available.Width, Height);
     }
 
-    public void Draw(PageLayout page)
+    public void Draw(SKCanvas canvas, PageLayout page)
     {
-        page.Canvas.DrawRect(
+        canvas.DrawRect(
             page.Available,
             new SKPaint
             {

@@ -13,14 +13,9 @@ public class PageLayout : IPage, IDisposable
     private SKRect Drawable { get; }
 
     /// <summary>
-    /// The current canvas available for drawing.
-    /// </summary>
-    public SKCanvas Canvas { get; }
-
-    /// <summary>
     /// The current available drawing area as a SKRect.
     /// </summary>
-    public SKRect Available => new (_cursor.X, _cursor.Y, Drawable.Right, Drawable.Bottom);
+    public SKRect Available => new (_cursor.X, _cursor.Y, Drawable.Width, Drawable.Height);
 
     /// <summary>
     /// Enumerable of drawables that fit onto the page.
@@ -42,26 +37,13 @@ public class PageLayout : IPage, IDisposable
     /// </summary>
     private SKPoint _cursor;
 
-    public PageLayout(SKCanvas canvas, SKRect drawable, bool debug)
+    public PageLayout(SKRect drawable, bool debug)
     {
-        Canvas = canvas;
         Drawable = drawable;
         _cursor = Drawable.Location;
-
-        if (debug)
-        {
-            canvas.DrawRect(
-                Available,
-                new SKPaint
-                {
-                    Style = SKPaintStyle.Stroke,
-                    Color = SKColors.Magenta,
-                    StrokeWidth = .5f,
-                });
-        }
     }
 
-    public void MarkFullyDrawn()
+    public void MarkFullyDrawn(PageLayout page)
     {
         IsFullyDrawn = true;
     }
@@ -95,6 +77,5 @@ public class PageLayout : IPage, IDisposable
 
     public void Dispose()
     {
-        Canvas.Dispose();
     }
 }

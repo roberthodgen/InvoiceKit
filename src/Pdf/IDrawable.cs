@@ -13,5 +13,5 @@ public interface IDrawable : IMeasurable, IDisposable
     /// <summary>
     /// Draws the content within the specified rectangle.
     /// </summary>
-    void Draw(PageLayout page);
+    void Draw(SKCanvas canvas, PageLayout page);
 }

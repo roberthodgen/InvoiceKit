@@ -54,12 +54,17 @@ public class PdfDocument : IDisposable
         layoutStack.LayoutPages(context);
 
         //Draws all pages from the context
-        context.DrawAllPages();
+        foreach (var page in context.Pages)
+        {
+            var canvas = _document.BeginPage(_pageSize.Width, _pageSize.Height);
+            page.Drawables.ForEach(d => d.Draw(canvas, page));
+            _document.EndPage();
+        }
 
         _document.Close();
         return _stream.ToArray();
     }
-    
+
     public PdfDocument DisplayLayoutGuidelines()
     {
         _debug = true;
@@ -75,7 +80,6 @@ public class PdfDocument : IDisposable
     private PageLayout BeginNewPage()
     {
         return new PageLayout(
-            _document.BeginPage(_pageSize.Width, _pageSize.Height),
             SKRect.Create(Margin, Margin, _pageSize.Width - Margin, _pageSize.Height - Margin),
             _debug);
     }

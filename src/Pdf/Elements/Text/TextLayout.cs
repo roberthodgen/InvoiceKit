@@ -39,8 +39,12 @@ public sealed class TextLayout : ILayout
         return new SKSize(available.Width, lines.Sum(line => line.Height));
     }
 
+    /// <summary>
+    ///
+    /// </summary>
     private List<SKSize> MeasureLines(SKSize available)
     {
+        // Todo: might now need this measure lines method. However, could separates measuring logic out for both the text and rect.
         var lines = new List<SKSize>();
         var font = Style.ToFont();
         var renderedHeight = font.Metrics.Descent - font.Metrics.Ascent;
@@ -49,6 +53,7 @@ public sealed class TextLayout : ILayout
             .SelectMany(line => WrapText(line, Style, available.Width))
             .Select((_, index) => index)
             .ToList();
+        wrappedLines.ForEach(line => lines.Add(new SKSize(available.Width, lineHeight)));;
         foreach (var index in wrappedLines)
         {
             var height = lineHeight;
@@ -67,6 +72,9 @@ public sealed class TextLayout : ILayout
         return lines;
     }
 
+    /// <summary>
+    /// Separates a single string into multiple lines based on the width of the available space.
+    /// </summary>
     private static List<string> WrapText(string text, TextStyle style, float maxWidth)
     {
         var font = style.ToFont();
@@ -102,41 +110,46 @@ public sealed class TextLayout : ILayout
         return lines;
     }
 
+    /// <summary>
+    ///
+    /// </summary>
     public void LayoutPages(MultiPageContext context)
     {
         var page = context.GetCurrentPage();
         var wrappedLines = _lines.SelectMany(line => WrapText(line, Style, page.Available.Width)).ToList();
-        var halfLineHeightAddition = ((Style.LineHeight * Style.ToFont().Size) - Style.ToFont().Size) / 2;
-        var lineMeasurements = MeasureLines(page.Available.Size);
-        var top = page.Available.Top + Style.ParagraphSpacingBefore;
+        var halfLineHeight = (Style.LineHeight * Style.FontSize - Style.FontSize) / 2;
+        var top = page.Available.Top;
 
         for(var i = 0; i < wrappedLines.Count; i++)
         {
-            var lineHeight = lineMeasurements[i].Height;
             while (true)
             {
-                top += halfLineHeightAddition - Style.ToFont().Metrics.Ascent;
-                var rectBottom = top + lineHeight + (halfLineHeightAddition + Style.ToFont().Metrics.Descent);
+                var textLineLocation = top + halfLineHeight - Style.ToFont().Metrics.Ascent;
+
+                if (i == 0)
+                {
+                    textLineLocation += Style.ParagraphSpacingBefore;
+                }
+
+                var textRect = new SKRect(page.Available.Left, textLineLocation, page.Available.Right, textLineLocation);
+                var allocationRectBottom = textLineLocation + halfLineHeight + Style.ToFont().Metrics.Descent;
 
                 if (i == wrappedLines.Count - 1)
                 {
-                    rectBottom += Style.ParagraphSpacingAfter;
+                    allocationRectBottom += Style.ParagraphSpacingAfter;
                 }
 
-                var rect = new SKRect(
-                    page.Available.Left,
-                    top,
-                    page.Available.Right,
-                    rectBottom);
+                var rect = new SKRect(page.Available.Left, top, page.Available.Right, allocationRectBottom);
 
                 if (page.TryAllocateRect(rect))
                 {
-                    page.AddDrawable(new TextDrawable(wrappedLines[i], rect, Style));
+                    page.AddDrawable(new TextDrawable(wrappedLines[i], textRect, Style));
+                    top = allocationRectBottom;
                     break;
                 }
 
                 // Will only be hit if the page is full.
-                page.MarkFullyDrawn();
+                page.MarkFullyDrawn(page);
                 page = context.GetCurrentPage();
                 top = page.Available.Top;
             }

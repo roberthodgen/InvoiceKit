@@ -12,7 +12,7 @@ public sealed class PageBreak : IViewBuilder
 
     public void Draw(PageLayout page)
     {
-        page.MarkFullyDrawn();
+        page.MarkFullyDrawn(page);
     }
 
     public void Dispose()

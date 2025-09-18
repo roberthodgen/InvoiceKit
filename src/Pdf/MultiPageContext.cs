@@ -1,6 +1,7 @@
 namespace InvoiceKit.Pdf;
 
 using Containers;
+using ShimSkiaSharp;
 
 public class MultiPageContext : IDisposable
 {
@@ -8,7 +9,7 @@ public class MultiPageContext : IDisposable
 
     private int _currentPageIndex;
 
-    private List<PageLayout> Pages { get; } = [];
+    public List<PageLayout> Pages { get; } = [];
 
     public bool Debug { get; }
 
@@ -17,17 +18,6 @@ public class MultiPageContext : IDisposable
         _getNextPage = getNextPage;
         Pages.Add(getNextPage());
         Debug = debug;
-    }
-
-    public void DrawAllPages()
-    {
-        foreach (var page in Pages)
-        {
-            foreach (var drawable in page.Drawables)
-            {
-                drawable.Draw(page);
-            }
-        }
     }
 
     /// <summary>
