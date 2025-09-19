@@ -150,7 +150,7 @@ public sealed class TextLayout : ILayout
                 }
 
                 // Will only be hit if the page is full.
-                page.MarkFullyDrawn(page);
+                page.MarkFullyDrawn();
                 page = context.GetCurrentPage();
                 top = page.Available.Top;
             }

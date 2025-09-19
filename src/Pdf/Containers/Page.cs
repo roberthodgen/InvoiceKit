@@ -5,7 +5,7 @@ using SkiaSharp;
 /// <summary>
 /// Used to render a layout across a single page.
 /// </summary>
-public class PageLayout : IPage, IDisposable
+public class Page : IPage, IDisposable
 {
     /// <summary>
     /// The unmodified original available drawing area of the page.
@@ -37,13 +37,13 @@ public class PageLayout : IPage, IDisposable
     /// </summary>
     private SKPoint _cursor;
 
-    public PageLayout(SKRect drawable, bool debug)
+    public Page(SKRect drawable, bool debug)
     {
         Drawable = drawable;
         _cursor = Drawable.Location;
     }
 
-    public void MarkFullyDrawn(PageLayout page)
+    public void MarkFullyDrawn()
     {
         IsFullyDrawn = true;
     }

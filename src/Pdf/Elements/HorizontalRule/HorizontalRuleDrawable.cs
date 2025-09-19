@@ -1,4 +1,4 @@
-namespace InvoiceKit.Pdf.Elements;
+namespace InvoiceKit.Pdf.Elements.HorizontalRule;
 
 using Containers;
 using SkiaSharp;
@@ -15,16 +15,11 @@ public sealed class HorizontalRuleDrawable : IDrawable
         Debug = debug;
     }
 
-    public SKSize Measure(SKSize available)
-    {
-        return new SKSize(available.Width, 1);
-    }
-
-    public void Draw(SKCanvas canvas, PageLayout page)
+    public void Draw(SKCanvas canvas, Page page)
     {
         canvas.DrawLine(
-            page.Available.Location,
-            SKPoint.Add(page.Available.Location, new SKSize(page.Available.Width, 0)),
+            SizeAndLocation.Location,
+            SKPoint.Add(SizeAndLocation.Location, new SKSize(SizeAndLocation.Width, 0)),
             new SKPaint
             {
                 Color = SKColors.Black,

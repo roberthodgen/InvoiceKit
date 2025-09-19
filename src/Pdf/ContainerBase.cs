@@ -4,8 +4,10 @@ using Elements.Text;
 using Elements.Images;
 using Containers.Stacks;
 using Containers.Tables;
+using Containers.SpacingBlock;
+using Containers.PageBreak;
+using Elements.HorizontalRule;
 using Styles.Text;
-using Containers;
 
 public abstract class ContainerBase : IContainer
 {
@@ -34,8 +36,7 @@ public abstract class ContainerBase : IContainer
 
     public IContainer AddHorizontalRule()
     {
-        var child = new VStack(DefaultTextStyle);
-        child.AddHorizontalRule();
+        var child = new HorizontalRuleViewBuilder();
         Children.Add(child);
         return this;
     }
@@ -56,14 +57,14 @@ public abstract class ContainerBase : IContainer
         return this;
     }
 
-    public IContainer AddSpacingBlock(float height = 5)
+    public IContainer AddSpacing(float height = 5)
     {
         var child = new SpacingBlock(height);
         Children.Add(child);
         return this;
     }
 
-    public IContainer AddTableBlock(Action<TableViewBuilder> configure)
+    public IContainer AddTable(Action<TableViewBuilder> configure)
     {
         var child = new TableViewBuilder(DefaultTextStyle);
         configure(child);
@@ -73,7 +74,7 @@ public abstract class ContainerBase : IContainer
 
     public IContainer AddPageBreak()
     {
-        var child = new PageBreak();
+        var child = new PageBreakViewBuilder();
         Children.Add(child);
         return this;
     }

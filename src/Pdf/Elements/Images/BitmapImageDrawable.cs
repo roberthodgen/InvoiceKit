@@ -11,23 +11,16 @@ internal class BitmapImageDrawable : IDrawable
 
     public bool Debug { get; }
 
-    internal BitmapImageDrawable(string path, SKRect rect, bool debug = false)
+    internal BitmapImageDrawable(SKBitmap bitmap, SKRect rect, bool debug = false)
     {
-        using var data = SKData.Create(path);
-        using var codec = SKCodec.Create(data);
-        _bitmap = SKBitmap.Decode(codec);
+        _bitmap = bitmap;
         SizeAndLocation = rect;
         Debug = debug;
     }
 
-    public SKSize Measure(SKSize available)
+    public void Draw(SKCanvas canvas, Page page)
     {
-        return new SKSize(_bitmap.Width, _bitmap.Height);
-    }
-
-    public void Draw(SKCanvas canvas, PageLayout page)
-    {
-        canvas.DrawBitmap(_bitmap, page.Available.Location);
+        canvas.DrawBitmap(_bitmap, SizeAndLocation);
     }
 
     public void Dispose()

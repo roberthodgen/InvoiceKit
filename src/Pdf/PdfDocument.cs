@@ -48,10 +48,10 @@ public class PdfDocument : IDisposable
         using var context = new MultiPageContext(BeginNewPage);
 
         // Converts viewBuilders to Layouts
-        var layoutStack = _viewBuilder?.ToLayout() ?? throw new Exception("No ViewBuilder defined");
+        var viewStack = _viewBuilder?.ToLayout() ?? throw new Exception("No ViewBuilder defined");
 
         // Converts Layouts to Pages that are stored on context
-        layoutStack.LayoutPages(context, _debug);
+        viewStack.LayoutPages(context, _debug);
 
         //Draws all pages from the context
         foreach (var page in context.Pages)
@@ -80,9 +80,9 @@ public class PdfDocument : IDisposable
     /// <summary>
     /// Creates a new PageLayout with the current page size and margin.
     /// </summary>
-    private PageLayout BeginNewPage()
+    private Page BeginNewPage()
     {
-        return new PageLayout(
+        return new Page(
             SKRect.Create(Margin, Margin, _pageSize.Width - Margin, _pageSize.Height - Margin),
             _debug);
     }

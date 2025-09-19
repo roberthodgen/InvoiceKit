@@ -24,6 +24,7 @@ public class TextLayoutTests(ITestOutputHelper testOutputHelper)
                 .AddText(text => text
                     .Color(SKColors.DimGray)
                     .WithText("Sample document for text block layout and rendering."))
+                .AddHorizontalRule()
                 .AddText(text => text.WithText("Default: The quick brown fox jumps over the lazy dog."))
                 .AddText(text => text
                     .ParagraphSpacing(after: 2f)

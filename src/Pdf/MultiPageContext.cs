@@ -5,13 +5,13 @@ using ShimSkiaSharp;
 
 public class MultiPageContext : IDisposable
 {
-    private readonly Func<PageLayout> _getNextPage;
+    private readonly Func<Page> _getNextPage;
 
     private int _currentPageIndex;
 
-    public List<PageLayout> Pages { get; } = [];
+    public List<Page> Pages { get; } = [];
 
-    public MultiPageContext(Func<PageLayout> getNextPage)
+    public MultiPageContext(Func<Page> getNextPage)
     {
         _getNextPage = getNextPage;
         Pages.Add(getNextPage());
@@ -24,7 +24,7 @@ public class MultiPageContext : IDisposable
     /// The return page may be partially drawn into or an empty page. When the current page is fully drawn, this class
     /// will create a new page and advance the marker.
     /// </remarks>
-    public PageLayout GetCurrentPage()
+    public Page GetCurrentPage()
     {
         var currentPage = Pages[_currentPageIndex];
         if (!currentPage.IsFullyDrawn) return currentPage;
@@ -41,7 +41,7 @@ public class MultiPageContext : IDisposable
     /// Does not advance the current page marker as other blocks (think columns or Z stacks) may still need to render
     /// into the current page.
     /// </remarks>
-    private PageLayout NextPage()
+    private Page NextPage()
     {
         if (_currentPageIndex + 1 >= Pages.Count)
         {

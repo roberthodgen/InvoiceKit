@@ -52,21 +52,21 @@ public class TableViewBuilder(TextStyle defaultTextStyle) : IViewBuilder
     //
     // public void Draw(PageLayout page)
     // {
-    //     // var top = page.Available.Top;
-    //     // foreach (var row in _headers)
-    //     // {
-    //     //     var rowHeight = row.Measure(page.Available.Size).Height;
-    //     //     row.Draw(page, new SKRect(page.Available.Left, top, page.Available.Left + page.Available.Width, top + rowHeight));
-    //     //     top += rowHeight;
-    //     // }
-    //     //
-    //     // foreach (var row in Rows)
-    //     // {
-    //     //     // TODO detect when page changes and re-draw header row(s)
-    //     //     var rowHeight = row.Measure(page.Available.Size).Height;
-    //     //     row.Draw(context, new SKRect(page.Available.Left, top, page.Available.Left + page.Available.Width, top + rowHeight));
-    //     //     top += rowHeight;
-    //     // }
+    //     var top = page.Available.Top;
+    //     foreach (var row in _headers)
+    //     {
+    //         var rowHeight = row.Measure(page.Available.Size).Height;
+    //         row.Draw(page, new SKRect(page.Available.Left, top, page.Available.Left + page.Available.Width, top + rowHeight));
+    //         top += rowHeight;
+    //     }
+    //
+    //     foreach (var row in Rows)
+    //     {
+    //         // TODO detect when page changes and re-draw header row(s)
+    //         var rowHeight = row.Measure(page.Available.Size).Height;
+    //         row.Draw(context, new SKRect(page.Available.Left, top, page.Available.Left + page.Available.Width, top + rowHeight));
+    //         top += rowHeight;
+    //     }
     // }
 
     public TableViewBuilder UseEquallySpaceColumns()
@@ -114,12 +114,12 @@ public class TableViewBuilder(TextStyle defaultTextStyle) : IViewBuilder
             _ => throw new NotImplementedException(),
         };
 
-    public void Dispose()
-    {
-    }
-
     public ILayout ToLayout()
     {
-        throw new NotImplementedException();
+        return new TableLayout();
+    }
+
+    public void Dispose()
+    {
     }
 }

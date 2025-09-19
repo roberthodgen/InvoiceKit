@@ -43,12 +43,12 @@ public interface IContainer : IViewBuilder
     /// Adds spacing between blocks.
     /// </summary>
     /// <param name="height">Float for the amount of spacing. Default of 5f.</param>
-    IContainer AddSpacingBlock(float height = 5f);
+    IContainer AddSpacing(float height = 5f);
 
     /// <summary>
     /// Adds a new table block.
     /// </summary>
-    IContainer AddTableBlock(Action<TableViewBuilder> configureTableBlock);
+    IContainer AddTable(Action<TableViewBuilder> configureTableBlock);
 
     /// <summary>
     /// Fills the rest of the page with blank space and starts a new page.

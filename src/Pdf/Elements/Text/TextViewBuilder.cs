@@ -7,6 +7,8 @@ public sealed class TextViewBuilder : IViewBuilder
 {
     private TextStyle Style { get; set; }
 
+    private string Text { get; set; } = "";
+
     internal TextViewBuilder(TextStyle style)
     {
         Style = style;
@@ -14,7 +16,8 @@ public sealed class TextViewBuilder : IViewBuilder
 
     public IViewBuilder WithText(string text)
     {
-        return new TextView(Style, text);
+        Text = text;
+        return this;
     }
 
     public TextViewBuilder ParagraphSpacing(float? before = null, float? after = null)
@@ -62,6 +65,6 @@ public sealed class TextViewBuilder : IViewBuilder
 
     public ILayout ToLayout()
     {
-        throw new NotImplementedException();
+        return new TextLayout(Style, Text);
     }
 }

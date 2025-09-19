@@ -22,16 +22,7 @@ public sealed class TextDrawable : IDrawable
         Debug = debug;
     }
 
-    public SKSize Measure(SKSize available)
-    {
-        return new SKSize(SizeAndLocation.Width, SizeAndLocation.Height);
-    }
-
-    public void Dispose()
-    {
-    }
-
-    public void Draw(SKCanvas canvas, PageLayout page)
+    public void Draw(SKCanvas canvas, Page page)
     {
         if (Debug)
         {
@@ -44,5 +35,9 @@ public sealed class TextDrawable : IDrawable
             });
         }
         canvas.DrawText(TextLine, SizeAndLocation.Left, SizeAndLocation.Top, SKTextAlign.Left, Style.ToFont(), Style.ToPaint());
+    }
+
+    public void Dispose()
+    {
     }
 }

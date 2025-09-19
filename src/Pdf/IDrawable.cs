@@ -3,7 +3,7 @@ namespace InvoiceKit.Pdf;
 using Containers;
 using SkiaSharp;
 
-public interface IDrawable : IMeasurable, IDisposable
+public interface IDrawable : IDisposable
 {
     /// <summary>
     /// Used after the content has been laid out to store the final size and location of the drawable on a page.
@@ -18,5 +18,5 @@ public interface IDrawable : IMeasurable, IDisposable
     /// <summary>
     /// Draws the content within the specified rectangle.
     /// </summary>
-    void Draw(SKCanvas canvas, PageLayout page);
+    void Draw(SKCanvas canvas, Page page);
 }

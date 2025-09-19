@@ -5,7 +5,9 @@ using SkiaSharp;
 
 public sealed class ImageViewBuilder : IViewBuilder
 {
-    private IDrawable? _drawable;
+    private string Path { get; set; } = "";
+
+    private string ImageType { get; set; } = "";
 
     internal ImageViewBuilder()
     {
@@ -13,20 +15,20 @@ public sealed class ImageViewBuilder : IViewBuilder
 
     public IViewBuilder WithBitmapImage(string path)
     {
-        // Todo: Fill in correct SKRect
-        _drawable = new BitmapImageDrawable(path, new SKRect());
+        Path = path;
+        ImageType = "bmp";
         return this;
     }
 
     public IViewBuilder WithSvgImage(string path)
     {
-        // Todo: Fill in correct SKRect
-        _drawable = new SvgImageDrawable(path, new SKRect());
+        Path = path;
+        ImageType = "svg";
         return this;
     }
 
     public ILayout ToLayout()
     {
-        throw new NotImplementedException();
+        return new ImageLayout(Path, ImageType);
     }
 }
