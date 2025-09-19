@@ -5,7 +5,7 @@ using SkiaSharp;
 public class TableLayout : ILayout
 {
     // Todo:
-    public void LayoutPages(MultiPageContext context)
+    public void LayoutPages(MultiPageContext context, bool debug)
     {
         throw new NotImplementedException();
     }

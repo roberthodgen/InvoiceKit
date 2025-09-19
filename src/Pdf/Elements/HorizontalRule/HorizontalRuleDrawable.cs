@@ -7,9 +7,12 @@ public sealed class HorizontalRuleDrawable : IDrawable
 {
     public SKRect SizeAndLocation { get; }
 
-    public HorizontalRuleDrawable(SKRect rect)
+    public bool Debug { get; }
+
+    public HorizontalRuleDrawable(SKRect rect, bool debug = false)
     {
         SizeAndLocation = rect;
+        Debug = debug;
     }
 
     public SKSize Measure(SKSize available)

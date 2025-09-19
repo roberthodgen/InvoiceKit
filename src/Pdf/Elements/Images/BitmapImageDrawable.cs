@@ -9,12 +9,15 @@ internal class BitmapImageDrawable : IDrawable
 
     public SKRect SizeAndLocation { get; }
 
-    internal BitmapImageDrawable(string path, SKRect rect)
+    public bool Debug { get; }
+
+    internal BitmapImageDrawable(string path, SKRect rect, bool debug = false)
     {
         using var data = SKData.Create(path);
         using var codec = SKCodec.Create(data);
         _bitmap = SKBitmap.Decode(codec);
         SizeAndLocation = rect;
+        Debug = debug;
     }
 
     public SKSize Measure(SKSize available)

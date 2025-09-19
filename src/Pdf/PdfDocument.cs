@@ -45,13 +45,13 @@ public class PdfDocument : IDisposable
 
     public byte[] Build()
     {
-        using var context = new MultiPageContext(BeginNewPage, _debug);
+        using var context = new MultiPageContext(BeginNewPage);
 
         // Converts viewBuilders to Layouts
         var layoutStack = _viewBuilder?.ToLayout() ?? throw new Exception("No ViewBuilder defined");
 
         // Converts Layouts to Pages that are stored on context
-        layoutStack.LayoutPages(context);
+        layoutStack.LayoutPages(context, _debug);
 
         //Draws all pages from the context
         foreach (var page in context.Pages)
@@ -77,6 +77,9 @@ public class PdfDocument : IDisposable
         _stream.Dispose();
     }
 
+    /// <summary>
+    /// Creates a new PageLayout with the current page size and margin.
+    /// </summary>
     private PageLayout BeginNewPage()
     {
         return new PageLayout(

@@ -10,11 +10,14 @@ internal class SvgImageDrawable : IDrawable
 
     public SKRect SizeAndLocation { get; }
 
-    public SvgImageDrawable(string path, SKRect rect)
+    public bool Debug { get; }
+
+    public SvgImageDrawable(string path, SKRect rect, bool debug = false)
     {
         _svg = new SKSvg();
         _svg.Load(path);
         SizeAndLocation = rect;
+        Debug = debug;
     }
 
     public SKSize Measure(SKSize available)

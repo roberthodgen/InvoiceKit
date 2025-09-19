@@ -44,7 +44,7 @@ public sealed class TextLayout : ILayout
     /// </summary>
     private List<SKSize> MeasureLines(SKSize available)
     {
-        // Todo: might now need this measure lines method. However, could separates measuring logic out for both the text and rect.
+        // Todo: might not need this measure lines method. However, could separates measuring logic out for both the text and rect.
         var lines = new List<SKSize>();
         var font = Style.ToFont();
         var renderedHeight = font.Metrics.Descent - font.Metrics.Ascent;
@@ -113,7 +113,7 @@ public sealed class TextLayout : ILayout
     /// <summary>
     ///
     /// </summary>
-    public void LayoutPages(MultiPageContext context)
+    public void LayoutPages(MultiPageContext context, bool debug)
     {
         var page = context.GetCurrentPage();
         var wrappedLines = _lines.SelectMany(line => WrapText(line, Style, page.Available.Width)).ToList();
@@ -141,9 +141,10 @@ public sealed class TextLayout : ILayout
 
                 var rect = new SKRect(page.Available.Left, top, page.Available.Right, allocationRectBottom);
 
+                // Tries to allocate the rect to the current page. If it fails, the page is marked full and a new page is created.
                 if (page.TryAllocateRect(rect))
                 {
-                    page.AddDrawable(new TextDrawable(wrappedLines[i], textRect, Style));
+                    page.AddDrawable(new TextDrawable(wrappedLines[i], textRect, Style, debug));
                     top = allocationRectBottom;
                     break;
                 }

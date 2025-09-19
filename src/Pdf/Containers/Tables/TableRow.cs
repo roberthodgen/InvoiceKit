@@ -15,6 +15,8 @@ public class TableRow(TableViewBuilder table, TextStyle defaultTextStyle, SKRect
 
     public SKRect SizeAndLocation { get; } = rect;
 
+    public bool Debug { get; }
+
     public TableRow AddCell(Action<TableCell> config)
     {
         var column = table.GetOrAddColumn(_columnIndex);

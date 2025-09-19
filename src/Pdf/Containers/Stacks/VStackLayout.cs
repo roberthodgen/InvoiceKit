@@ -11,9 +11,9 @@ public class VStackLayout : ILayout
         Children = children;
     }
 
-    public void LayoutPages(MultiPageContext context)
+    public void LayoutPages(MultiPageContext context, bool debug)
     {
-        Children.ForEach(child => child.LayoutPages(context));
+        Children.ForEach(child => child.LayoutPages(context, debug));
     }
 
     public SKSize Measure(SKSize available)

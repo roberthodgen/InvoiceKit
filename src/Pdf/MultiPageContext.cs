@@ -11,13 +11,10 @@ public class MultiPageContext : IDisposable
 
     public List<PageLayout> Pages { get; } = [];
 
-    public bool Debug { get; }
-
-    public MultiPageContext(Func<PageLayout> getNextPage, bool debug)
+    public MultiPageContext(Func<PageLayout> getNextPage)
     {
         _getNextPage = getNextPage;
         Pages.Add(getNextPage());
-        Debug = debug;
     }
 
     /// <summary>

@@ -11,6 +11,11 @@ public interface IDrawable : IMeasurable, IDisposable
     SKRect SizeAndLocation { get; }
 
     /// <summary>
+    /// Used to activate debug box outlines for the drawable.
+    /// </summary>
+    bool Debug { get; }
+
+    /// <summary>
     /// Draws the content within the specified rectangle.
     /// </summary>
     void Draw(SKCanvas canvas, PageLayout page);

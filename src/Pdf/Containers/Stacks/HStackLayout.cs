@@ -11,7 +11,7 @@ public class HStackLayout : ILayout
         Children = children;
     }
 
-    public void LayoutPages(MultiPageContext context)
+    public void LayoutPages(MultiPageContext context, bool debug)
     {
         throw new NotImplementedException();
     }
