@@ -35,41 +35,8 @@ public sealed class TextLayout : ILayout
 
     public SKSize Measure(SKSize available)
     {
-        var lines = MeasureLines(available);
-        return new SKSize(available.Width, lines.Sum(line => line.Height));
-    }
-
-    /// <summary>
-    ///
-    /// </summary>
-    private List<SKSize> MeasureLines(SKSize available)
-    {
-        // Todo: might not need this measure lines method. However, could separates measuring logic out for both the text and rect.
-        var lines = new List<SKSize>();
-        var font = Style.ToFont();
-        var renderedHeight = font.Metrics.Descent - font.Metrics.Ascent;
-        var lineHeight = renderedHeight + ((Style.LineHeight * Style.FontSize) - Style.FontSize);
-        var wrappedLines = _lines
-            .SelectMany(line => WrapText(line, Style, available.Width))
-            .Select((_, index) => index)
-            .ToList();
-        wrappedLines.ForEach(line => lines.Add(new SKSize(available.Width, lineHeight)));;
-        foreach (var index in wrappedLines)
-        {
-            var height = lineHeight;
-            if (index == 0) // first line
-            {
-                height += Style.ParagraphSpacingBefore;
-            }
-            else if (index == wrappedLines.Count - 1) // last line
-            {
-                height += Style.ParagraphSpacingAfter;
-            }
-
-            lines.Add(new SKSize(available.Width, height));
-        }
-
-        return lines;
+        //Todo: measure a single line for use inside of the layout methods.
+        return new SKSize();
     }
 
     /// <summary>
@@ -113,12 +80,13 @@ public sealed class TextLayout : ILayout
     /// <summary>
     ///
     /// </summary>
-    public void LayoutPages(MultiPageContext context, bool debug)
+    public LayoutResult Layout(LayoutContext context)
     {
-        var page = context.GetCurrentPage();
-        var wrappedLines = _lines.SelectMany(line => WrapText(line, Style, page.Available.Width)).ToList();
+        var listDrawables = new List<IDrawable>();
+        var totalSize = new SKSize();
+        var wrappedLines = _lines.SelectMany(line => WrapText(line, Style, context.Available.Width)).ToList();
         var halfLineHeight = (Style.LineHeight * Style.FontSize - Style.FontSize) / 2;
-        var top = page.Available.Top;
+        var top = context.Available.Top;
 
         for(var i = 0; i < wrappedLines.Count; i++)
         {
@@ -131,7 +99,7 @@ public sealed class TextLayout : ILayout
                     textLineLocation += Style.ParagraphSpacingBefore;
                 }
 
-                var textRect = new SKRect(page.Available.Left, textLineLocation, page.Available.Right, textLineLocation);
+                var textRect = new SKRect(context.Available.Left, textLineLocation, context.Available.Right, textLineLocation);
                 var allocationRectBottom = textLineLocation + halfLineHeight + Style.ToFont().Metrics.Descent;
 
                 if (i == wrappedLines.Count - 1)
@@ -139,21 +107,22 @@ public sealed class TextLayout : ILayout
                     allocationRectBottom += Style.ParagraphSpacingAfter;
                 }
 
-                var rect = new SKRect(page.Available.Left, top, page.Available.Right, allocationRectBottom);
+                var rect = new SKRect(context.Available.Left, top, context.Available.Right, allocationRectBottom);
 
                 // Tries to allocate the rect to the current page. If it fails, the page is marked full and a new page is created.
-                if (page.TryAllocateRect(rect))
+                if (context.TryAllocateRect(rect))
                 {
-                    page.AddDrawable(new TextDrawable(wrappedLines[i], textRect, Style, debug));
+                    listDrawables.Add(new TextDrawable(wrappedLines[i], textRect, Style));
+                    // page.ForceAllocateSize(rect.Size);
                     top = allocationRectBottom;
+                    totalSize += rect.Size;
                     break;
                 }
 
                 // Will only be hit if the page is full.
-                page.MarkFullyDrawn();
-                page = context.GetCurrentPage();
-                top = page.Available.Top;
+                return new LayoutResult(listDrawables, LayoutState.IsFullyDrawn);
             }
         }
+        return new LayoutResult(listDrawables, LayoutState.HasSpace);
     }
 }

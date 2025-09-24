@@ -1,9 +1,11 @@
 namespace InvoiceKit.Pdf;
 
+using SkiaSharp;
+
 public interface ILayout : IMeasurable
 {
     /// <summary>
-    /// Used to lay out drawables across multiple pages.
+    /// Used by VStack and HStack to lay out their children.
     /// </summary>
-    void LayoutPages(MultiPageContext context, bool debug);
+    LayoutResult Layout(LayoutContext context);
 }

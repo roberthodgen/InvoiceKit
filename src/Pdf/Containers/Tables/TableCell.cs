@@ -1,6 +1,7 @@
 namespace InvoiceKit.Pdf.Containers.Tables;
 
 using Elements;
+using SkiaSharp;
 using Styles.Text;
 
 /// <summary>
@@ -8,17 +9,11 @@ using Styles.Text;
 /// </summary>
 public class TableCell : ElementBase
 {
-    public int RowIndex { get; }
-
-    public int ColumnIndex { get; }
-
     /// <summary>
-    /// Table cells should be created by the <see cref="TableColumn"/> to ensure property tracking and assignment.
+    ///
     /// </summary>
-    internal TableCell(TextStyle defaultTextStyle, int rowIndex, int columnIndex)
+    internal TableCell(TextStyle defaultTextStyle)
         : base(defaultTextStyle)
     {
-        RowIndex = rowIndex;
-        ColumnIndex = columnIndex;
     }
 }

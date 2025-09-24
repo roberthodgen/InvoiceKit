@@ -3,27 +3,27 @@ namespace InvoiceKit.Pdf.Containers.Tables;
 using SkiaSharp;
 using Styles.Text;
 
-public class TableRow(TableViewBuilder table, TextStyle defaultTextStyle, SKRect rect) : IDrawable
+public class TableRowViewBuilder : IViewBuilder
 {
-    private int _columnIndex = 0;
-
     private List<TableCell> Cells { get; } = [];
 
-    private TextStyle Style { get; } = defaultTextStyle;
+    private List<ColumnWidthPercent> ColumnWidths { get; }
 
-    private bool IsLastRow => table.Rows.Last() == this;
+    private TextStyle Style { get; }
 
-    public SKRect SizeAndLocation { get; } = rect;
+    public IReadOnlyCollection<IViewBuilder> Children => [];
 
-    public bool Debug { get; }
-
-    public TableRow AddCell(Action<TableCell> config)
+    internal TableRowViewBuilder(TextStyle defaultTextStyle, List<ColumnWidthPercent> columnWidths)
     {
-        var column = table.GetOrAddColumn(_columnIndex);
-        var cell = column.AddCell(Style, table.Rows.Count - 1);
-        config(cell);
+        Style = defaultTextStyle;
+        ColumnWidths = columnWidths;
+    }
+
+    public TableRowViewBuilder AddCell(Action<TableCell> action)
+    {
+        var cell = new TableCell(Style);
+        action(cell);
         Cells.Add(cell);
-        _columnIndex++;
         return this;
     }
 
@@ -35,11 +35,10 @@ public class TableRow(TableViewBuilder table, TextStyle defaultTextStyle, SKRect
     public SKSize Measure(SKSize available)
     {
         float height = 0;
-        // foreach (var cell in Cells)
+        // for (var i = 0; i < Cells.Count - 1; i++)
         // {
-        //     var width = table.GetColumnWidth(available.Width, cell.ColumnIndex);
-        //     var tallestCell = cell.Measure(new SKSize(width, available.Height));
-        //     height = Math.Max(height, tallestCell.Height);
+        //     var cellHeight = Cells[i].Measure(new SKSize(ColumnWidths[i].Percent, available.Height)).Height;
+        //     height = Math.Max(height, cellHeight);
         // }
 
         return new SKSize(available.Width, height);
@@ -70,8 +69,8 @@ public class TableRow(TableViewBuilder table, TextStyle defaultTextStyle, SKRect
         // }
     }
 
-    public void Dispose()
+    public ILayout ToLayout()
     {
-        table.Dispose();
+        throw new NotImplementedException();
     }
 }

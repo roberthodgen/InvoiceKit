@@ -10,23 +10,20 @@ public sealed class TextDrawable : IDrawable
 
     public SKRect SizeAndLocation { get; }
 
-    public bool Debug { get; }
-
     private TextStyle Style { get; }
 
-    public TextDrawable(string text, SKRect sizeAndLocation, TextStyle style, bool debug)
+    public TextDrawable(string text, SKRect sizeAndLocation, TextStyle style)
     {
         TextLine = text;
         SizeAndLocation = sizeAndLocation;
         Style = style;
-        Debug = debug;
     }
 
-    public void Draw(SKCanvas canvas, Page page)
+    public void Draw(IDrawableContext context)
     {
-        if (Debug)
+        if (context.Debug)
         {
-            canvas.DrawLine(SizeAndLocation.Left, SizeAndLocation.Top, SizeAndLocation.Right, SizeAndLocation.Top,
+            context.Canvas.DrawLine(SizeAndLocation.Left, SizeAndLocation.Top, SizeAndLocation.Right, SizeAndLocation.Top,
                 new SKPaint
             {
                 Style = SKPaintStyle.Stroke,
@@ -34,7 +31,7 @@ public sealed class TextDrawable : IDrawable
                 StrokeWidth = 1f,
             });
         }
-        canvas.DrawText(TextLine, SizeAndLocation.Left, SizeAndLocation.Top, SKTextAlign.Left, Style.ToFont(), Style.ToPaint());
+        context.Canvas.DrawText(TextLine, SizeAndLocation.Left, SizeAndLocation.Top, SKTextAlign.Left, Style.ToFont(), Style.ToPaint());
     }
 
     public void Dispose()

@@ -11,7 +11,9 @@ using Styles.Text;
 
 public abstract class ContainerBase : IContainer
 {
-    protected List<IViewBuilder> Children { get; } = [];
+    private List<IViewBuilder> _children = [];
+
+    public IReadOnlyCollection<IViewBuilder> Children => _children.AsReadOnly();
 
     public TextStyle DefaultTextStyle { get; protected set; }
 
@@ -23,21 +25,21 @@ public abstract class ContainerBase : IContainer
     public IContainer AddText(Func<TextViewBuilder, IViewBuilder> builder)
     {
         var child = builder(new TextViewBuilder(DefaultTextStyle));
-        Children.Add(child);
+        _children.Add(child);
         return this;
     }
 
     public IContainer AddImage(Func<ImageViewBuilder, IViewBuilder> builder)
     {
         var child = builder(new ImageViewBuilder());
-        Children.Add(child);
+        _children.Add(child);
         return this;
     }
 
     public IContainer AddHorizontalRule()
     {
         var child = new HorizontalRuleViewBuilder();
-        Children.Add(child);
+        _children.Add(child);
         return this;
     }
 
@@ -45,7 +47,7 @@ public abstract class ContainerBase : IContainer
     {
         var child = new HStack(DefaultTextStyle);
         configure(child);
-        Children.Add(child);
+        _children.Add(child);
         return this;
     }
 
@@ -53,14 +55,14 @@ public abstract class ContainerBase : IContainer
     {
         var child = new VStack(DefaultTextStyle);
         configure(child);
-        Children.Add(child);
+        _children.Add(child);
         return this;
     }
 
     public IContainer AddSpacing(float height = 5)
     {
-        var child = new SpacingBlock(height);
-        Children.Add(child);
+        var child = new SpacingBlockViewBuilder(height);
+        _children.Add(child);
         return this;
     }
 
@@ -68,14 +70,14 @@ public abstract class ContainerBase : IContainer
     {
         var child = new TableViewBuilder(DefaultTextStyle);
         configure(child);
-        Children.Add(child);
+        _children.Add(child);
         return this;
     }
 
     public IContainer AddPageBreak()
     {
         var child = new PageBreakViewBuilder();
-        Children.Add(child);
+        _children.Add(child);
         return this;
     }
 

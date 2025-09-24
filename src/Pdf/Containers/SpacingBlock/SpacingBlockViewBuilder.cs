@@ -5,11 +5,13 @@ using SkiaSharp;
 /// <summary>
 /// Used to add spacing in between blocks.
 /// </summary>
-public sealed class SpacingBlock : IViewBuilder
+public sealed class SpacingBlockViewBuilder : IViewBuilder
 {
     private float Height { get; }
 
-    internal SpacingBlock(float height)
+    public IReadOnlyCollection<IViewBuilder> Children => [];
+
+    internal SpacingBlockViewBuilder(float height)
     {
         Height = height;
     }

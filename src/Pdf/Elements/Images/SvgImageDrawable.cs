@@ -19,9 +19,9 @@ internal class SvgImageDrawable : IDrawable
         Debug = debug;
     }
 
-    public void Draw(SKCanvas canvas, Page page)
+    public void Draw(IDrawableContext context)
     {
-        canvas.DrawPicture(_svg.Picture, SizeAndLocation.Location);
+        context.Canvas.DrawPicture(_svg.Picture, SizeAndLocation.Location);
     }
 
     public void Dispose()

@@ -15,7 +15,6 @@ public class HStack : ContainerBase
     public override ILayout ToLayout()
     {
         var childrenLayouts = Children.Select(child => child.ToLayout()).ToList();
-        var vStackLayout = new VStackLayout(childrenLayouts);
-        return vStackLayout;
+        return new HStackLayout(childrenLayouts);
     }
 }

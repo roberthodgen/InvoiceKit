@@ -18,9 +18,9 @@ internal class BitmapImageDrawable : IDrawable
         Debug = debug;
     }
 
-    public void Draw(SKCanvas canvas, Page page)
+    public void Draw(IDrawableContext context)
     {
-        canvas.DrawBitmap(_bitmap, SizeAndLocation);
+        context.Canvas.DrawBitmap(_bitmap, SizeAndLocation);
     }
 
     public void Dispose()

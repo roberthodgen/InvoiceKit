@@ -7,17 +7,14 @@ public sealed class HorizontalRuleDrawable : IDrawable
 {
     public SKRect SizeAndLocation { get; }
 
-    public bool Debug { get; }
-
-    public HorizontalRuleDrawable(SKRect rect, bool debug = false)
+    public HorizontalRuleDrawable(SKRect rect)
     {
         SizeAndLocation = rect;
-        Debug = debug;
     }
 
-    public void Draw(SKCanvas canvas, Page page)
+    public void Draw(IDrawableContext context)
     {
-        canvas.DrawLine(
+        context.Canvas.DrawLine(
             SizeAndLocation.Location,
             SKPoint.Add(SizeAndLocation.Location, new SKSize(SizeAndLocation.Width, 0)),
             new SKPaint

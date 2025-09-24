@@ -11,9 +11,22 @@ public class VStackLayout : ILayout
         Children = children;
     }
 
-    public void LayoutPages(MultiPageContext context, bool debug)
+    public LayoutResult Layout(LayoutContext context)
     {
-        Children.ForEach(child => child.LayoutPages(context, debug));
+        if (Children.Count == 0)
+        {
+            return new LayoutResult([], LayoutState.IsEmpty);
+        }
+
+        var layoutResults = new List<LayoutResult>();
+        var top = context.Available.Top;
+        foreach (var child in Children)
+        {
+            var rect = new SKRect(context.Available.Left, top, context.Available.Right, context.Available.Bottom);
+            layoutResults.Add(child.Layout(context));
+        }
+
+        return layoutResults.Last();
     }
 
     public SKSize Measure(SKSize available)

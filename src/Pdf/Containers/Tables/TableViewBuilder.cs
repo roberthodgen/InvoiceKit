@@ -3,15 +3,13 @@ namespace InvoiceKit.Pdf.Containers.Tables;
 using SkiaSharp;
 using Styles.Text;
 
-public class TableViewBuilder(TextStyle defaultTextStyle) : IViewBuilder
+public class TableViewBuilder : IViewBuilder
 {
-    private readonly List<TableRow> _headers = [];
+    private readonly List<TableRowViewBuilder> _headers = [];
 
-    private TextStyle _defaultTextStyle = defaultTextStyle; // TODO make this editable for the table
+    private readonly List<TableRowViewBuilder> _rows = [];
 
-    public List<TableRow> Rows { get; } = [];
-
-    private List<TableColumn> Columns = [];
+    private readonly TextStyle _defaultTextStyle; // TODO make this editable for the table
 
     /// <summary>
     /// Specifies how column sizes will be computed.
@@ -20,54 +18,33 @@ public class TableViewBuilder(TextStyle defaultTextStyle) : IViewBuilder
 
     private List<ColumnWidthPercent> ColumnWidthPercentages { get; set; } = [];
 
-    private TextStyle TableHeaderStyle { get; } = defaultTextStyle with { FontPath = "Open Sans/Bold", };
+    private TextStyle TableHeaderStyle { get; }
 
-    public bool ShowRowSeparators { get; private set; } = false;
+    private bool ShowRowSeparators { get; set; }
 
-    public TableViewBuilder AddHeader(Action<TableRow> config)
+    public IReadOnlyCollection<IViewBuilder> Children => [];
+
+    internal TableViewBuilder(TextStyle defaultTextStyle)
     {
-        // Todo: fix rect
-        var row = new TableRow(this, TableHeaderStyle, new SKRect());
+        _defaultTextStyle = defaultTextStyle;
+        TableHeaderStyle = defaultTextStyle with {FontPath = "Open Sans/Bold"};
+    }
+
+    public TableViewBuilder AddHeader(Action<TableRowViewBuilder> config)
+    {
+        var row = new TableRowViewBuilder(TableHeaderStyle, ColumnWidthPercentages);
         config(row);
         _headers.Add(row);
         return this;
     }
 
-    public TableViewBuilder AddRow(Action<TableRow> config)
+    public TableViewBuilder AddRow(Action<TableRowViewBuilder> config)
     {
-        // Todo: fix rect
-        var row = new TableRow(this, _defaultTextStyle, new SKRect());
+        var row = new TableRowViewBuilder(_defaultTextStyle, ColumnWidthPercentages);
         config(row);
-        Rows.Add(row);
+        _rows.Add(row);
         return this;
     }
-
-    // public SKSize Measure(SKSize available)
-    // {
-    //     var width = available.Width; // always fills the available width
-    //     var height = Rows.Sum(row => row.Measure(available).Height);
-    //     height += _headers.Sum(row => row.Measure(available).Height);
-    //     return new SKSize(width, height);
-    // }
-    //
-    // public void Draw(PageLayout page)
-    // {
-    //     var top = page.Available.Top;
-    //     foreach (var row in _headers)
-    //     {
-    //         var rowHeight = row.Measure(page.Available.Size).Height;
-    //         row.Draw(page, new SKRect(page.Available.Left, top, page.Available.Left + page.Available.Width, top + rowHeight));
-    //         top += rowHeight;
-    //     }
-    //
-    //     foreach (var row in Rows)
-    //     {
-    //         // TODO detect when page changes and re-draw header row(s)
-    //         var rowHeight = row.Measure(page.Available.Size).Height;
-    //         row.Draw(context, new SKRect(page.Available.Left, top, page.Available.Left + page.Available.Width, top + rowHeight));
-    //         top += rowHeight;
-    //     }
-    // }
 
     public TableViewBuilder UseEquallySpaceColumns()
     {
@@ -91,23 +68,10 @@ public class TableViewBuilder(TextStyle defaultTextStyle) : IViewBuilder
         return this;
     }
 
-    internal TableColumn GetOrAddColumn(int columnIndex)
-    {
-        var column = Columns.ElementAtOrDefault(columnIndex);
-        if (column is null)
-        {
-            // TODO handle sizing
-            column = new TableColumn(columnIndex);
-            Columns.Add(column);
-        }
-
-        return column;
-    }
-
-    public float GetColumnWidth(float available, int columnIndex) =>
+    public float GetColumnWidth(float available, int numberOfColumns, int columnIndex) =>
         ColumnSizing switch
         {
-            ColumnSizing.Equal => available / Columns.Count,
+            ColumnSizing.Equal => available / numberOfColumns,
             ColumnSizing.FixedPercentage => available * ColumnWidthPercentages[columnIndex].Percent,
             ColumnSizing.FixedPoints => throw new NotImplementedException("TODO"),
             ColumnSizing.Auto => throw new NotImplementedException("TODO"),
@@ -116,7 +80,7 @@ public class TableViewBuilder(TextStyle defaultTextStyle) : IViewBuilder
 
     public ILayout ToLayout()
     {
-        return new TableLayout();
+        return new TableLayout(_headers, _rows, ShowRowSeparators);
     }
 
     public void Dispose()

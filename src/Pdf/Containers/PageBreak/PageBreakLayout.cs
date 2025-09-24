@@ -6,12 +6,12 @@ public class PageBreakLayout : ILayout
 {
     public SKSize Measure(SKSize available)
     {
-        throw new NotImplementedException();
+        return new SKSize(available.Width, available.Height);
     }
 
-    public void LayoutPages(MultiPageContext context, bool debug)
+    public LayoutResult Layout(LayoutContext context)
     {
         // Marks the page fully drawn. When another layout calls getCurrentPage(), it will get a new page.
-        context.GetCurrentPage().MarkFullyDrawn();
+        return new LayoutResult([], LayoutState.IsFullyDrawn);
     }
 }

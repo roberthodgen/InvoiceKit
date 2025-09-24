@@ -44,39 +44,39 @@ public class ImageLayout : ILayout
         throw new Exception("Image not loaded.");
     }
 
-    public void LayoutPages(MultiPageContext context, bool debug)
+    public LayoutResult Layout(LayoutContext context)
     {
-        var page = context.GetCurrentPage();
+        var listDrawables = new List<IDrawable>();
+        var size = Measure(context.Available.Size);
         while (true)
         {
-            var size = Measure(page.Available.Size);
             var rect = new SKRect(
-                page.Available.Left,
-                page.Available.Top,
-                page.Available.Left + size.Width,
-                page.Available.Top + size.Height);
+                context.Available.Left,
+                context.Available.Top,
+                context.Available.Left + size.Width,
+                context.Available.Top + size.Height);
 
             if (Svg?.Drawable != null)
             {
-                if (page.TryAllocateRect(rect))
+                if (context.TryAllocateRect(rect))
                 {
-                    page.AddDrawable(new SvgImageDrawable(Svg, rect, debug));
+                    listDrawables.Add(new SvgImageDrawable(Svg, rect));
                     break;
                 }
             }
 
             if (Bitmap != null)
             {
-                if (page.TryAllocateRect(rect))
+                if (context.TryAllocateRect(rect))
                 {
-                    page.AddDrawable(new BitmapImageDrawable(Bitmap, rect, debug));
+                    listDrawables.Add(new BitmapImageDrawable(Bitmap, rect));
                     break;
                 }
             }
 
             // Will only be hit if the page is full.
-            page.MarkFullyDrawn();
-            page = context.GetCurrentPage();
+            return new LayoutResult(listDrawables, LayoutState.IsFullyDrawn);
         }
+        return new LayoutResult(listDrawables, LayoutState.HasSpace);
     }
 }

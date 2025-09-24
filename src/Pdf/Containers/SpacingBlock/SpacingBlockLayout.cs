@@ -13,24 +13,24 @@ public class SpacingBlockLayout : ILayout
 
     public SKSize Measure(SKSize available)
     {
-        throw new NotImplementedException();
+        return new SKSize(available.Width, Height);
     }
 
-    public void LayoutPages(MultiPageContext context, bool debug)
+    public LayoutResult Layout(LayoutContext context)
     {
-        var page = context.GetCurrentPage();
         while (true)
         {
-            var rect = new SKRect(page.Available.Left, page.Available.Top, page.Available.Right,
-                page.Available.Top + Height);
-            if (page.TryAllocateRect(rect))
+            var rect = new SKRect(context.Available.Left, context.Available.Top, context.Available.Right,
+                context.Available.Top + Height);
+            if (context.TryAllocateRect(rect))
             {
                 break;
             }
 
             // Will only be hit if the page is full.
-            page.MarkFullyDrawn();
-            page = context.GetCurrentPage();
+            return new LayoutResult([], LayoutState.IsFullyDrawn);
         }
+
+        return new LayoutResult([], LayoutState.HasSpace);
     }
 }

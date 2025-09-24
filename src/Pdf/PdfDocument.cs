@@ -1,10 +1,6 @@
 namespace InvoiceKit.Pdf;
 
-using Elements.Images;
-using Elements.Text;
-using Containers;
 using Containers.Stacks;
-using Containers.Tables;
 using SkiaSharp;
 using Styles.Text;
 
@@ -17,13 +13,15 @@ public class PdfDocument : IDisposable
     private readonly MemoryStream _stream = new ();
     private readonly SKDocument _document;
 
-    private IViewBuilder? _viewBuilder;
+    private IViewBuilder? _rootViewBuilder;
 
     private bool _debug;
 
     public static PdfDocument UsLetter => new (8.5f * PointsPerInch, 11f * PointsPerInch);
 
     private TextStyle DefaultTextStyle { get; set; } = new ();
+
+    private SKRect DrawableArea => SKRect.Create(Margin, Margin, _pageSize.Width - Margin, _pageSize.Height - Margin);
 
     private PdfDocument(float width, float height)
     {
@@ -45,19 +43,20 @@ public class PdfDocument : IDisposable
 
     public byte[] Build()
     {
-        using var context = new MultiPageContext(BeginNewPage);
+        if (_rootViewBuilder is null)
+        {
+            throw new ApplicationException("No root view builder added to document.");
+        }
 
-        // Converts viewBuilders to Layouts
-        var viewStack = _viewBuilder?.ToLayout() ?? throw new Exception("No ViewBuilder defined");
-
-        // Converts Layouts to Pages that are stored on context
-        viewStack.LayoutPages(context, _debug);
-
-        //Draws all pages from the context
-        foreach (var page in context.Pages)
+        foreach (var page in new LayoutTree(_rootViewBuilder).ToPages(DrawableArea))
         {
             var canvas = _document.BeginPage(_pageSize.Width, _pageSize.Height);
-            page.Drawables.ForEach(d => d.Draw(canvas, page));
+            var drawableContext = new DrawableContext(canvas, _debug);
+            foreach (var drawable in page.Drawables)
+            {
+                drawable.Draw(drawableContext);
+            }
+
             _document.EndPage();
         }
 
@@ -78,48 +77,14 @@ public class PdfDocument : IDisposable
     }
 
     /// <summary>
-    /// Creates a new PageLayout with the current page size and margin.
+    /// Should only every start with a VStack.
+    /// Might need to create a StarterStack class that handles different logic that a basic VStack.
     /// </summary>
-    private Page BeginNewPage()
-    {
-        return new Page(
-            SKRect.Create(Margin, Margin, _pageSize.Width - Margin, _pageSize.Height - Margin),
-            _debug);
-    }
-
-    public PdfDocument WithHStack(Action<HStack> action)
-    {
-        var hStack = new HStack(DefaultTextStyle);
-        action(hStack);
-        _viewBuilder = hStack;
-        return this;
-    }
-
     public PdfDocument WithVStack(Action<VStack> action)
     {
         var vStack = new VStack(DefaultTextStyle);
         action(vStack);
-        _viewBuilder = vStack;
-        return this;
-    }
-
-    public PdfDocument WithTable(Action<TableViewBuilder> action)
-    {
-        var table = new TableViewBuilder(DefaultTextStyle);
-        action(table);
-        _viewBuilder = table;
-        return this;
-    }
-
-    public PdfDocument WithText(Func<TextViewBuilder, IViewBuilder> builder)
-    {
-        _viewBuilder = builder(new TextViewBuilder(DefaultTextStyle));
-        return this;
-    }
-
-    public PdfDocument WithImage(Func<ImageViewBuilder, IViewBuilder> builder)
-    {
-        _viewBuilder = builder(new ImageViewBuilder());
+        _rootViewBuilder = vStack;
         return this;
     }
 }

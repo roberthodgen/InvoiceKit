@@ -9,6 +9,8 @@ public sealed class TextViewBuilder : IViewBuilder
 
     private string Text { get; set; } = "";
 
+    public IReadOnlyCollection<IViewBuilder> Children => [];
+
     internal TextViewBuilder(TextStyle style)
     {
         Style = style;
@@ -67,4 +69,5 @@ public sealed class TextViewBuilder : IViewBuilder
     {
         return new TextLayout(Style, Text);
     }
+
 }

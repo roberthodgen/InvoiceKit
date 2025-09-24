@@ -9,6 +9,8 @@ public sealed class ImageViewBuilder : IViewBuilder
 
     private string ImageType { get; set; } = "";
 
+    public IReadOnlyCollection<IViewBuilder> Children => [];
+
     internal ImageViewBuilder()
     {
     }

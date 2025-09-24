@@ -13,27 +13,31 @@ public class HorizontalRuleLayout : ILayout
         return new SKSize(available.Width, 1);
     }
 
-    public void LayoutPages(MultiPageContext context, bool debug)
+    /// <summary>
+    ///
+    /// </summary>
+    public LayoutResult Layout(LayoutContext context)
     {
-        var page = context.GetCurrentPage();
+        var listDrawables = new List<IDrawable>();
+        var size = Measure(context.Available.Size);
         while (true)
         {
-            var size = Measure(page.Available.Size);
             var rect = new SKRect(
-                page.Available.Left,
-                page.Available.Top,
-                page.Available.Left + size.Width,
-                page.Available.Top + size.Height);
+                context.Available.Left,
+                context.Available.Top,
+                context.Available.Left + size.Width,
+                context.Available.Top + size.Height);
 
-            if (page.TryAllocateRect(rect))
+            if (context.TryAllocateRect(rect))
             {
-                page.AddDrawable(new HorizontalRuleDrawable(rect, debug));
+                listDrawables.Add(new HorizontalRuleDrawable(rect));
                 break;
             }
 
             // Will only be hit if the page is full.
-            page.MarkFullyDrawn();
-            page = context.GetCurrentPage();
+            return new LayoutResult(listDrawables, LayoutState.IsFullyDrawn);
         }
+
+        return new LayoutResult(listDrawables, LayoutState.HasSpace);
     }
 }
