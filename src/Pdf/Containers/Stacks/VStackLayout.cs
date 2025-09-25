@@ -4,29 +4,30 @@ using SkiaSharp;
 
 public class VStackLayout : ILayout
 {
-    private List<ILayout> Children { get; }
+    private Stack<ILayout> Children { get; }
 
     internal VStackLayout(List<ILayout> children)
     {
-        Children = children;
+        Children = new Stack<ILayout>(children.AsEnumerable().Reverse());
     }
 
     public LayoutResult Layout(LayoutContext context)
     {
         if (Children.Count == 0)
         {
-            return new LayoutResult([], LayoutState.IsEmpty);
+            return new LayoutResult([], LayoutStatus.IsFullyDrawn);
         }
 
-        var layoutResults = new List<LayoutResult>();
-        var top = context.Available.Top;
-        foreach (var child in Children)
+        var layout = Children.Pop();
+
+        var layoutResult = layout.Layout(context);
+
+        if (layoutResult.Status == LayoutStatus.NeedsNewPage)
         {
-            var rect = new SKRect(context.Available.Left, top, context.Available.Right, context.Available.Bottom);
-            layoutResults.Add(child.Layout(context));
+            Children.Push(layout);
         }
 
-        return layoutResults.Last();
+        return layoutResult;
     }
 
     public SKSize Measure(SKSize available)

@@ -44,7 +44,7 @@ public class TableLayout : ILayout
                     totalSize += rowHeight;
                     break;
                 }
-                return new LayoutResult(listDrawables, LayoutState.IsFullyDrawn);
+                return new LayoutResult(listDrawables, LayoutStatus.IsFullyDrawn);
             }
         }
 
@@ -61,10 +61,10 @@ public class TableLayout : ILayout
                     totalSize += rowHeight;
                     break;
                 }
-                return new LayoutResult(listDrawables, LayoutState.IsFullyDrawn);
+                return new LayoutResult(listDrawables, LayoutStatus.IsFullyDrawn);
             }
         }
 
-        return new LayoutResult(listDrawables, LayoutState.HasSpace);
+        return new LayoutResult(listDrawables, LayoutStatus.IsFullyDrawn);
     }
 }

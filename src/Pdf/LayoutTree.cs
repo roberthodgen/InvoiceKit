@@ -13,9 +13,8 @@ public sealed class LayoutTree : ILayoutTree
         _root = LayoutNode.CreateFromView(root);
     }
 
-    /// Depth-first search that skips nodes previously seen that did not satisfy the predicate.
-    /// Returns the first match (preorder) or default if none.
-    private IPage LayoutPage(LayoutContext context)
+    /// Depth-first search that skips layouts that were already fully drawn.
+    private PageLayoutResult LayoutPage(LayoutContext context)
     {
         var stack = new Stack<LayoutNode>();
         stack.Push(_root);
@@ -31,35 +30,40 @@ public sealed class LayoutTree : ILayoutTree
                 continue;
             }
 
-            var layoutResult = layout.Layout.Layout(context);
+            var childContext = new LayoutContext(context.Available);
+            var layoutResult = layout.Layout.Layout(childContext);
             page.AddDrawables(layoutResult.Drawables);
-            if (layoutResult.State == LayoutState.IsFullyDrawn)
+
+            if (layoutResult.Status == LayoutStatus.NeedsNewPage)
             {
-                break;
+                return new PageLayoutResult(page, LayoutStatus.NeedsNewPage);
             }
 
-            // Remember that this node failed, so we can skip it next time
+            // Remember that this layout is complete
             _layoutComplete.Add(layout.Layout);
+            context.CommitChildContext(childContext);
 
+            // If the layout was not complete...
             // Push children in reverse so the first child is visited first
-            // (typical DFS preorder behavior)
             foreach (var child in Enumerable.Reverse(layout.Children))
             {
                 stack.Push(child);
             }
         }
 
-        return page;
+        return new PageLayoutResult(page, LayoutStatus.IsFullyDrawn);
     }
 
     public List<IPage> ToPages(SKRect drawableArea)
     {
         var pages = new List<IPage>();
 
-        DocumentLayoutStatus documentStatus = DocumentLayoutStatus.NeedsAdditionalPage;
-        while (documentStatus == DocumentLayoutStatus.NeedsAdditionalPage)
+        LayoutStatus status = LayoutStatus.NeedsNewPage;
+        while (status == LayoutStatus.NeedsNewPage)
         {
-            pages.Add(LayoutPage(new LayoutContext(drawableArea)));
+            var result = LayoutPage(new LayoutContext(drawableArea));
+            pages.Add(result.Page);
+            status = result.Status;
         }
 
         return pages;
@@ -79,17 +83,6 @@ public sealed class LayoutTree : ILayoutTree
         }
     }
 
-    private readonly record struct DocumentLayoutStatus
-    {
-        public static readonly DocumentLayoutStatus AllPagesComplete = new (1);
+    private record PageLayoutResult(IPage Page, LayoutStatus Status);
 
-        public static readonly DocumentLayoutStatus NeedsAdditionalPage = new (2);
-
-        private int Value { get; }
-
-        private DocumentLayoutStatus(int value)
-        {
-            Value = value;
-        }
-    }
 }

@@ -4,5 +4,5 @@ public interface ILayoutResult
 {
     public List<IDrawable> Drawables { get; }
 
-    public LayoutState State { get; }
+    public LayoutStatus Status { get; }
 }

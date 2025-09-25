@@ -4,13 +4,35 @@ using SkiaSharp;
 
 public class LayoutContext : ILayoutContext
 {
-    public SKRect Available { get; }
+    private readonly List<float> _allocated = [];
+
+    private float Allocated => _allocated.Sum();
+
+    public SKRect Available
+    {
+        get
+        {
+            var rect = new SKRect(
+                _originalSpace.Left,
+                _originalSpace.Top + Allocated,
+                _originalSpace.Right,
+                _originalSpace.Bottom);
+            return rect;
+        }
+    }
+
+    private readonly SKRect _originalSpace;
 
     public SKPoint Cursor => Available.Location;
 
     internal LayoutContext(SKRect available)
     {
-        Available = available;
+        _originalSpace = available;
+    }
+
+    public void CommitChildContext(LayoutContext child)
+    {
+        _allocated.Add(child.Allocated);
     }
 
     /// <summary>
@@ -23,14 +45,7 @@ public class LayoutContext : ILayoutContext
             return false;
         }
 
+        _allocated.Add(rect.Height);
         return true;
-    }
-
-    /// <summary>
-    /// Allocates a rect, even if it overflows the available area.
-    /// </summary>
-    public void ForceAllocateSize(SKSize size)
-    {
-        Cursor.Offset(0, size.Height);
     }
 }

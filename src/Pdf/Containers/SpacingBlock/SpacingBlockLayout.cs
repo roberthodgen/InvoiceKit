@@ -24,13 +24,14 @@ public class SpacingBlockLayout : ILayout
                 context.Available.Top + Height);
             if (context.TryAllocateRect(rect))
             {
+                // Allocates the space but does not draw anything.
                 break;
             }
 
             // Will only be hit if the page is full.
-            return new LayoutResult([], LayoutState.IsFullyDrawn);
+            return new LayoutResult([], LayoutStatus.NeedsNewPage);
         }
 
-        return new LayoutResult([], LayoutState.HasSpace);
+        return new LayoutResult([], LayoutStatus.IsFullyDrawn);
     }
 }

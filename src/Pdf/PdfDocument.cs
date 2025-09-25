@@ -21,7 +21,7 @@ public class PdfDocument : IDisposable
 
     private TextStyle DefaultTextStyle { get; set; } = new ();
 
-    private SKRect DrawableArea => SKRect.Create(Margin, Margin, _pageSize.Width - Margin, _pageSize.Height - Margin);
+    private SKRect DrawableArea => SKRect.Create(Margin, Margin, _pageSize.Width - Margin * 2, _pageSize.Height - Margin * 2);
 
     private PdfDocument(float width, float height)
     {

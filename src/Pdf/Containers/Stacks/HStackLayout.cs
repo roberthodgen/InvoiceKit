@@ -4,11 +4,11 @@ using SkiaSharp;
 
 public class HStackLayout : ILayout
 {
-    private List<ILayout> Children { get; }
+    private Stack<ILayout> Children { get; }
 
     internal HStackLayout(List<ILayout> children)
     {
-        Children = children;
+        Children = new Stack<ILayout>(children.AsEnumerable().Reverse());
     }
 
     /// <summary>
@@ -18,20 +18,30 @@ public class HStackLayout : ILayout
     {
         if (Children.Count == 0)
         {
-            return new LayoutResult([], LayoutState.IsEmpty);
+            return new LayoutResult([], LayoutStatus.IsFullyDrawn);
         }
 
-        // Todo: Need to fix HStack column sizes, currently working as a VStack
-        List<LayoutResult> results = [];
-        foreach (var child in Children)
+        var needsNewPage = false;
+        List<LayoutResult> layoutResults = [];
+
+        // Loops for the number of children once. Children that need a new page are added back to the stack.
+        for (var i = 0; i < Children.Count; i++)
         {
-            results.Add(child.Layout(context));
+            var layout = Children.Pop();
+            var layoutResult = layout.Layout(context);
+            if (layoutResult.Status == LayoutStatus.NeedsNewPage)
+            {
+                Children.Push(layout); // HStack should not reverse the stack to push
+                needsNewPage = true;
+            }
+            layoutResults.Add(layoutResult);
         }
-        var heights = results.Select(result => result.Drawables.Select(drawable => drawable.SizeAndLocation.Height));
-        var maxHeight = heights.Max(height => height.Max());
-        context.ForceAllocateSize(new SKSize(context.Available.Width, maxHeight));
 
-        return results.Last();
+        var listDrawables = new List<IDrawable>();
+        layoutResults.ForEach(result => result.Drawables.ForEach(drawable => listDrawables.Add(drawable)));
+
+        return needsNewPage ? new LayoutResult(listDrawables, LayoutStatus.NeedsNewPage)
+            : new LayoutResult(listDrawables, LayoutStatus.IsFullyDrawn);
     }
 
     public SKSize Measure(SKSize available)

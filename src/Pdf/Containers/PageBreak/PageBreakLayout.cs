@@ -11,7 +11,7 @@ public class PageBreakLayout : ILayout
 
     public LayoutResult Layout(LayoutContext context)
     {
-        // Marks the page fully drawn. When another layout calls getCurrentPage(), it will get a new page.
-        return new LayoutResult([], LayoutState.IsFullyDrawn);
+        // Requests new page and returns no drawables.
+        return new LayoutResult([], LayoutStatus.NeedsNewPage);
     }
 }

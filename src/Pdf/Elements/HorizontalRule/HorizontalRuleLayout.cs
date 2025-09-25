@@ -35,9 +35,9 @@ public class HorizontalRuleLayout : ILayout
             }
 
             // Will only be hit if the page is full.
-            return new LayoutResult(listDrawables, LayoutState.IsFullyDrawn);
+            return new LayoutResult(listDrawables, LayoutStatus.NeedsNewPage);
         }
 
-        return new LayoutResult(listDrawables, LayoutState.HasSpace);
+        return new LayoutResult(listDrawables, LayoutStatus.IsFullyDrawn);
     }
 }

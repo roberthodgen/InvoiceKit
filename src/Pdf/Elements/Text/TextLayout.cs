@@ -83,7 +83,6 @@ public sealed class TextLayout : ILayout
     public LayoutResult Layout(LayoutContext context)
     {
         var listDrawables = new List<IDrawable>();
-        var totalSize = new SKSize();
         var wrappedLines = _lines.SelectMany(line => WrapText(line, Style, context.Available.Width)).ToList();
         var halfLineHeight = (Style.LineHeight * Style.FontSize - Style.FontSize) / 2;
         var top = context.Available.Top;
@@ -113,16 +112,14 @@ public sealed class TextLayout : ILayout
                 if (context.TryAllocateRect(rect))
                 {
                     listDrawables.Add(new TextDrawable(wrappedLines[i], textRect, Style));
-                    // page.ForceAllocateSize(rect.Size);
                     top = allocationRectBottom;
-                    totalSize += rect.Size;
                     break;
                 }
 
                 // Will only be hit if the page is full.
-                return new LayoutResult(listDrawables, LayoutState.IsFullyDrawn);
+                return new LayoutResult(listDrawables, LayoutStatus.NeedsNewPage);
             }
         }
-        return new LayoutResult(listDrawables, LayoutState.HasSpace);
+        return new LayoutResult(listDrawables, LayoutStatus.IsFullyDrawn);
     }
 }
