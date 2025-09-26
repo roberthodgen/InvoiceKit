@@ -4,30 +4,44 @@ using SkiaSharp;
 
 public class VStackLayout : ILayout
 {
-    private Stack<ILayout> Children { get; }
+    public bool IsFullyDrawn { get; set; }
+
+    private Queue<ILayout> Children { get; }
 
     internal VStackLayout(List<ILayout> children)
     {
-        Children = new Stack<ILayout>(children.AsEnumerable().Reverse());
+        Children = new Queue<ILayout>(children);
     }
 
     public LayoutResult Layout(LayoutContext context)
     {
-        if (Children.Count == 0)
+        if (Children.Count == 0 || IsFullyDrawn)
         {
             return new LayoutResult([], LayoutStatus.IsFullyDrawn);
         }
 
-        var layout = Children.Pop();
+        var drawables = new List<IDrawable>();
 
-        var layoutResult = layout.Layout(context);
-
-        if (layoutResult.Status == LayoutStatus.NeedsNewPage)
+        while (Children.Count > 0)
         {
-            Children.Push(layout);
-        }
+            var layout = Children.Peek();
 
-        return layoutResult;
+            var childContext = new LayoutContext(context.Available);
+            var layoutResult = layout.Layout(childContext);
+            drawables.AddRange(layoutResult.Drawables);
+            context.CommitChildContext(childContext);
+
+            if (layoutResult.Status == LayoutStatus.IsFullyDrawn)
+            {
+                Children.Dequeue();
+            }
+            else
+            {
+                return new LayoutResult(drawables, LayoutStatus.NeedsNewPage);
+            }
+        }
+        IsFullyDrawn = true;
+        return new LayoutResult(drawables, LayoutStatus.IsFullyDrawn);
     }
 
     public SKSize Measure(SKSize available)

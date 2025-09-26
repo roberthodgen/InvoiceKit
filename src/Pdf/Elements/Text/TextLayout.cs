@@ -17,6 +17,12 @@ public sealed class TextLayout : ILayout
 
     private readonly List<string> _lines = [];
 
+    private List<string> _wrappedLines = [];
+
+    private int _currentIndex = 0;
+
+    public bool IsFullyDrawn { get; set; }
+
     internal TextLayout(TextStyle style, string text)
     {
         Style = style;
@@ -41,6 +47,7 @@ public sealed class TextLayout : ILayout
 
     /// <summary>
     /// Separates a single string into multiple lines based on the width of the available space.
+    /// Todo: This needs to be merged into the Layout method.
     /// </summary>
     private static List<string> WrapText(string text, TextStyle style, float maxWidth)
     {
@@ -65,6 +72,7 @@ public sealed class TextLayout : ILayout
                 {
                     lines.Add(currentLine);
                 }
+
                 currentLine = word;
             }
         }
@@ -82,44 +90,51 @@ public sealed class TextLayout : ILayout
     /// </summary>
     public LayoutResult Layout(LayoutContext context)
     {
+        if (IsFullyDrawn) return new LayoutResult([], LayoutStatus.IsFullyDrawn);
+
+        if (_wrappedLines.Count == 0)
+        {
+            _wrappedLines = _lines.SelectMany(line => WrapText(line, Style, context.Available.Width)).ToList();
+        }
+
         var listDrawables = new List<IDrawable>();
-        var wrappedLines = _lines.SelectMany(line => WrapText(line, Style, context.Available.Width)).ToList();
         var halfLineHeight = (Style.LineHeight * Style.FontSize - Style.FontSize) / 2;
         var top = context.Available.Top;
 
-        for(var i = 0; i < wrappedLines.Count; i++)
+        while (_currentIndex < _wrappedLines.Count)
         {
-            while (true)
+            var textLineLocation = top + halfLineHeight - Style.ToFont().Metrics.Ascent;
+
+            if (_currentIndex == 0)
             {
-                var textLineLocation = top + halfLineHeight - Style.ToFont().Metrics.Ascent;
+                textLineLocation += Style.ParagraphSpacingBefore;
+            }
 
-                if (i == 0)
-                {
-                    textLineLocation += Style.ParagraphSpacingBefore;
-                }
+            var textRect = new SKRect(context.Available.Left, textLineLocation, context.Available.Right,
+                textLineLocation);
+            var allocationRectBottom = textLineLocation + halfLineHeight + Style.ToFont().Metrics.Descent;
 
-                var textRect = new SKRect(context.Available.Left, textLineLocation, context.Available.Right, textLineLocation);
-                var allocationRectBottom = textLineLocation + halfLineHeight + Style.ToFont().Metrics.Descent;
+            if (_currentIndex == _wrappedLines.Count - 1)
+            {
+                allocationRectBottom += Style.ParagraphSpacingAfter;
+            }
 
-                if (i == wrappedLines.Count - 1)
-                {
-                    allocationRectBottom += Style.ParagraphSpacingAfter;
-                }
+            var rect = new SKRect(context.Available.Left, top, context.Available.Right, allocationRectBottom);
 
-                var rect = new SKRect(context.Available.Left, top, context.Available.Right, allocationRectBottom);
-
-                // Tries to allocate the rect to the current page. If it fails, the page is marked full and a new page is created.
-                if (context.TryAllocateRect(rect))
-                {
-                    listDrawables.Add(new TextDrawable(wrappedLines[i], textRect, Style));
-                    top = allocationRectBottom;
-                    break;
-                }
-
+            // Tries to allocate the rect to the current page. If it fails, the page is marked full and a new page is created.
+            if (context.TryAllocateRect(rect))
+            {
+                listDrawables.Add(new TextDrawable(_wrappedLines[_currentIndex], textRect, Style));
+                _currentIndex++;
+                top = allocationRectBottom;
+            }
+            else
+            {
                 // Will only be hit if the page is full.
                 return new LayoutResult(listDrawables, LayoutStatus.NeedsNewPage);
             }
         }
+        IsFullyDrawn = true;
         return new LayoutResult(listDrawables, LayoutStatus.IsFullyDrawn);
     }
 }

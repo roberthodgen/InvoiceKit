@@ -6,7 +6,7 @@ public class LayoutContext : ILayoutContext
 {
     private readonly List<float> _allocated = [];
 
-    private float Allocated => _allocated.Sum();
+    public float Allocated => _allocated.Sum();
 
     public SKRect Available
     {
@@ -22,8 +22,6 @@ public class LayoutContext : ILayoutContext
     }
 
     private readonly SKRect _originalSpace;
-
-    public SKPoint Cursor => Available.Location;
 
     internal LayoutContext(SKRect available)
     {

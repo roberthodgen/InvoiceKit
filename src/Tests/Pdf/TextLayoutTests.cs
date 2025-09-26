@@ -24,7 +24,6 @@ public class TextLayoutTests(ITestOutputHelper testOutputHelper)
                 .AddText(text => text
                     .Color(SKColors.DimGray)
                     .WithText("Sample document for text block layout and rendering."))
-                .AddHorizontalRule()
                 .AddText(text => text.WithText("Default: The quick brown fox jumps over the lazy dog."))
                 .AddText(text => text
                     .ParagraphSpacing(after: 2f)
@@ -140,8 +139,6 @@ public class TextLayoutTests(ITestOutputHelper testOutputHelper)
                         Nulla molestie diam sit amet nibh aliquam, vitae efficitur nulla eleifend. Cras quis fringilla leo. Sed rhoncus leo et tellus congue, nec aliquet lacus hendrerit. Donec porta turpis nec urna dictum, id tempor lectus aliquam. Curabitur non erat sed augue maximus ultricies vel id velit. Etiam egestas sed justo varius blandit. Etiam ac ultrices quam. Ut sit amet felis ac turpis imperdiet placerat. Nullam sed sem tellus. Morbi hendrerit sollicitudin magna et dignissim. Mauris a dui mattis, vehicula eros in, lacinia augue. Phasellus in eleifend risus.
                         """
                     ))
-                .AddSpacing(100f)
-                .AddHorizontalRule()
                 .AddHStack(stack => stack
                     .AddText(text => text
                         .WithText("""

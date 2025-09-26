@@ -4,11 +4,13 @@ using SkiaSharp;
 
 public class HStackLayout : ILayout
 {
-    private Stack<ILayout> Children { get; }
+    public bool IsFullyDrawn { get; set; }
 
-    internal HStackLayout(List<ILayout> children)
+    private List<ILayout> Columns { get; }
+
+    internal HStackLayout(List<ILayout> columns)
     {
-        Children = new Stack<ILayout>(children.AsEnumerable().Reverse());
+        Columns = columns;
     }
 
     /// <summary>
@@ -16,36 +18,57 @@ public class HStackLayout : ILayout
     /// </summary>
     public LayoutResult Layout(LayoutContext context)
     {
-        if (Children.Count == 0)
+        if (Columns.Count == 0 || IsFullyDrawn)
         {
             return new LayoutResult([], LayoutStatus.IsFullyDrawn);
         }
 
-        var needsNewPage = false;
-        List<LayoutResult> layoutResults = [];
+        var results = new List<ColumnResult>();
+        var columnWidth = context.Available.Width / Columns.Count;
 
-        // Loops for the number of children once. Children that need a new page are added back to the stack.
-        for (var i = 0; i < Children.Count; i++)
+        // Loops for the number of columns once. Children that need a new page are added back to the stack.
+        foreach (var i in Enumerable.Range(0, Columns.Count))
         {
-            var layout = Children.Pop();
-            var layoutResult = layout.Layout(context);
-            if (layoutResult.Status == LayoutStatus.NeedsNewPage)
-            {
-                Children.Push(layout); // HStack should not reverse the stack to push
-                needsNewPage = true;
-            }
-            layoutResults.Add(layoutResult);
+            var column = Columns[i];
+
+            var left = context.Available.Left + (columnWidth * i);
+
+            var childContext = new LayoutContext(
+                new SKRect(
+                    left,
+                    context.Available.Top,
+                    left + columnWidth,
+                    context.Available.Bottom));
+
+            var result = column.Layout(childContext);
+            results.Add(new ColumnResult(result.Drawables, result.Status, childContext));
         }
 
-        var listDrawables = new List<IDrawable>();
-        layoutResults.ForEach(result => result.Drawables.ForEach(drawable => listDrawables.Add(drawable)));
+        var maxHeight = results.MaxBy(result => result.Context.Allocated);
+        context.CommitChildContext(maxHeight!.Context);
+        var status = LayoutStatus.IsFullyDrawn;
+        foreach (var result in results)
+        {
+            if (result.Status == LayoutStatus.NeedsNewPage)
+            {
+                status = LayoutStatus.NeedsNewPage;
+                break;
+            }
+        }
+        var drawables = results.SelectMany(result => result.Drawables).ToList();
 
-        return needsNewPage ? new LayoutResult(listDrawables, LayoutStatus.NeedsNewPage)
-            : new LayoutResult(listDrawables, LayoutStatus.IsFullyDrawn);
+        if (status == LayoutStatus.IsFullyDrawn)
+        {
+            IsFullyDrawn = true;
+        }
+
+        return new LayoutResult(drawables, status);
     }
 
     public SKSize Measure(SKSize available)
     {
-        return new SKSize(available.Width / Children.Count, available.Height);
+        return new SKSize(available.Width / Columns.Count, available.Height);
     }
+
+    private record ColumnResult(IReadOnlyCollection<IDrawable> Drawables, LayoutStatus Status, LayoutContext Context);
 }

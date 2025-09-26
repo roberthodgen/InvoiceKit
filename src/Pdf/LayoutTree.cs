@@ -24,7 +24,7 @@ public sealed class LayoutTree : ILayoutTree
         {
             var layout = stack.Pop();
 
-            // Skip nodes that we've already tested and that failed before
+            // Skip nodes that we've already laid out completely
             if (_layoutComplete.Contains(layout.Layout))
             {
                 continue;
@@ -33,6 +33,7 @@ public sealed class LayoutTree : ILayoutTree
             var childContext = new LayoutContext(context.Available);
             var layoutResult = layout.Layout.Layout(childContext);
             page.AddDrawables(layoutResult.Drawables);
+            context.CommitChildContext(childContext);
 
             if (layoutResult.Status == LayoutStatus.NeedsNewPage)
             {
@@ -40,15 +41,8 @@ public sealed class LayoutTree : ILayoutTree
             }
 
             // Remember that this layout is complete
+            // Todo: This might not be needed if the root element is the only one on the stack.
             _layoutComplete.Add(layout.Layout);
-            context.CommitChildContext(childContext);
-
-            // If the layout was not complete...
-            // Push children in reverse so the first child is visited first
-            foreach (var child in Enumerable.Reverse(layout.Children))
-            {
-                stack.Push(child);
-            }
         }
 
         return new PageLayoutResult(page, LayoutStatus.IsFullyDrawn);
@@ -84,5 +78,4 @@ public sealed class LayoutTree : ILayoutTree
     }
 
     private record PageLayoutResult(IPage Page, LayoutStatus Status);
-
 }

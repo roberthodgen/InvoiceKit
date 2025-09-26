@@ -4,6 +4,8 @@ using SkiaSharp;
 
 public class HorizontalRuleLayout : ILayout
 {
+    public bool IsFullyDrawn { get; set; }
+
     internal HorizontalRuleLayout()
     {
     }
@@ -18,26 +20,25 @@ public class HorizontalRuleLayout : ILayout
     /// </summary>
     public LayoutResult Layout(LayoutContext context)
     {
+        if (IsFullyDrawn) return new LayoutResult([], LayoutStatus.IsFullyDrawn);
+
         var listDrawables = new List<IDrawable>();
         var size = Measure(context.Available.Size);
-        while (true)
+
+        var rect = new SKRect(
+            context.Available.Left,
+            context.Available.Top,
+            context.Available.Left + size.Width,
+            context.Available.Top + size.Height);
+
+        if (context.TryAllocateRect(rect))
         {
-            var rect = new SKRect(
-                context.Available.Left,
-                context.Available.Top,
-                context.Available.Left + size.Width,
-                context.Available.Top + size.Height);
-
-            if (context.TryAllocateRect(rect))
-            {
-                listDrawables.Add(new HorizontalRuleDrawable(rect));
-                break;
-            }
-
-            // Will only be hit if the page is full.
-            return new LayoutResult(listDrawables, LayoutStatus.NeedsNewPage);
+            listDrawables.Add(new HorizontalRuleDrawable(rect));
+            IsFullyDrawn = true;
+            return new LayoutResult(listDrawables, LayoutStatus.IsFullyDrawn);
         }
 
-        return new LayoutResult(listDrawables, LayoutStatus.IsFullyDrawn);
+        // Will only be hit if the page is full.
+        return new LayoutResult(listDrawables, LayoutStatus.NeedsNewPage);
     }
 }

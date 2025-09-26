@@ -4,6 +4,8 @@ using SkiaSharp;
 
 public class TableLayout : ILayout
 {
+    public bool IsFullyDrawn { get; set; }
+
     private List<TableRowViewBuilder> Headers { get; }
 
     private List<TableRowViewBuilder> Rows { get; }
@@ -25,8 +27,11 @@ public class TableLayout : ILayout
         return new SKSize(width, height);
     }
 
+    // Todo: Fix tables, they do not work at all.
     public LayoutResult Layout(LayoutContext context)
     {
+        if (IsFullyDrawn) return new LayoutResult([], LayoutStatus.IsFullyDrawn);
+
         var listDrawables = new List<IDrawable>();
         var totalSize = new SKSize();
         var top = context.Available.Top;

@@ -9,6 +9,8 @@ public class ImageLayout : ILayout
 
     private SKBitmap? Bitmap { get; }
 
+    public bool IsFullyDrawn { get; set; }
+
     internal ImageLayout(string path, string imageType)
     {
         switch (imageType)
@@ -46,37 +48,38 @@ public class ImageLayout : ILayout
 
     public LayoutResult Layout(LayoutContext context)
     {
+        if (IsFullyDrawn) return new LayoutResult([], LayoutStatus.IsFullyDrawn);
+
         var listDrawables = new List<IDrawable>();
         var size = Measure(context.Available.Size);
-        while (true)
+
+        var rect = new SKRect(
+            context.Available.Left,
+            context.Available.Top,
+            context.Available.Left + size.Width,
+            context.Available.Top + size.Height);
+
+        if (Svg?.Drawable != null)
         {
-            var rect = new SKRect(
-                context.Available.Left,
-                context.Available.Top,
-                context.Available.Left + size.Width,
-                context.Available.Top + size.Height);
-
-            if (Svg?.Drawable != null)
+            if (context.TryAllocateRect(rect))
             {
-                if (context.TryAllocateRect(rect))
-                {
-                    listDrawables.Add(new SvgImageDrawable(Svg, rect));
-                    break;
-                }
+                listDrawables.Add(new SvgImageDrawable(Svg, rect));
+                IsFullyDrawn = true;
+                return new LayoutResult(listDrawables, LayoutStatus.IsFullyDrawn);
             }
-
-            if (Bitmap != null)
-            {
-                if (context.TryAllocateRect(rect))
-                {
-                    listDrawables.Add(new BitmapImageDrawable(Bitmap, rect));
-                    break;
-                }
-            }
-
-            // Will only be hit if the page is full.
-            return new LayoutResult(listDrawables, LayoutStatus.NeedsNewPage);
         }
-        return new LayoutResult(listDrawables, LayoutStatus.IsFullyDrawn);
+
+        if (Bitmap != null)
+        {
+            if (context.TryAllocateRect(rect))
+            {
+                listDrawables.Add(new BitmapImageDrawable(Bitmap, rect));
+                IsFullyDrawn = true;
+                return new LayoutResult(listDrawables, LayoutStatus.IsFullyDrawn);
+            }
+        }
+
+        // Will only be hit if the page is full.
+        return new LayoutResult(listDrawables, LayoutStatus.NeedsNewPage);
     }
 }

@@ -4,6 +4,8 @@ using SkiaSharp;
 
 public class PageBreakLayout : ILayout
 {
+    public bool IsFullyDrawn { get; set; }
+
     public SKSize Measure(SKSize available)
     {
         return new SKSize(available.Width, available.Height);
@@ -11,7 +13,10 @@ public class PageBreakLayout : ILayout
 
     public LayoutResult Layout(LayoutContext context)
     {
-        // Requests new page and returns no drawables.
+        if (IsFullyDrawn) return new LayoutResult([], LayoutStatus.IsFullyDrawn);
+
+        IsFullyDrawn = true;
+        // Requests a new page and returns no drawables.
         return new LayoutResult([], LayoutStatus.NeedsNewPage);
     }
 }
