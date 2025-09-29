@@ -25,15 +25,16 @@ internal class SpacingBlockLayout : ILayout
             return new LayoutResult([], LayoutStatus.IsFullyDrawn);
         }
 
-        var rect = new SKRect(context.Available.Left, context.Available.Top, context.Available.Right,
-            context.Available.Top + Height);
+        var size = Measure(context.Available.Size);
+        var rect = new SKRect(
+            context.Available.Left,
+            context.Available.Top,
+            context.Available.Left + size.Width,
+            context.Available.Top + size.Height);
 
-        // If the spacing block cannot fit on the current page, the spacing block is disregarded.
-        if (context.TryAllocateRect(rect))
-        {
-            // Allocates the space but does not draw anything.
-        }
-        
+        // Allocates the space but does not draw anything.
+        context.TryAllocateRect(rect);
+
         // Always returns fully drawn
         IsFullyDrawn = true;
         return new LayoutResult([], LayoutStatus.IsFullyDrawn);

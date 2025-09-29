@@ -1,6 +1,5 @@
 namespace InvoiceKit.Pdf;
 
-using Containers;
 using SkiaSharp;
 
 public interface IDrawable : IDisposable

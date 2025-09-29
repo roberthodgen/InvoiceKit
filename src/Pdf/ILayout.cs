@@ -1,7 +1,5 @@
 namespace InvoiceKit.Pdf;
 
-using SkiaSharp;
-
 public interface ILayout : IMeasurable
 {
     /// <summary>
