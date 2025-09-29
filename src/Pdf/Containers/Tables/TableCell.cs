@@ -1,13 +1,12 @@
 namespace InvoiceKit.Pdf.Containers.Tables;
 
-using Elements;
-using SkiaSharp;
+using Layout;
 using Styles.Text;
 
 /// <summary>
 /// Renders a table cell. Currently only supports text via wrapping <see cref="TextLayout"/>.
 /// </summary>
-public class TableCell : ElementBase
+public class TableCell : ContainerBase
 {
     /// <summary>
     ///
@@ -15,5 +14,10 @@ public class TableCell : ElementBase
     internal TableCell(TextStyle defaultTextStyle)
         : base(defaultTextStyle)
     {
+    }
+
+    public override ILayout ToLayout()
+    {
+        throw new NotImplementedException();
     }
 }
