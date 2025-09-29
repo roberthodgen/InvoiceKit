@@ -1,5 +1,7 @@
 namespace InvoiceKit.Pdf.Elements.Images;
 
+using Layout;
+
 public sealed class ImageViewBuilder : IViewBuilder
 {
     private string Path { get; set; } = "";

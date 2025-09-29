@@ -1,8 +1,10 @@
 namespace InvoiceKit.Pdf;
 
+using Layout;
+
 public interface IViewBuilder
 {
-    ILayout ToLayout();
+    internal ILayout ToLayout();
 
     IReadOnlyCollection<IViewBuilder> Children { get; }
 }

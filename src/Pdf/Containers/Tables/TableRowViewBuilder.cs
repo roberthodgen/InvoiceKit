@@ -1,5 +1,6 @@
 namespace InvoiceKit.Pdf.Containers.Tables;
 
+using Layout;
 using SkiaSharp;
 using Styles.Text;
 
@@ -44,7 +45,7 @@ public sealed class TableRowViewBuilder : IViewBuilder
         return new SKSize(available.Width, height);
     }
 
-    public void Draw(SKCanvas canvas, Page page)
+    public void Draw(SKCanvas canvas, IPage page)
     {
         // var top = page.Available.Top;
         // var left = page.Available.Left;

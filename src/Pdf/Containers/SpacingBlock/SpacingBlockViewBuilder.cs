@@ -1,5 +1,7 @@
 namespace InvoiceKit.Pdf.Containers.SpacingBlock;
 
+using Layout;
+
 /// <summary>
 /// Used to add spacing in between elements.
 /// </summary>

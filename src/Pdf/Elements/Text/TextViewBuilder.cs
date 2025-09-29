@@ -1,5 +1,6 @@
 namespace InvoiceKit.Pdf.Elements.Text;
 
+using Layout;
 using SkiaSharp;
 using Styles.Text;
 
@@ -69,5 +70,4 @@ public sealed class TextViewBuilder : IViewBuilder
     {
         return new TextLayout(Style, Text);
     }
-
 }

@@ -1,5 +1,6 @@
 namespace InvoiceKit.Pdf.Elements.HorizontalRule;
 
+using Layout;
 using SkiaSharp;
 
 internal class HorizontalRuleLayout : ILayout

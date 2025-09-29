@@ -1,5 +1,6 @@
 namespace InvoiceKit.Pdf.Containers.Stacks;
 
+using Layout;
 using Styles.Text;
 
 /// <summary>

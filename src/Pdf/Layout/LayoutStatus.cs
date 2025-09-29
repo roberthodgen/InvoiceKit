@@ -1,4 +1,4 @@
-namespace InvoiceKit.Pdf;
+namespace InvoiceKit.Pdf.Layout;
 
 public readonly record struct LayoutStatus
 {

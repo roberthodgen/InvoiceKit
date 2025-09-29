@@ -1,11 +1,9 @@
-namespace InvoiceKit.Pdf.Containers;
-
-using SkiaSharp;
+namespace InvoiceKit.Pdf.Layout;
 
 /// <summary>
 /// Used to render a layout across a single page.
 /// </summary>
-public class Page : IPage, IDisposable
+internal class Page : IPage, IDisposable
 {
     /// <summary>
     /// Enumerable of drawables that fit onto the page.

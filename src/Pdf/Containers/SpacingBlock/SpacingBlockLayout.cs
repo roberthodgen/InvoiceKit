@@ -1,5 +1,6 @@
 namespace InvoiceKit.Pdf.Containers.SpacingBlock;
 
+using Layout;
 using SkiaSharp;
 
 internal class SpacingBlockLayout : ILayout

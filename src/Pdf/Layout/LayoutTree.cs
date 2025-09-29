@@ -1,9 +1,8 @@
-namespace InvoiceKit.Pdf;
+namespace InvoiceKit.Pdf.Layout;
 
-using Containers;
 using SkiaSharp;
 
-public sealed class LayoutTree : ILayoutTree
+internal class LayoutTree : ILayoutTree
 {
     private readonly LayoutNode _root;
 

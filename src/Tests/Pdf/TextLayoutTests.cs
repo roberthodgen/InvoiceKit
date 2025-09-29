@@ -15,7 +15,7 @@ public class TextLayoutTests(ITestOutputHelper testOutputHelper)
         using var stream = File.OpenWrite(fileName);
         using var builder = PdfDocument.UsLetter;
         var pdfBytes = builder
-            // .DisplayLayoutGuidelines()
+            .DisplayLayoutGuidelines()
             .WithVStack(vStack => vStack
                 .AddText(text => text
                     .Font("Open Sans/Bold")

@@ -1,6 +1,7 @@
 namespace InvoiceKit.Pdf.Elements.Text;
 
 using Containers.Stacks;
+using Layout;
 using SkiaSharp;
 using Styles.Text;
 

@@ -1,10 +1,11 @@
 namespace InvoiceKit.Pdf;
 
 using Containers.Stacks;
+using Layout;
 using SkiaSharp;
 using Styles.Text;
 
-public class PdfDocument : IDisposable
+public sealed class PdfDocument : IDisposable
 {
     private const float PointsPerInch = 72f;
     private const float Margin = 50f;

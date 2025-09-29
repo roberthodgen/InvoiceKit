@@ -1,13 +1,14 @@
-namespace InvoiceKit.Pdf;
+namespace InvoiceKit.Pdf.Containers;
 
-using Elements.Text;
-using Elements.Images;
-using Containers.Stacks;
-using Containers.Tables;
-using Containers.SpacingBlock;
-using Containers.PageBreak;
 using Elements.HorizontalRule;
+using Elements.Images;
+using Elements.Text;
+using Layout;
+using PageBreak;
+using SpacingBlock;
+using Stacks;
 using Styles.Text;
+using Tables;
 
 public abstract class ContainerBase : IContainer
 {

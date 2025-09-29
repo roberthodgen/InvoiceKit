@@ -1,5 +1,6 @@
 namespace InvoiceKit.Pdf.Containers.Tables;
 
+using Layout;
 using Styles.Text;
 
 public sealed class TableViewBuilder : IViewBuilder
