@@ -3,23 +3,29 @@ namespace InvoiceKit.Pdf.Layout;
 /// <summary>
 /// Used to render a layout across a single page.
 /// </summary>
-internal class Page : IPage, IDisposable
+internal class Page : IDisposable
 {
+    private readonly List<IDrawable> _drawables = [];
+
     /// <summary>
     /// Enumerable of drawables that fit onto the page.
     /// </summary>
-    public List<IDrawable> Drawables { get; } = [];
+    public IReadOnlyCollection<IDrawable> Drawables => _drawables.AsReadOnly();
 
     public Page()
     {
     }
 
-    public void AddDrawables(IEnumerable<IDrawable> drawables)
+    internal void AddDrawables(IEnumerable<IDrawable> drawables)
     {
-        Drawables.AddRange(drawables);
+        _drawables.AddRange(drawables);
     }
 
     public void Dispose()
     {
+        foreach (var drawable in _drawables)
+        {
+            drawable.Dispose();
+        }
     }
 }

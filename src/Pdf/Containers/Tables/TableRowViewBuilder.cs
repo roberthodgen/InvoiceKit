@@ -45,8 +45,8 @@ public sealed class TableRowViewBuilder : IViewBuilder
         return new SKSize(available.Width, height);
     }
 
-    public void Draw(SKCanvas canvas, IPage page)
-    {
+    // public void Draw(SKCanvas canvas, IPage page)
+    // {
         // var top = page.Available.Top;
         // var left = page.Available.Left;
         // var height = Measure(page.Available.Size).Height;
@@ -68,7 +68,7 @@ public sealed class TableRowViewBuilder : IViewBuilder
         //             StrokeWidth = 1f,
         //         });
         // }
-    }
+    // }
 
     public ILayout ToLayout()
     {

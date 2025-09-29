@@ -1,14 +1,17 @@
 namespace InvoiceKit.Pdf.Layout;
 
-public sealed class LayoutResult : ILayoutResult
+/// <summary>
+/// A layout result object contains the drawables assigned to page as well as the status of the layout.
+/// </summary>
+public sealed class LayoutResult(List<IDrawable> drawables, LayoutStatus status)
 {
-    public IReadOnlyCollection<IDrawable> Drawables { get; }
+    /// <summary>
+    /// The drawables assigned to the page.
+    /// </summary>
+    public IReadOnlyCollection<IDrawable> Drawables { get; } = drawables;
 
-    public LayoutStatus Status { get; }
-
-    internal LayoutResult(List<IDrawable> drawables, LayoutStatus status)
-    {
-        Drawables = drawables;
-        Status = status;
-    }
+    /// <summary>
+    /// The status of the layout.
+    /// </summary>
+    public LayoutStatus Status { get; } = status;
 }

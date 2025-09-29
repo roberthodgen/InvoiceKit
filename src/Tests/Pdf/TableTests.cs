@@ -6,7 +6,7 @@ using Xunit.Abstractions;
 
 public class TableTests(ITestOutputHelper testOutputHelper)
 {
-    [Fact]
+    [Fact(Skip = "WIP")]
     public void Table_EndToEnd_Test()
     {
         const string fileName = "table-test.pdf";

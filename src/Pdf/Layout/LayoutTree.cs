@@ -2,7 +2,7 @@ namespace InvoiceKit.Pdf.Layout;
 
 using SkiaSharp;
 
-internal class LayoutTree : ILayoutTree
+internal class LayoutTree
 {
     private readonly LayoutNode _root;
 
@@ -36,9 +36,9 @@ internal class LayoutTree : ILayoutTree
         return new PageLayoutResult(page, LayoutStatus.IsFullyDrawn);
     }
 
-    public List<IPage> ToPages(SKRect drawableArea)
+    public List<Page> ToPages(SKRect drawableArea)
     {
-        var pages = new List<IPage>();
+        var pages = new List<Page>();
 
         LayoutStatus status = LayoutStatus.NeedsNewPage;
         while (status == LayoutStatus.NeedsNewPage)
@@ -65,5 +65,5 @@ internal class LayoutTree : ILayoutTree
         }
     }
 
-    private record PageLayoutResult(IPage Page, LayoutStatus Status);
+    private record PageLayoutResult(Page Page, LayoutStatus Status);
 }
