@@ -5,6 +5,14 @@ using Layout;
 using SkiaSharp;
 using Styles.Text;
 
+/// <summary>
+/// The PDF document renderer takes inspiration from SwiftUI's flexible layout structure: HStack and VStack are used to
+/// layout blocks horizontally or vertically, respectively. Combed with text, images, and tables, this provides a
+/// flexible path to building complex layouts for invoices and other documents.
+/// </summary>
+/// <remarks>
+/// Units are points (1 inch = 72 points). Margin is handled internally (currently 50 points on each side).
+/// </remarks>
 public sealed class PdfDocument : IDisposable
 {
     private const float PointsPerInch = 72f;
@@ -15,14 +23,20 @@ public sealed class PdfDocument : IDisposable
     private readonly SKDocument _document;
 
     private IViewBuilder? _rootViewBuilder;
-
     private bool _debug;
 
+    /// <summary>
+    /// Creates a document with US Letter dimensions.
+    /// </summary>
     public static PdfDocument UsLetter => new (8.5f * PointsPerInch, 11f * PointsPerInch);
 
     private TextStyle DefaultTextStyle { get; set; } = new ();
 
-    private SKRect DrawableArea => SKRect.Create(Margin, Margin, _pageSize.Width - Margin * 2, _pageSize.Height - Margin * 2);
+    private SKRect DrawableArea => SKRect.Create(
+        Margin,
+        Margin,
+        _pageSize.Width - Margin * 2,
+        _pageSize.Height - Margin * 2);
 
     private PdfDocument(float width, float height)
     {
@@ -30,6 +44,9 @@ public sealed class PdfDocument : IDisposable
         _document = SKDocument.CreatePdf(_stream);
     }
 
+    /// <summary>
+    /// Sets the default text style for this document.
+    /// </summary>
     public PdfDocument DefaultFont(string fontPath, float fontSize = TextStyle.DefaultFontSize, SKColor? color = null)
     {
         DefaultTextStyle = new TextStyle
@@ -42,6 +59,10 @@ public sealed class PdfDocument : IDisposable
         return this;
     }
 
+    /// <summary>
+    /// Renders all views in this document into a PDF byte array.
+    /// </summary>
+    /// <returns>A byte array containing the PDF document.</returns>
     public byte[] Build()
     {
         if (_rootViewBuilder is null)
@@ -51,8 +72,8 @@ public sealed class PdfDocument : IDisposable
 
         foreach (var page in new LayoutTree(_rootViewBuilder).ToPages(DrawableArea))
         {
-            var canvas = _document.BeginPage(_pageSize.Width, _pageSize.Height);
-            var drawableContext = new DrawableContext(canvas, _debug);
+            using var canvas = _document.BeginPage(_pageSize.Width, _pageSize.Height);
+            using var drawableContext = new DrawableContext(canvas, _debug);
             foreach (var drawable in page.Drawables)
             {
                 drawable.Draw(drawableContext);
@@ -65,6 +86,9 @@ public sealed class PdfDocument : IDisposable
         return _stream.ToArray();
     }
 
+    /// <summary>
+    /// Enables visual layout guidelines while rendering (useful for debugging).
+    /// </summary>
     public PdfDocument DisplayLayoutGuidelines()
     {
         _debug = true;
@@ -78,8 +102,7 @@ public sealed class PdfDocument : IDisposable
     }
 
     /// <summary>
-    /// Should only every start with a VStack.
-    /// Might need to create a StarterStack class that handles different logic that a basic VStack.
+    /// Defines the root layout as a vertical stack. You compose the entire view tree here.
     /// </summary>
     public PdfDocument WithVStack(Action<VStack> action)
     {

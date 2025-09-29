@@ -3,21 +3,12 @@ namespace InvoiceKit.Pdf.Containers.SpacingBlock;
 using Layout;
 
 /// <summary>
-/// Used to add spacing in between elements.
+/// Used to add vertical spacing between elements.
 /// </summary>
-public sealed class SpacingBlockViewBuilder : IViewBuilder
+public sealed class SpacingBlockViewBuilder(float height) : IViewBuilder
 {
-    private float Height { get; }
-
-    public IReadOnlyCollection<IViewBuilder> Children => [];
-
-    internal SpacingBlockViewBuilder(float height)
-    {
-        Height = height < 700f ? height : 5f;
-    }
-
     public ILayout ToLayout()
     {
-        return new SpacingBlockLayout(Height);
+        return new SpacingBlockLayout(height);
     }
 }

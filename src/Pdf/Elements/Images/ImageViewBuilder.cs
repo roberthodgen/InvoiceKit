@@ -2,13 +2,14 @@ namespace InvoiceKit.Pdf.Elements.Images;
 
 using Layout;
 
+/// <summary>
+/// Adds an image to the document.
+/// </summary>
 public sealed class ImageViewBuilder : IViewBuilder
 {
     private string Path { get; set; } = "";
 
     private ImageType ImageType { get; set; }
-
-    public IReadOnlyCollection<IViewBuilder> Children => [];
 
     internal ImageViewBuilder()
     {

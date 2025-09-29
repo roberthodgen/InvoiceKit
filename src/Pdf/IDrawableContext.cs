@@ -2,9 +2,18 @@ namespace InvoiceKit.Pdf;
 
 using SkiaSharp;
 
-public interface IDrawableContext
+/// <summary>
+/// Wraps a PDF canvas for drawing and provides debug information.
+/// </summary>
+public interface IDrawableContext : IDisposable
 {
-    public SKCanvas Canvas { get; }
+    /// <summary>
+    /// The canvas to draw on.
+    /// </summary>
+    SKCanvas Canvas { get; }
 
-    public bool Debug { get; }
+    /// <summary>
+    /// Indicates whether debug information should be drawn.
+    /// </summary>
+    bool Debug { get; }
 }

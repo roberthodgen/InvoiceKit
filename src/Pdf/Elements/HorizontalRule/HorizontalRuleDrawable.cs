@@ -2,20 +2,13 @@ namespace InvoiceKit.Pdf.Elements.HorizontalRule;
 
 using SkiaSharp;
 
-internal sealed class HorizontalRuleDrawable : IDrawable
+internal sealed class HorizontalRuleDrawable(SKRect rect) : IDrawable
 {
-    public SKRect SizeAndLocation { get; }
-
-    public HorizontalRuleDrawable(SKRect rect)
-    {
-        SizeAndLocation = rect;
-    }
-
     public void Draw(IDrawableContext context)
     {
         context.Canvas.DrawLine(
-            SizeAndLocation.Location,
-            SKPoint.Add(SizeAndLocation.Location, new SKSize(SizeAndLocation.Width, 0)),
+            rect.Location,
+            SKPoint.Add(rect.Location, new SKSize(rect.Width, 0)),
             new SKPaint
             {
                 Color = SKColors.Black,

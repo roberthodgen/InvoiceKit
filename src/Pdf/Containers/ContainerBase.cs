@@ -12,11 +12,11 @@ using Tables;
 
 public abstract class ContainerBase : IContainer
 {
-    private List<IViewBuilder> _children = [];
-
-    public IReadOnlyCollection<IViewBuilder> Children => _children.AsReadOnly();
+    private readonly List<IViewBuilder> _children = [];
 
     public TextStyle DefaultTextStyle { get; protected set; }
+
+    protected IReadOnlyCollection<IViewBuilder> Children => _children.AsReadOnly();
 
     protected ContainerBase(TextStyle defaultTextStyle)
     {

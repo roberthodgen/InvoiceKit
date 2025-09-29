@@ -1,7 +1,7 @@
 namespace InvoiceKit.Pdf.Layout;
 
 /// <summary>
-/// Used to render a layout across a single page.
+/// Represents a single page in a PDF document and stores all drawables placed on it during the layout phase.
 /// </summary>
 internal class Page : IDisposable
 {
@@ -12,11 +12,7 @@ internal class Page : IDisposable
     /// </summary>
     public IReadOnlyCollection<IDrawable> Drawables => _drawables.AsReadOnly();
 
-    public Page()
-    {
-    }
-
-    internal void AddDrawables(IEnumerable<IDrawable> drawables)
+    public void AddDrawables(IEnumerable<IDrawable> drawables)
     {
         _drawables.AddRange(drawables);
     }

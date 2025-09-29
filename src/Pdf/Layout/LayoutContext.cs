@@ -2,6 +2,12 @@ namespace InvoiceKit.Pdf.Layout;
 
 using SkiaSharp;
 
+/// <summary>
+/// Represents the available space for a layout.
+/// </summary>
+/// <remarks>
+/// Uses a two-phase commit model where children contexts should be created then committed back to their parents.
+/// </remarks>
 public sealed class LayoutContext
 {
     private readonly List<float> _allocated = [];

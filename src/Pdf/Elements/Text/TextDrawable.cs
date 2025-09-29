@@ -3,26 +3,13 @@ namespace InvoiceKit.Pdf.Elements.Text;
 using SkiaSharp;
 using Styles.Text;
 
-internal sealed class TextDrawable : IDrawable
+internal sealed class TextDrawable(string text, SKRect rect, TextStyle style) : IDrawable
 {
-    private string TextLine { get; }
-
-    public SKRect SizeAndLocation { get; }
-
-    private TextStyle Style { get; }
-
-    public TextDrawable(string text, SKRect sizeAndLocation, TextStyle style)
-    {
-        TextLine = text;
-        SizeAndLocation = sizeAndLocation;
-        Style = style;
-    }
-
     public void Draw(IDrawableContext context)
     {
         if (context.Debug)
         {
-            context.Canvas.DrawLine(SizeAndLocation.Left, SizeAndLocation.Top, SizeAndLocation.Right, SizeAndLocation.Top,
+            context.Canvas.DrawLine(rect.Left, rect.Top, rect.Right, rect.Top,
                 new SKPaint
             {
                 Style = SKPaintStyle.Stroke,
@@ -30,7 +17,8 @@ internal sealed class TextDrawable : IDrawable
                 StrokeWidth = 1f,
             });
         }
-        context.Canvas.DrawText(TextLine, SizeAndLocation.Left, SizeAndLocation.Top, SKTextAlign.Left, Style.ToFont(), Style.ToPaint());
+
+        context.Canvas.DrawText(text, rect.Left, rect.Top, SKTextAlign.Left, style.ToFont(), style.ToPaint());
     }
 
     public void Dispose()

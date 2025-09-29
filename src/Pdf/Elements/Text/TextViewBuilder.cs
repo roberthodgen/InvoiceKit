@@ -4,13 +4,14 @@ using Layout;
 using SkiaSharp;
 using Styles.Text;
 
+/// <summary>
+/// Adds text to the document.
+/// </summary>
 public sealed class TextViewBuilder : IViewBuilder
 {
     private TextStyle Style { get; set; }
 
     private string Text { get; set; } = "";
-
-    public IReadOnlyCollection<IViewBuilder> Children => [];
 
     internal TextViewBuilder(TextStyle style)
     {

@@ -2,14 +2,11 @@ namespace InvoiceKit.Pdf.Elements.HorizontalRule;
 
 using Layout;
 
+/// <summary>
+/// Adds a horizontal line to the document.
+/// </summary>
 public sealed class HorizontalRuleViewBuilder : IViewBuilder
 {
-    public IReadOnlyCollection<IViewBuilder> Children => [];
-
-    internal HorizontalRuleViewBuilder()
-    {
-    }
-
     public ILayout ToLayout()
     {
         return new HorizontalRuleLayout();

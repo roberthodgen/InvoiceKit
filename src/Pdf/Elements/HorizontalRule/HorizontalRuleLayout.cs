@@ -5,23 +5,16 @@ using SkiaSharp;
 
 internal class HorizontalRuleLayout : ILayout
 {
-    public bool IsFullyDrawn { get; set; }
-
-    internal HorizontalRuleLayout()
-    {
-    }
+    private bool _drawn;
 
     public SKSize Measure(SKSize available)
     {
         return new SKSize(available.Width, 1);
     }
 
-    /// <summary>
-    ///
-    /// </summary>
     public LayoutResult Layout(LayoutContext context)
     {
-        if (IsFullyDrawn)
+        if (_drawn)
         {
             return new LayoutResult([], LayoutStatus.IsFullyDrawn);
         }
@@ -38,11 +31,10 @@ internal class HorizontalRuleLayout : ILayout
         if (context.TryAllocateRect(rect))
         {
             listDrawables.Add(new HorizontalRuleDrawable(rect));
-            IsFullyDrawn = true;
+            _drawn = true;
             return new LayoutResult(listDrawables, LayoutStatus.IsFullyDrawn);
         }
 
-        // Will only be hit if the page is full.
         return new LayoutResult(listDrawables, LayoutStatus.NeedsNewPage);
     }
 }

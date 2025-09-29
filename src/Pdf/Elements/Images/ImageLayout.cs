@@ -6,11 +6,11 @@ using Svg.Skia;
 
 internal class ImageLayout : ILayout
 {
+    private bool _drawn;
+
     private SKSvg? Svg { get; }
 
     private SKBitmap? Bitmap { get; }
-
-    public bool IsFullyDrawn { get; set; }
 
     internal ImageLayout(string path, ImageType imageType)
     {
@@ -18,7 +18,8 @@ internal class ImageLayout : ILayout
         {
             Svg = new SKSvg();
             Svg.Load(path);
-        }else if (imageType == ImageType.Bmp)
+        }
+        else if (imageType == ImageType.Bmp)
         {
             using var data = SKData.Create(path);
             using var codec = SKCodec.Create(data);
@@ -47,7 +48,7 @@ internal class ImageLayout : ILayout
 
     public LayoutResult Layout(LayoutContext context)
     {
-        if (IsFullyDrawn)
+        if (_drawn)
         {
             return new LayoutResult([], LayoutStatus.IsFullyDrawn);
         }
@@ -66,7 +67,7 @@ internal class ImageLayout : ILayout
             if (context.TryAllocateRect(rect))
             {
                 listDrawables.Add(new SvgImageDrawable(Svg, rect));
-                IsFullyDrawn = true;
+                _drawn = true;
                 return new LayoutResult(listDrawables, LayoutStatus.IsFullyDrawn);
             }
         }
@@ -76,7 +77,7 @@ internal class ImageLayout : ILayout
             if (context.TryAllocateRect(rect))
             {
                 listDrawables.Add(new BitmapImageDrawable(Bitmap, rect));
-                IsFullyDrawn = true;
+                _drawn = true;
                 return new LayoutResult(listDrawables, LayoutStatus.IsFullyDrawn);
             }
         }

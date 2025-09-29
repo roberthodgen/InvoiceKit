@@ -2,7 +2,7 @@ namespace InvoiceKit.Pdf;
 
 using SkiaSharp;
 
-public sealed class DrawableContext : IDrawableContext
+internal class DrawableContext : IDrawableContext
 {
     public SKCanvas Canvas { get; }
 
@@ -14,4 +14,8 @@ public sealed class DrawableContext : IDrawableContext
         Debug = debug;
     }
 
+    public void Dispose()
+    {
+        Canvas.Dispose();
+    }
 }

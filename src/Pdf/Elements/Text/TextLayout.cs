@@ -14,6 +14,8 @@ using Styles.Text;
 /// </remarks>
 internal sealed class TextLayout : ILayout
 {
+    private bool _drawn;
+
     private TextStyle Style { get; }
 
     private readonly List<string> _lines = [];
@@ -21,8 +23,6 @@ internal sealed class TextLayout : ILayout
     private List<string> _wrappedLines = [];
 
     private int _currentIndex = 0;
-
-    public bool IsFullyDrawn { get; set; }
 
     internal TextLayout(TextStyle style, string text)
     {
@@ -87,7 +87,7 @@ internal sealed class TextLayout : ILayout
 
     public LayoutResult Layout(LayoutContext context)
     {
-        if (IsFullyDrawn || _lines.Count == 0)
+        if (_drawn || _lines.Count == 0)
         {
             return new LayoutResult([], LayoutStatus.IsFullyDrawn);
         }
@@ -134,7 +134,8 @@ internal sealed class TextLayout : ILayout
                 return new LayoutResult(listDrawables, LayoutStatus.NeedsNewPage);
             }
         }
-        IsFullyDrawn = true;
+
+        _drawn = true;
         return new LayoutResult(listDrawables, LayoutStatus.IsFullyDrawn);
     }
 }
