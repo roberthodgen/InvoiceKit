@@ -47,7 +47,6 @@ internal sealed class TextLayout : ILayout
 
     /// <summary>
     /// Separates a single string into multiple lines based on the width of the available space.
-    /// Todo: This needs to be merged into the Layout method.
     /// </summary>
     private static List<string> WrapText(string text, TextStyle style, float maxWidth)
     {
@@ -85,12 +84,12 @@ internal sealed class TextLayout : ILayout
         return lines;
     }
 
-    /// <summary>
-    ///
-    /// </summary>
     public LayoutResult Layout(LayoutContext context)
     {
-        if (IsFullyDrawn || _lines.Count == 0) return new LayoutResult([], LayoutStatus.IsFullyDrawn);
+        if (IsFullyDrawn || _lines.Count == 0)
+        {
+            return new LayoutResult([], LayoutStatus.IsFullyDrawn);
+        }
 
         if (_wrappedLines.Count == 0)
         {

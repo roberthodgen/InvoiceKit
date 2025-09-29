@@ -1,9 +1,7 @@
 namespace InvoiceKit.Pdf.Containers.SpacingBlock;
 
-using SkiaSharp;
-
 /// <summary>
-/// Used to add spacing in between blocks.
+/// Used to add spacing in between elements.
 /// </summary>
 public sealed class SpacingBlockViewBuilder : IViewBuilder
 {

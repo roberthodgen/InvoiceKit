@@ -20,7 +20,10 @@ internal class HorizontalRuleLayout : ILayout
     /// </summary>
     public LayoutResult Layout(LayoutContext context)
     {
-        if (IsFullyDrawn) return new LayoutResult([], LayoutStatus.IsFullyDrawn);
+        if (IsFullyDrawn)
+        {
+            return new LayoutResult([], LayoutStatus.IsFullyDrawn);
+        }
 
         var listDrawables = new List<IDrawable>();
         var size = Measure(context.Available.Size);

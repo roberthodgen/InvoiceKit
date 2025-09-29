@@ -11,23 +11,21 @@ internal class ImageLayout : ILayout
 
     public bool IsFullyDrawn { get; set; }
 
-    internal ImageLayout(string path, string imageType)
+    internal ImageLayout(string path, ImageType imageType)
     {
-        switch (imageType)
+        if (imageType == ImageType.Svg)
         {
-            case "svg":
-                Svg = new SKSvg();
-                Svg.Load(path);
-                break;
-            case "bmp":
-            {
-                using var data = SKData.Create(path);
-                using var codec = SKCodec.Create(data);
-                Bitmap = SKBitmap.Decode(codec);
-                break;
-            }
-            default:
-                throw new ArgumentException("Image type not supported.");
+            Svg = new SKSvg();
+            Svg.Load(path);
+        }else if (imageType == ImageType.Bmp)
+        {
+            using var data = SKData.Create(path);
+            using var codec = SKCodec.Create(data);
+            Bitmap = SKBitmap.Decode(codec);
+        }
+        else
+        {
+            throw new ArgumentException("Unsupported image type", nameof(imageType));
         }
     }
 
@@ -48,7 +46,10 @@ internal class ImageLayout : ILayout
 
     public LayoutResult Layout(LayoutContext context)
     {
-        if (IsFullyDrawn) return new LayoutResult([], LayoutStatus.IsFullyDrawn);
+        if (IsFullyDrawn)
+        {
+            return new LayoutResult([], LayoutStatus.IsFullyDrawn);
+        }
 
         var listDrawables = new List<IDrawable>();
         var size = Measure(context.Available.Size);

@@ -2,7 +2,7 @@ namespace InvoiceKit.Pdf.Containers.PageBreak;
 
 using SkiaSharp;
 
-public class PageBreakLayout : ILayout
+internal class PageBreakLayout : ILayout
 {
     public bool IsFullyDrawn { get; set; }
 
@@ -13,7 +13,10 @@ public class PageBreakLayout : ILayout
 
     public LayoutResult Layout(LayoutContext context)
     {
-        if (IsFullyDrawn) return new LayoutResult([], LayoutStatus.IsFullyDrawn);
+        if (IsFullyDrawn)
+        {
+            return new LayoutResult([], LayoutStatus.IsFullyDrawn);
+        }
 
         IsFullyDrawn = true;
         // Requests a new page and returns no drawables.

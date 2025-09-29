@@ -4,7 +4,7 @@ public sealed class ImageViewBuilder : IViewBuilder
 {
     private string Path { get; set; } = "";
 
-    private string ImageType { get; set; } = "";
+    private ImageType ImageType { get; set; }
 
     public IReadOnlyCollection<IViewBuilder> Children => [];
 
@@ -15,14 +15,14 @@ public sealed class ImageViewBuilder : IViewBuilder
     public IViewBuilder WithBitmapImage(string path)
     {
         Path = path;
-        ImageType = "bmp";
+        ImageType = ImageType.Bmp;
         return this;
     }
 
     public IViewBuilder WithSvgImage(string path)
     {
         Path = path;
-        ImageType = "svg";
+        ImageType = ImageType.Svg;
         return this;
     }
 
