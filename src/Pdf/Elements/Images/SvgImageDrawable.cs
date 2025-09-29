@@ -1,6 +1,5 @@
 namespace InvoiceKit.Pdf.Elements.Images;
 
-using Containers;
 using SkiaSharp;
 using Svg.Skia;
 

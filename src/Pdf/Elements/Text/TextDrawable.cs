@@ -1,10 +1,9 @@
 namespace InvoiceKit.Pdf.Elements.Text;
 
-using Containers;
 using SkiaSharp;
 using Styles.Text;
 
-public sealed class TextDrawable : IDrawable
+internal sealed class TextDrawable : IDrawable
 {
     private string TextLine { get; }
 

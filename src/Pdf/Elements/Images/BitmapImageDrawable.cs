@@ -1,6 +1,5 @@
 namespace InvoiceKit.Pdf.Elements.Images;
 
-using Containers;
 using SkiaSharp;
 
 internal class BitmapImageDrawable : IDrawable
@@ -9,13 +8,10 @@ internal class BitmapImageDrawable : IDrawable
 
     public SKRect SizeAndLocation { get; }
 
-    public bool Debug { get; }
-
-    internal BitmapImageDrawable(SKBitmap bitmap, SKRect rect, bool debug = false)
+    internal BitmapImageDrawable(SKBitmap bitmap, SKRect rect)
     {
         _bitmap = bitmap;
         SizeAndLocation = rect;
-        Debug = debug;
     }
 
     public void Draw(IDrawableContext context)

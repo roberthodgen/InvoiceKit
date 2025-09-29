@@ -2,7 +2,7 @@ namespace InvoiceKit.Pdf.Elements.HorizontalRule;
 
 using SkiaSharp;
 
-public class HorizontalRuleLayout : ILayout
+internal class HorizontalRuleLayout : ILayout
 {
     public bool IsFullyDrawn { get; set; }
 

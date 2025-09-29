@@ -5,7 +5,7 @@ using Styles.Text;
 /// <summary>
 /// Renders content vertically. Each row is rendered on a new line.
 /// </summary>
-public class VStack : ContainerBase
+public sealed class VStack : ContainerBase
 {
     internal VStack(TextStyle defaultTextStyle)
         : base(defaultTextStyle)

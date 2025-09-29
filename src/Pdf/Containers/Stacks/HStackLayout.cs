@@ -2,7 +2,7 @@ namespace InvoiceKit.Pdf.Containers.Stacks;
 
 using SkiaSharp;
 
-public class HStackLayout : ILayout
+internal class HStackLayout : ILayout
 {
     public bool IsFullyDrawn { get; set; }
 

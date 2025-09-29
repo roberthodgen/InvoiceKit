@@ -1,8 +1,5 @@
 namespace InvoiceKit.Pdf.Elements.Images;
 
-using Containers;
-using SkiaSharp;
-
 public sealed class ImageViewBuilder : IViewBuilder
 {
     private string Path { get; set; } = "";

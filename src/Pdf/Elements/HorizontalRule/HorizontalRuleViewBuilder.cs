@@ -1,6 +1,6 @@
 namespace InvoiceKit.Pdf.Elements.HorizontalRule;
 
-public class HorizontalRuleViewBuilder : IViewBuilder
+public sealed class HorizontalRuleViewBuilder : IViewBuilder
 {
     public IReadOnlyCollection<IViewBuilder> Children => [];
 

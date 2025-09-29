@@ -1,9 +1,8 @@
 namespace InvoiceKit.Pdf.Elements.HorizontalRule;
 
-using Containers;
 using SkiaSharp;
 
-public sealed class HorizontalRuleDrawable : IDrawable
+internal sealed class HorizontalRuleDrawable : IDrawable
 {
     public SKRect SizeAndLocation { get; }
 

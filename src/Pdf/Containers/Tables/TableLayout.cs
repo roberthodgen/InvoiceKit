@@ -2,7 +2,7 @@ namespace InvoiceKit.Pdf.Containers.Tables;
 
 using SkiaSharp;
 
-public class TableLayout : ILayout
+internal class TableLayout : ILayout
 {
     public bool IsFullyDrawn { get; set; }
 

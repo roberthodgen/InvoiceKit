@@ -1,6 +1,6 @@
 namespace InvoiceKit.Pdf;
 
-public class LayoutResult : ILayoutResult
+public sealed class LayoutResult : ILayoutResult
 {
     public IReadOnlyCollection<IDrawable> Drawables { get; }
 

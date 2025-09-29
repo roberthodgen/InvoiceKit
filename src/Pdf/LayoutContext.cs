@@ -2,7 +2,7 @@ namespace InvoiceKit.Pdf;
 
 using SkiaSharp;
 
-public class LayoutContext : ILayoutContext
+public sealed class LayoutContext : ILayoutContext
 {
     private readonly List<float> _allocated = [];
 

@@ -2,7 +2,7 @@ namespace InvoiceKit.Pdf.Containers.Tables;
 
 using SkiaSharp;
 
-public class TableRowDrawable : IDrawable
+internal class TableRowDrawable : IDrawable
 {
     public SKRect SizeAndLocation { get; }
     

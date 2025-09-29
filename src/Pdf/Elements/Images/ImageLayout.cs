@@ -3,7 +3,7 @@ namespace InvoiceKit.Pdf.Elements.Images;
 using SkiaSharp;
 using Svg.Skia;
 
-public class ImageLayout : ILayout
+internal class ImageLayout : ILayout
 {
     private SKSvg? Svg { get; }
 

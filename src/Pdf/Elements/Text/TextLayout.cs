@@ -11,7 +11,7 @@ using Styles.Text;
 /// <remarks>
 /// If multiple paragraphs are required, add them to <see cref="VStack"/>.
 /// </remarks>
-public sealed class TextLayout : ILayout
+internal sealed class TextLayout : ILayout
 {
     private TextStyle Style { get; }
 

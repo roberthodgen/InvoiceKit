@@ -3,7 +3,7 @@ namespace InvoiceKit.Pdf.Containers.Tables;
 using SkiaSharp;
 using Styles.Text;
 
-public class TableRowViewBuilder : IViewBuilder
+public sealed class TableRowViewBuilder : IViewBuilder
 {
     private List<TableCell> Cells { get; } = [];
 
