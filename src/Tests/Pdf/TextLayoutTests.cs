@@ -125,20 +125,9 @@ public class TextLayoutTests(ITestOutputHelper testOutputHelper)
                         Aliquam erat volutpat. Donec vel metus ex. Nam ac pretium odio. Donec aliquet tellus felis, non varius nisi tempor ut. Cras dictum sit amet nisl ac sodales. Vestibulum laoreet felis at velit vulputate, commodo cursus diam sagittis. Donec ut est vehicula nulla venenatis consequat. Sed eu ante mi. Praesent imperdiet purus et egestas placerat. Mauris vestibulum egestas dictum. Donec iaculis, neque non pretium blandit, velit lorem malesuada turpis, eu consequat orci turpis a urna. Maecenas in vulputate urna, vitae mattis lacus. Curabitur arcu quam, bibendum at metus sed, finibus facilisis nibh. Vestibulum eu augue congue, dictum risus sit amet, sollicitudin arcu.
                         """
                     ))
-                .AddText(text => text
-                    .LineHeight(1.5f)
-                    .WithText(
-                        """
-                        Cras faucibus velit lacus, tempus scelerisque nisl pulvinar eget. Sed eleifend mauris tellus, eu dapibus ipsum efficitur ut. Donec faucibus molestie sem non commodo. Donec non nibh porta, viverra urna non, aliquet mauris. Nullam gravida massa at leo lacinia, eu tristique est egestas. Morbi tempus ut elit ac vestibulum. Aenean in tincidunt purus, ut vehicula orci. Etiam ullamcorper tortor ac diam blandit, nec tincidunt orci mollis. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc elementum, ante sed laoreet bibendum, quam nisi fringilla elit, sed euismod sem tellus eu massa. Interdum et malesuada fames ac ante ipsum primis in faucibus. Aenean mattis semper interdum.
-                        """
-                    ))
-                .AddText(text => text
-                    .LineHeight(1.5f)
-                    .WithText(
-                        """
-                        Nulla molestie diam sit amet nibh aliquam, vitae efficitur nulla eleifend. Cras quis fringilla leo. Sed rhoncus leo et tellus congue, nec aliquet lacus hendrerit. Donec porta turpis nec urna dictum, id tempor lectus aliquam. Curabitur non erat sed augue maximus ultricies vel id velit. Etiam egestas sed justo varius blandit. Etiam ac ultrices quam. Ut sit amet felis ac turpis imperdiet placerat. Nullam sed sem tellus. Morbi hendrerit sollicitudin magna et dignissim. Mauris a dui mattis, vehicula eros in, lacinia augue. Phasellus in eleifend risus.
-                        """
-                    ))
+                .AddHorizontalRule()
+                .AddSpacing(50f)
+                .AddHorizontalRule()
                 .AddHStack(stack => stack
                     .AddText(text => text
                         .WithText("""

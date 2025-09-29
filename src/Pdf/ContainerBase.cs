@@ -59,7 +59,7 @@ public abstract class ContainerBase : IContainer
         return this;
     }
 
-    public IContainer AddSpacing(float height = 5)
+    public IContainer AddSpacing(float height = 5f)
     {
         var child = new SpacingBlockViewBuilder(height);
         _children.Add(child);

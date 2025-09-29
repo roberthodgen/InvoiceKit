@@ -13,7 +13,7 @@ public sealed class SpacingBlockViewBuilder : IViewBuilder
 
     internal SpacingBlockViewBuilder(float height)
     {
-        Height = height;
+        Height = height < 700f ? height : 5f;
     }
 
     public ILayout ToLayout()

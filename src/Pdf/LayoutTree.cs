@@ -6,7 +6,8 @@ using SkiaSharp;
 public sealed class LayoutTree : ILayoutTree
 {
     private readonly LayoutNode _root;
-    private readonly HashSet<ILayout> _layoutComplete = new ();
+
+    private bool IsFullyDrawn;
 
     public LayoutTree(IViewBuilder root)
     {
@@ -16,22 +17,12 @@ public sealed class LayoutTree : ILayoutTree
     /// Depth-first search that skips layouts that were already fully drawn.
     private PageLayoutResult LayoutPage(LayoutContext context)
     {
-        var stack = new Stack<LayoutNode>();
-        stack.Push(_root);
         var page = new Page();
 
-        while (stack.Count > 0)
+        while (!IsFullyDrawn)
         {
-            var layout = stack.Pop();
-
-            // Skip nodes that we've already laid out completely
-            if (_layoutComplete.Contains(layout.Layout))
-            {
-                continue;
-            }
-
             var childContext = new LayoutContext(context.Available);
-            var layoutResult = layout.Layout.Layout(childContext);
+            var layoutResult = _root.Layout.Layout(childContext);
             page.AddDrawables(layoutResult.Drawables);
             context.CommitChildContext(childContext);
 
@@ -40,9 +31,7 @@ public sealed class LayoutTree : ILayoutTree
                 return new PageLayoutResult(page, LayoutStatus.NeedsNewPage);
             }
 
-            // Remember that this layout is complete
-            // Todo: This might not be needed if the root element is the only one on the stack.
-            _layoutComplete.Add(layout.Layout);
+            IsFullyDrawn = true;
         }
 
         return new PageLayoutResult(page, LayoutStatus.IsFullyDrawn);
