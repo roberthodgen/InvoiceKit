@@ -90,7 +90,7 @@ public sealed class TextLayout : ILayout
     /// </summary>
     public LayoutResult Layout(LayoutContext context)
     {
-        if (IsFullyDrawn) return new LayoutResult([], LayoutStatus.IsFullyDrawn);
+        if (IsFullyDrawn || _lines.Count == 0) return new LayoutResult([], LayoutStatus.IsFullyDrawn);
 
         if (_wrappedLines.Count == 0)
         {

@@ -7,7 +7,7 @@ public sealed class LayoutTree : ILayoutTree
 {
     private readonly LayoutNode _root;
 
-    private bool IsFullyDrawn;
+    private bool _isFullyDrawn;
 
     public LayoutTree(IViewBuilder root)
     {
@@ -19,7 +19,7 @@ public sealed class LayoutTree : ILayoutTree
     {
         var page = new Page();
 
-        while (!IsFullyDrawn)
+        while (!_isFullyDrawn)
         {
             var childContext = new LayoutContext(context.Available);
             var layoutResult = _root.Layout.Layout(childContext);
@@ -31,7 +31,7 @@ public sealed class LayoutTree : ILayoutTree
                 return new PageLayoutResult(page, LayoutStatus.NeedsNewPage);
             }
 
-            IsFullyDrawn = true;
+            _isFullyDrawn = true;
         }
 
         return new PageLayoutResult(page, LayoutStatus.IsFullyDrawn);
