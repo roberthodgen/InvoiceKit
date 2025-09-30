@@ -81,6 +81,38 @@ public class DocumentTests(ITestOutputHelper testOutputHelper)
     }
 
     [Fact]
+    public void HeaderAndFooter_Test()
+    {
+        const string fileName = "HeaderAndFooter.pdf";
+        File.Delete(fileName);
+
+        using var stream = File.OpenWrite(fileName);
+        using var builder = PdfDocument.UsLetter;
+        var pdfBytes = builder
+            // .DisplayLayoutGuidelines()
+            .DefaultFont("Open Sans/Regular")
+            .WithVStack(vStack => vStack
+                .WithHeader(header => header.AddText(text => text.WithText("This is the header.")))
+                .WithFooter(footer => footer.AddText(text => text.WithText("This is the footer.")))
+                .AddText(text => text.WithText("This is inside the body."))
+                .AddSpacing(100f)
+                .AddText(text => text.WithText("This is inside the body."))
+                .AddSpacing(100f)
+                .AddText(text => text.WithText("This is inside the body."))
+                .AddPageBreak()
+                .AddText(text => text.WithText("This is inside the second page's body."))
+                .AddSpacing(100f)
+                .AddText(text => text.WithText("This is inside the second page's body."))
+                .AddSpacing(100f)
+                .AddText(text => text.WithText("This is inside the second page's body.")))
+            .Build();
+
+        stream.Write(pdfBytes);
+        testOutputHelper.WriteLine($"PDF created: {Path.GetFullPath(fileName)}");
+        File.Exists(fileName).ShouldBeTrue();
+    }
+
+    [Fact]
     public void Example_Document_Test()
     {
         const string fileName = "Example-Document.pdf";

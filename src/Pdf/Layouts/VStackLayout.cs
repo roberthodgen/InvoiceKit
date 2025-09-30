@@ -3,8 +3,12 @@ namespace InvoiceKit.Pdf.Layouts;
 using Drawables;
 using SkiaSharp;
 
-internal class VStackLayout(List<ILayout> children) : ILayout
+internal class VStackLayout(List<ILayout> children, ILayout? header, ILayout? footer) : ILayout
 {
+    private readonly ILayout? _header = header;
+
+    private readonly ILayout? _footer = footer;
+
     private readonly Queue<ILayout> _children = new (children);
 
     private bool _drawn;
@@ -22,7 +26,17 @@ internal class VStackLayout(List<ILayout> children) : ILayout
         {
             var layout = _children.Peek();
 
-            var childContext = context.GetChildContext();
+            if (_header is not null)
+            {
+                drawables.AddRange(_header.Layout(context).Drawables);
+            }
+            var available = context.Available;
+            // Todo: Measure isn't properly set up for most layouts
+            var headerSize = _header?.Measure(context.Available.Size) ?? SKSize.Empty;
+            var contentAvailable = SKRect.Create(available.Location, available.Size - headerSize);
+            contentAvailable.Offset(0, headerSize.Height);
+
+            var childContext = context.GetChildContext(contentAvailable);
             var layoutResult = layout.Layout(childContext);
             drawables.Add(new DebugDrawable(childContext.Allocated));
             drawables.AddRange(layoutResult.Drawables);
