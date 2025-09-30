@@ -1,24 +1,13 @@
 namespace InvoiceKit.Pdf;
 
-using SkiaSharp;
-
+/// <summary>
+/// A piece of content that can be drawn to a page. Its location, size, and content were determined during the layout
+/// phase. This object contains all data necessary to draw.
+/// </summary>
 public interface IDrawable : IDisposable
 {
     /// <summary>
-    /// Attempts to fit the content within the available size. Returns the sizes of all children.
+    /// Draws the content to a canvas within the <see cref="IDrawableContext"/>.
     /// </summary>
-    /// <param name="available">The available rectangle to render content within.</param>
-    /// <returns>The size necessary to render the content.</returns>
-    /// <remarks>
-    /// The sum of all returned sizes may be larger than the available area and indicates a new page or resize is
-    /// necessary.
-    /// </remarks>
-    SKSize Measure(SKSize available);
-
-    /// <summary>
-    /// Draws the content within the specified rectangle.
-    /// </summary>
-    /// <param name="context">A multi-page drawing context.</param>
-    /// <param name="rect">The rectangle into which the content should be drawn.</param>
-    void Draw(MultiPageContext context, SKRect rect);
+    void Draw(IDrawableContext context);
 }
