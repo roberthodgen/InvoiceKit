@@ -1,7 +1,5 @@
 namespace InvoiceKit.Pdf;
 
-using Layout;
-
 /// <summary>
 /// A view build describes content to be added to a document.
 /// </summary>

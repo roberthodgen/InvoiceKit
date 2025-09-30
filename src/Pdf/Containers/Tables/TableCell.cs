@@ -1,7 +1,8 @@
 namespace InvoiceKit.Pdf.Containers.Tables;
 
-using Layout;
+using Layouts;
 using Styles.Text;
+using Views;
 
 /// <summary>
 /// Renders a table cell. Currently only supports text via wrapping <see cref="TextLayout"/>.

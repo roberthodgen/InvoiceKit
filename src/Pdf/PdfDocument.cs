@@ -1,9 +1,8 @@
 namespace InvoiceKit.Pdf;
 
-using Containers.Stacks;
-using Layout;
 using SkiaSharp;
 using Styles.Text;
+using Views;
 
 /// <summary>
 /// The PDF document renderer takes inspiration from SwiftUI's flexible layout structure: HStack and VStack are used to

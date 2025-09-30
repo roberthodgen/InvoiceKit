@@ -1,6 +1,5 @@
 namespace InvoiceKit.Pdf.Containers.Tables;
 
-using Layout;
 using SkiaSharp;
 
 internal class TableLayout : ILayout
