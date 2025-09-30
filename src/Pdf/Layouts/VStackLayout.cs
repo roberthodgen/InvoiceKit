@@ -22,7 +22,7 @@ internal class VStackLayout(List<ILayout> children) : ILayout
         {
             var layout = _children.Peek();
 
-            var childContext = new LayoutContext(context.Available);
+            var childContext = context.GetChildContext();
             var layoutResult = layout.Layout(childContext);
             drawables.Add(new DebugDrawable(childContext.Allocated));
             drawables.AddRange(layoutResult.Drawables);

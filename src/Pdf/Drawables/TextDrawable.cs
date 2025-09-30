@@ -3,7 +3,7 @@ namespace InvoiceKit.Pdf.Drawables;
 using SkiaSharp;
 using Styles.Text;
 
-internal sealed class TextDrawable(string text, SKRect rect, TextStyle style) : IDrawable
+internal class TextDrawable(string text, SKRect rect, TextStyle style) : IDrawable
 {
     public void Draw(IDrawableContext context)
     {

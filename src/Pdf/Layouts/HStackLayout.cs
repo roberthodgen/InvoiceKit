@@ -18,38 +18,28 @@ internal class HStackLayout(List<ILayout> columns) : ILayout
         }
 
         var results = new List<ColumnResult>();
-        var columnWidth = context.Available.Width / columns.Count;
+        var columnSize = new SKSize(context.Available.Width / columns.Count, context.Available.Height);
 
         // Loops for the number of columns once. Children that need a new page are added back to the stack.
-        foreach (var i in Enumerable.Range(0, columns.Count))
+        foreach (var index in Enumerable.Range(0, columns.Count))
         {
-            var column = columns[i];
-            var left = context.Available.Left + (columnWidth * i);
-
-            var childContext = new LayoutContext(
-                new SKRect(
-                    left,
-                    context.Available.Top,
-                    left + columnWidth,
-                    context.Available.Bottom));
-
-            var columnDrawables = new List<IDrawable>();
-            var result = column.Layout(childContext);
-            columnDrawables.Add(new DebugDrawable(childContext.Allocated));
-            columnDrawables.AddRange(result.Drawables);
-            results.Add(new ColumnResult(columnDrawables, result.Status, childContext));
+            var point = context.Available.Location;
+            point.Offset(columnSize.Width * index, 0);
+            var childContext = context.GetChildContext(SKRect.Create(point, columnSize));
+            var result = columns[index].Layout(childContext);
+            results.Add(
+                new ColumnResult(
+                    [new DebugDrawable(childContext.Allocated), ..result.Drawables,],
+                    result.Status,
+                    childContext));
         }
 
         var maxHeight = results.MaxBy(result => result.Context.Allocated.Height);
         context.CommitChildContext(maxHeight!.Context);
         var status = LayoutStatus.IsFullyDrawn;
-        foreach (var result in results)
+        if (results.Any(result => result.Status == LayoutStatus.NeedsNewPage))
         {
-            if (result.Status == LayoutStatus.NeedsNewPage)
-            {
-                status = LayoutStatus.NeedsNewPage;
-                break;
-            }
+            status = LayoutStatus.NeedsNewPage;
         }
 
         var drawables = results.SelectMany(result => result.Drawables).ToList();

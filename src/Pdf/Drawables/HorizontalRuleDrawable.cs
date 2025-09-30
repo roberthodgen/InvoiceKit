@@ -2,7 +2,7 @@ namespace InvoiceKit.Pdf.Drawables;
 
 using SkiaSharp;
 
-internal sealed class HorizontalRuleDrawable(SKRect rect) : IDrawable
+internal class HorizontalRuleDrawable(SKRect rect) : IDrawable
 {
     public void Draw(IDrawableContext context)
     {

@@ -64,4 +64,21 @@ public sealed class LayoutContext
     {
         _allocated.Add(child.Allocated.Height);
     }
+
+    /// <summary>
+    /// Creates a new child context from the remaining available space.
+    /// </summary>
+    public LayoutContext GetChildContext()
+    {
+        return new LayoutContext(Available);
+    }
+
+    /// <summary>
+    /// Creates a new child context from the remaining available space that intersects with the given rect.
+    /// </summary>
+    /// <param name="intersectingRect">A rect to limit the child context to.</param>
+    public LayoutContext GetChildContext(SKRect intersectingRect)
+    {
+        return new LayoutContext(SKRect.Intersect(Available, intersectingRect));
+    }
 }

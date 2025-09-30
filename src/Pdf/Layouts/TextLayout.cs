@@ -8,7 +8,7 @@ using Styles.Text;
 /// A text block represents a single paragraph's text. Line breaks may be added to prevent paragraph spacing. Automatic
 /// new lines are added as needed.
 /// </summary>
-internal sealed class TextLayout : ILayout
+internal class TextLayout : ILayout
 {
     private bool _drawn;
 

@@ -4,10 +4,6 @@ using SkiaSharp;
 
 internal class DebugDrawable(SKRect rect) : IDrawable
 {
-    public void Dispose()
-    {
-    }
-
     public void Draw(IDrawableContext context)
     {
         if (context.Debug)
@@ -21,5 +17,9 @@ internal class DebugDrawable(SKRect rect) : IDrawable
                     StrokeWidth = 1f,
                 });
         }
+    }
+
+    public void Dispose()
+    {
     }
 }

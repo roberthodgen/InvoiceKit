@@ -15,7 +15,7 @@ internal class LayoutTree(IViewBuilder root)
 
         while (!_isFullyDrawn)
         {
-            var childContext = new LayoutContext(context.Available);
+            var childContext = context.GetChildContext();
             var layoutResult = _root.Layout(childContext);
             page.AddDrawables(layoutResult.Drawables);
             context.CommitChildContext(childContext);
