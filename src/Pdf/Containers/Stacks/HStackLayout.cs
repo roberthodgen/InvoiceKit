@@ -3,35 +3,27 @@ namespace InvoiceKit.Pdf.Containers.Stacks;
 using Layout;
 using SkiaSharp;
 
-internal class HStackLayout : ILayout
+internal class HStackLayout(List<ILayout> columns) : ILayout
 {
-    public bool IsFullyDrawn { get; set; }
-
-    private List<ILayout> Columns { get; }
-
-    internal HStackLayout(List<ILayout> columns)
-    {
-        Columns = columns;
-    }
+    private bool _drawn;
 
     /// <summary>
     /// Horizontal stack layout that will split into columns based on the number of children.
     /// </summary>
     public LayoutResult Layout(LayoutContext context)
     {
-        if (Columns.Count == 0 || IsFullyDrawn)
+        if (columns.Count == 0 || _drawn)
         {
             return new LayoutResult([], LayoutStatus.IsFullyDrawn);
         }
 
         var results = new List<ColumnResult>();
-        var columnWidth = context.Available.Width / Columns.Count;
+        var columnWidth = context.Available.Width / columns.Count;
 
         // Loops for the number of columns once. Children that need a new page are added back to the stack.
-        foreach (var i in Enumerable.Range(0, Columns.Count))
+        foreach (var i in Enumerable.Range(0, columns.Count))
         {
-            var column = Columns[i];
-
+            var column = columns[i];
             var left = context.Available.Left + (columnWidth * i);
 
             var childContext = new LayoutContext(
@@ -41,11 +33,14 @@ internal class HStackLayout : ILayout
                     left + columnWidth,
                     context.Available.Bottom));
 
+            var columnDrawables = new List<IDrawable>();
             var result = column.Layout(childContext);
-            results.Add(new ColumnResult(result.Drawables, result.Status, childContext));
+            columnDrawables.Add(new DebugDrawable(childContext.Allocated));
+            columnDrawables.AddRange(result.Drawables);
+            results.Add(new ColumnResult(columnDrawables, result.Status, childContext));
         }
 
-        var maxHeight = results.MaxBy(result => result.Context.Allocated);
+        var maxHeight = results.MaxBy(result => result.Context.Allocated.Height);
         context.CommitChildContext(maxHeight!.Context);
         var status = LayoutStatus.IsFullyDrawn;
         foreach (var result in results)
@@ -56,11 +51,11 @@ internal class HStackLayout : ILayout
                 break;
             }
         }
-        var drawables = results.SelectMany(result => result.Drawables).ToList();
 
+        var drawables = results.SelectMany(result => result.Drawables).ToList();
         if (status == LayoutStatus.IsFullyDrawn)
         {
-            IsFullyDrawn = true;
+            _drawn = true;
         }
 
         return new LayoutResult(drawables, status);
@@ -68,7 +63,7 @@ internal class HStackLayout : ILayout
 
     public SKSize Measure(SKSize available)
     {
-        return new SKSize(available.Width / Columns.Count, available.Height);
+        return new SKSize(available.Width / columns.Count, available.Height);
     }
 
     private record ColumnResult(IReadOnlyCollection<IDrawable> Drawables, LayoutStatus Status, LayoutContext Context);

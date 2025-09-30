@@ -15,25 +15,22 @@ public sealed class LayoutContext
     private readonly SKRect _originalSpace;
 
     /// <summary>
-    /// Gets the total vertical space allocated to this layout.
+    /// Gets the total space allocated to this layout.
     /// </summary>
-    public float Allocated => _allocated.Sum();
+    public SKRect Allocated => new (
+        _originalSpace.Left,
+        _originalSpace.Top,
+        _originalSpace.Right,
+        _originalSpace.Top + _allocated.Sum());
 
     /// <summary>
     /// Gets the available space left for this layout.
     /// </summary>
-    public SKRect Available
-    {
-        get
-        {
-            var rect = new SKRect(
-                _originalSpace.Left,
-                _originalSpace.Top + Allocated,
-                _originalSpace.Right,
-                _originalSpace.Bottom);
-            return rect;
-        }
-    }
+    public SKRect Available => new (
+        _originalSpace.Left,
+        Allocated.Bottom,
+        _originalSpace.Right,
+        _originalSpace.Bottom);
 
     internal LayoutContext(SKRect available)
     {
@@ -65,6 +62,6 @@ public sealed class LayoutContext
     /// <param name="child">Another layout to allocate on this layout.</param>
     public void CommitChildContext(LayoutContext child)
     {
-        _allocated.Add(child.Allocated);
+        _allocated.Add(child.Allocated.Height);
     }
 }

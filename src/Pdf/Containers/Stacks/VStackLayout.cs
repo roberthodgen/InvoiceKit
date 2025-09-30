@@ -3,50 +3,47 @@ namespace InvoiceKit.Pdf.Containers.Stacks;
 using Layout;
 using SkiaSharp;
 
-internal class VStackLayout : ILayout
+internal class VStackLayout(List<ILayout> children) : ILayout
 {
-    public bool IsFullyDrawn { get; set; }
+    private readonly Queue<ILayout> _children = new (children);
 
-    private Queue<ILayout> Children { get; }
-
-    internal VStackLayout(List<ILayout> children)
-    {
-        Children = new Queue<ILayout>(children);
-    }
+    private bool _drawn;
 
     public LayoutResult Layout(LayoutContext context)
     {
-        if (Children.Count == 0 || IsFullyDrawn)
+        if (_children.Count == 0 || _drawn)
         {
             return new LayoutResult([], LayoutStatus.IsFullyDrawn);
         }
 
         var drawables = new List<IDrawable>();
 
-        while (Children.Count > 0)
+        while (_children.Count > 0)
         {
-            var layout = Children.Peek();
+            var layout = _children.Peek();
 
             var childContext = new LayoutContext(context.Available);
             var layoutResult = layout.Layout(childContext);
+            drawables.Add(new DebugDrawable(childContext.Allocated));
             drawables.AddRange(layoutResult.Drawables);
             context.CommitChildContext(childContext);
 
             if (layoutResult.Status == LayoutStatus.IsFullyDrawn)
             {
-                Children.Dequeue();
+                _children.Dequeue();
             }
             else
             {
                 return new LayoutResult(drawables, LayoutStatus.NeedsNewPage);
             }
         }
-        IsFullyDrawn = true;
+
+        _drawn = true;
         return new LayoutResult(drawables, LayoutStatus.IsFullyDrawn);
     }
 
     public SKSize Measure(SKSize available)
     {
-        return new SKSize(available.Width, Children.Sum(child => child.Measure(available).Height));
+        return new SKSize(available.Width, _children.Sum(child => child.Measure(available).Height));
     }
 }

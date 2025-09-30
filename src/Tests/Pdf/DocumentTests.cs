@@ -14,7 +14,7 @@ public class DocumentTests(ITestOutputHelper testOutputHelper)
         using var stream = File.OpenWrite(fileName);
         using var builder = PdfDocument.UsLetter;
         var pdfBytes = builder
-            // .DisplayLayoutGuidelines()
+            .DisplayLayoutGuidelines()
             .DefaultFont("Open Sans/Regular")
             .WithVStack(main => main
                 .AddText(text => text
@@ -33,7 +33,7 @@ public class DocumentTests(ITestOutputHelper testOutputHelper)
                             .AddText(text => text
                                 .WithText("123 Main Street\nAnytown, XX 12345"))))
                     .AddHStack(column2 => column2
-                        .AddVStack(spacing => spacing.AddSpacing())
+                        .AddVStack(_ => { })
                         .AddVStack(lines => lines
                             .AddText(text => text
                                 .Font("Open Sans/Bold")
@@ -89,7 +89,7 @@ public class DocumentTests(ITestOutputHelper testOutputHelper)
         using var stream = File.OpenWrite(fileName);
         using var builder = PdfDocument.UsLetter;
         var pdfBytes = builder
-            // .DisplayLayoutGuidelines()
+            .DisplayLayoutGuidelines()
             .DefaultFont("Open Sans/Regular")
             .WithVStack(vStack => vStack
                 .AddHStack(hStack => hStack

@@ -13,7 +13,7 @@ internal sealed class TextDrawable(string text, SKRect rect, TextStyle style) : 
                 new SKPaint
             {
                 Style = SKPaintStyle.Stroke,
-                Color = SKColors.Green,
+                Color = SKColors.LightGray,
                 StrokeWidth = 1f,
             });
         }

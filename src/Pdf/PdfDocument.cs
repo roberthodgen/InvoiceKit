@@ -73,7 +73,7 @@ public sealed class PdfDocument : IDisposable
         foreach (var page in new LayoutTree(_rootViewBuilder).ToPages(DrawableArea))
         {
             using var canvas = _document.BeginPage(_pageSize.Width, _pageSize.Height);
-            using var drawableContext = new DrawableContext(canvas, _debug);
+            using var drawableContext = new DrawableContext(canvas, DrawableArea, _debug);
             foreach (var drawable in page.Drawables)
             {
                 drawable.Draw(drawableContext);
