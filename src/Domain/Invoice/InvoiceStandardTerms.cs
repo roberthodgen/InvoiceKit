@@ -29,4 +29,10 @@ public sealed record InvoiceStandardTerms : IInvoiceTerms
     {
         return new InvoiceStandardTerms(systemClock, days);
     }
+
+    public static InvoiceStandardTerms CreateNewFromDateOnly(DateOnly fixedDate)
+    {
+        var dueDate = ManualSystemClock.CreateNew(fixedDate.ToDateTime(TimeOnly.MaxValue, DateTimeKind.Utc));
+        return new InvoiceStandardTerms(dueDate, 0);
+    }
 }

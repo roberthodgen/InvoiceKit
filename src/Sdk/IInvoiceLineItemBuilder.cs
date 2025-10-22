@@ -8,7 +8,7 @@ public interface IInvoiceLineItemBuilder
     /// <remarks>
     /// Defaults to 1, if unspecified.
     /// </remarks>
-    IInvoiceLineItemBuilder WithQuantity(int quantity);
+    IInvoiceLineItemBuilder WithQuantity(int quantity = 1);
 
     /// <summary>
     /// Sets the line item's per-unit price.
@@ -20,10 +20,7 @@ public interface IInvoiceLineItemBuilder
     IInvoiceLineItemBuilder WithPerUnitPrice(decimal pricePerUnit);
 
     /// <summary>
-    /// Assigns the invoice line item to a subtotal.
+    /// Sets the line item's description.
     /// </summary>
-    /// <remarks>
-    /// Omitting this on a line item will simply exclude this from a subtotal.
-    /// </remarks>
-    IInvoiceCompanyBuilder WithSubtotal(string subtotal);
+    IInvoiceLineItemBuilder WithDescription(string description);
 }

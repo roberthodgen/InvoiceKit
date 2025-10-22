@@ -8,7 +8,7 @@ public sealed class ClientAddressTests
     [Fact]
     public void ClientAddress_IsA_Address()
     {
-        typeof(ClientAddress).IsAssignableTo(typeof(Address)).ShouldBeTrue();
+        typeof(ClientAddress).IsAssignableTo(typeof(AddressBase)).ShouldBeTrue();
     }
     
     [Fact]
@@ -26,6 +26,6 @@ public sealed class ClientAddressTests
     public void ClientAddress_ToString_ReturnsFormattedString()
     {
         var clientAddress = ClientAddress.CreateNew("123 street", "apartment", "city", "state", "zip", "US");
-        clientAddress.ToString().ShouldBe("123 street\napartment\ncity, state zip\nUS");   
+        clientAddress.ToString().ShouldBe("123 street, apartment, city, state, zip, US");
     }
 }

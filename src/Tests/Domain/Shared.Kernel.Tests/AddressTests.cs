@@ -4,7 +4,7 @@ namespace InvoiceKit.Tests.Domain.Shared.Kernel.Tests;
 
 public sealed class AddressTests
 {
-    private sealed record AddressTest : Address
+    private sealed record AddressTest : AddressBase
     {
         public AddressTest(string address1, string? address2, string city, string state, string zipCode, string? country)
             : base(address1, address2, city, state, zipCode, country) { }
@@ -26,6 +26,6 @@ public sealed class AddressTests
     public void Address_ToString_ReturnsValues()
     {
         var address = new AddressTest("123 Main St", "Apt 1", "Anytown", "NY", "12345", "USA");
-        address.ToString().ShouldBe("123 Main St\nApt 1\nAnytown, NY 12345\nUSA");
+        address.ToString().ShouldBe("123 Main St, Apt 1, Anytown, NY, 12345, USA");
     }
 }

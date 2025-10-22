@@ -1,6 +1,8 @@
 namespace InvoiceKit.Domain.Shared.Kernel;
 
-public abstract record Address
+using System.Text;
+
+public abstract record AddressBase
 {
     public string Address1 { get; }
     public string? Address2 { get; }
@@ -9,7 +11,7 @@ public abstract record Address
     public string ZipCode { get; }
     public string? Country { get; }
 
-    protected Address(string address1, string? address2, string city, string state, string zipCode, string? country)
+    protected AddressBase(string address1, string? address2, string city, string state, string zipCode, string? country)
     {
         Address1 = address1;
         Address2 = address2 ?? null;
@@ -21,11 +23,19 @@ public abstract record Address
 
     public sealed override string ToString()
     {
-        return $"""
-                {Address1}
-                {Address2}
-                {City}, {State} {ZipCode}
-                {Country}
-                """;
+        var fullAddress = new StringBuilder();
+        fullAddress.Append(Address1);
+        if (Address2 is not null)
+        {
+            fullAddress.Append(", " + Address2);
+        }
+        fullAddress.Append(", " + City);
+        fullAddress.Append(", " + State);
+        fullAddress.Append(", " + ZipCode);
+        if (Country is not null)
+        {
+            fullAddress.Append(", " + Country);
+        }
+        return fullAddress.ToString();
     }
 }

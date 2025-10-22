@@ -12,7 +12,7 @@ using Views;
 /// <remarks>
 /// Units are points (1 inch = 72 points). Margin is handled internally (currently 50 points on each side).
 /// </remarks>
-public sealed class PdfDocument : IDisposable
+public sealed class PdfDocument : IPdfDocument
 {
     private const float PointsPerInch = 72f;
     private const float Margin = 50f;

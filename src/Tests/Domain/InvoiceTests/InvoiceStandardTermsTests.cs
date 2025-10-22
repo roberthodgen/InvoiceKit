@@ -6,12 +6,21 @@ namespace InvoiceKit.Tests.Domain.InvoiceTests;
 public class InvoiceStandardTermsTests
 {
     [Fact]
-    public void InvoiceStandardTerms_CreateNew_SetsValue()
+    public void InvoiceStandardTerms_CreateNewDaysFromNow_SetsValue()
     {
         var systemClock = ManualSystemClock.CreateNew(DateTime.UtcNow);
         var terms = InvoiceStandardTerms.CreateNewDaysFromNow(systemClock, 10);
         terms.GetDueDate.ShouldBe(systemClock.Now.AddDays(10));
         terms.Days.ShouldBe(10);
+    }
+
+    [Fact]
+    public void InvoiceStandardTerms_CreateNewFromDateOnly_SetsValue()
+    {
+        var dateOnly = DateOnly.FromDateTime(DateTime.UtcNow.Date);
+        var terms = InvoiceStandardTerms.CreateNewFromDateOnly(dateOnly);
+        terms.GetDueDate.ShouldBe(dateOnly.ToDateTime(TimeOnly.MaxValue, DateTimeKind.Utc));
+        terms.Days.ShouldBe(0);
     }
     
     [Fact]
