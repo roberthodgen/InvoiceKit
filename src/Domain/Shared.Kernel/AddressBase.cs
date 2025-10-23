@@ -11,14 +11,20 @@ public abstract record AddressBase
     public string ZipCode { get; }
     public string? Country { get; }
 
-    protected AddressBase(string address1, string? address2, string city, string state, string zipCode, string? country)
+    protected AddressBase(
+        string address1,
+        string? address2,
+        string city,
+        string state,
+        string zipCode,
+        string? country)
     {
         Address1 = address1;
-        Address2 = address2 ?? null;
+        Address2 = address2;
         City = city;
         State = state;
         ZipCode = zipCode;
-        Country = country ?? null;
+        Country = country;
     }
 
     public sealed override string ToString()

@@ -12,27 +12,18 @@ public sealed class InvoiceLineItemBuilder : IInvoiceLineItemBuilder
 
     private List<string> _subtotals = [];
 
-    /// <summary>
-    /// Sets a line item's quantity. Default quantity of 1.
-    /// </summary>
     public IInvoiceLineItemBuilder WithQuantity(int quantity)
     {
         _quantity = InvoiceLineItemQuantity.CreateNew(quantity);
         return this;
     }
 
-    /// <summary>
-    /// Sets a line item's price.
-    /// </summary>
     public IInvoiceLineItemBuilder WithPerUnitPrice(decimal pricePerUnit)
     {
         _perUnitPrice = InvoiceLineItemPerUnitPrice.CreateNew(pricePerUnit);
         return this;
     }
 
-    /// <summary>
-    /// Sets a line item's description.
-    /// </summary>
     public IInvoiceLineItemBuilder WithDescription(string description)
     {
         _description = InvoiceLineItemDescription.CreateNew(description);

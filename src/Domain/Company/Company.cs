@@ -7,13 +7,13 @@ using Invoice;
 public sealed class Company
 {
     public CompanyName Name { get; }
-    
+
     public CompanyContactName? ContactName { get; private set; }
-    
+
     public CompanyEmail? Email { get; private set; }
-    
+
     public CompanyPhone? Phone { get; private set; }
-    
+
     public CompanyAddress? Address { get; private set; }
 
     private Company(CompanyName name)
@@ -26,14 +26,19 @@ public sealed class Company
         return new Company(name);
     }
 
-    public Invoice CreateInvoiceForClient(Client client, InvoiceDueDate dueDate, InvoiceNumber invoiceNumber, List<InvoiceLineItem>? items)
+    public Invoice CreateInvoiceForClient(
+        Client client,
+        InvoiceDueDate dueDate,
+        InvoiceNumber invoiceNumber,
+        List<InvoiceLineItem>? items)
     {
         return Invoice.CreateNewForClient(invoiceNumber, dueDate, client, this, items);
     }
 
-    public Invoice CreateInvoiceWithoutClient(InvoiceDueDate dueDate, InvoiceNumber invoiceNumber,  List<InvoiceLineItem>? items)
+    public Invoice CreateInvoiceWithoutClient(InvoiceDueDate dueDate, InvoiceNumber invoiceNumber,
+        List<InvoiceLineItem>? items)
     {
-        return Invoice.CreateNewWithoutClient(invoiceNumber, dueDate, this,  items);
+        return Invoice.CreateNewWithoutClient(invoiceNumber, dueDate, this, items);
     }
 
     public void SetContactName(CompanyContactName contactName)
@@ -55,7 +60,7 @@ public sealed class Company
     {
         Address = address;
     }
-    
+
     public override string ToString()
     {
         var builder = new StringBuilder();
@@ -79,6 +84,7 @@ public sealed class Company
         {
             builder.Append("\n" + Address);
         }
+
         return builder.ToString();
     }
 }

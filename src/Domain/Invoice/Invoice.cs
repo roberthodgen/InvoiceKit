@@ -19,7 +19,8 @@ public sealed class Invoice
 
     public ICollection<InvoiceLineItem> Items => _items.AsReadOnly();
 
-    private Invoice(InvoiceNumber invoiceNumber, InvoiceDueDate dueDate, Client? client, Company company, List<InvoiceLineItem>? items)
+    private Invoice(InvoiceNumber invoiceNumber, InvoiceDueDate dueDate, Client? client, Company company,
+        List<InvoiceLineItem>? items)
     {
         DueDate = dueDate;
         InvoiceNumber = invoiceNumber;
@@ -38,7 +39,11 @@ public sealed class Invoice
         return new Invoice(invoiceNumber, dueDate, client, company, items);
     }
 
-    internal static Invoice CreateNewWithoutClient(InvoiceNumber invoiceNumber, InvoiceDueDate dueDate, Company company, List<InvoiceLineItem>? items)
+    internal static Invoice CreateNewWithoutClient(
+        InvoiceNumber invoiceNumber,
+        InvoiceDueDate dueDate,
+        Company company,
+        List<InvoiceLineItem>? items)
     {
         return new Invoice(invoiceNumber, dueDate, null, company, items);
     }
