@@ -28,7 +28,7 @@ public sealed class Invoice
         _items = items ?? [];
     }
 
-    internal static Invoice CreateNew(
+    internal static Invoice CreateNewForClient(
         InvoiceNumber invoiceNumber,
         InvoiceDueDate dueDate,
         Client client,

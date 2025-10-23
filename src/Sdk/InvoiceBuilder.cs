@@ -91,7 +91,7 @@ public sealed class InvoiceBuilder : IInvoiceBuilder
 
     public IInvoiceBuilder WithDueDate(DateOnly dueDate)
     {
-        _terms = InvoiceStandardTerms.CreateNewFromDateOnly(dueDate);
+        _terms = InvoiceFixedDueDate.CreateNewFromDateOnly(dueDate);
         return this;
     }
 

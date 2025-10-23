@@ -28,7 +28,7 @@ public sealed class Company
 
     public Invoice CreateInvoiceForClient(Client client, InvoiceDueDate dueDate, InvoiceNumber invoiceNumber, List<InvoiceLineItem>? items)
     {
-        return Invoice.CreateNew(invoiceNumber, dueDate, client, this, items);
+        return Invoice.CreateNewForClient(invoiceNumber, dueDate, client, this, items);
     }
 
     public Invoice CreateInvoiceWithoutClient(InvoiceDueDate dueDate, InvoiceNumber invoiceNumber,  List<InvoiceLineItem>? items)

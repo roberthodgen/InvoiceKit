@@ -17,4 +17,11 @@ public sealed class InvoiceLineItemQuantityTests
         var quantity = InvoiceLineItemQuantity.CreateNew(10);
         quantity.Value.ShouldBe(10);
     }
+
+    [Fact]
+    public void InvoiceLineItemQuantity_ToString_ReturnsFormattedString()
+    {
+        var quantity = InvoiceLineItemQuantity.CreateNew(10);
+        quantity.ToString().ShouldBe("10");
+    }
 }

@@ -13,15 +13,6 @@ public class InvoiceStandardTermsTests
         terms.GetDueDate.ShouldBe(systemClock.Now.AddDays(10));
         terms.Days.ShouldBe(10);
     }
-
-    [Fact]
-    public void InvoiceStandardTerms_CreateNewFromDateOnly_SetsValue()
-    {
-        var dateOnly = DateOnly.FromDateTime(DateTime.UtcNow.Date);
-        var terms = InvoiceStandardTerms.CreateNewFromDateOnly(dateOnly);
-        terms.GetDueDate.ShouldBe(dateOnly.ToDateTime(TimeOnly.MaxValue, DateTimeKind.Utc));
-        terms.Days.ShouldBe(0);
-    }
     
     [Fact]
     public void InvoiceStandardTerms_CreateNew_ThrowsException()
