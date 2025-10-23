@@ -38,6 +38,6 @@ public sealed class ClientTests
         client.SetAddress(ClientAddress.CreateNew("123 street", "apartment", "city", "state", "zip", "country"));
         client.SetPhone(ClientPhone.CreateNew("123-456-7890"));
         client.SetEmail(ClientEmail.CreateNew("finance@client.com"));
-        client.ToString().ShouldBe("Client LLC\nContact Name\nfinance@client.com\n123-456-7890\n123 street, apartment, city, state, zip, country");
+        client.ToString().ShouldBe("Client LLC\nContact Name\nfinance@client.com\n123-456-7890\n123 street\napartment\ncity, state zip\ncountry");
     }
 }

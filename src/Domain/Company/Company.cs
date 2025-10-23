@@ -64,27 +64,27 @@ public sealed class Company
     public override string ToString()
     {
         var builder = new StringBuilder();
-        builder.Append(Name);
+        builder.AppendLine(Name.ToString());
         if (ContactName is not null)
         {
-            builder.Append("\n" + ContactName);
+            builder.AppendLine(ContactName.ToString());
         }
 
         if (Email is not null)
         {
-            builder.Append("\n" + Email);
+            builder.AppendLine(Email.ToString());
         }
 
         if (Phone is not null)
         {
-            builder.Append("\n" + Phone);
+            builder.AppendLine(Phone.ToString());
         }
 
         if (Address is not null)
         {
-            builder.Append("\n" + Address);
+            builder.AppendLine(Address.ToString());
         }
 
-        return builder.ToString();
+        return builder.Remove(builder.Length - 1, 1).ToString();
     }
 }

@@ -27,6 +27,6 @@ public sealed class CompanyAddressTests
     public void CompanyAddress_ToString_ReturnsFormattedString()
     {
         var companyAddress = CompanyAddress.CreateNew("123 street", "apartment", "city", "state", "zip", "US");
-        companyAddress.ToString().ShouldBe("123 street, apartment, city, state, zip, US");
+        companyAddress.ToString().ShouldBe("123 street\napartment\ncity, state zip\nUS");
     }
 }

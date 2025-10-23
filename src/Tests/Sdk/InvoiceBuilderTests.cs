@@ -185,7 +185,7 @@ public sealed class InvoiceBuilderTests
         item.Description!.ToString().ShouldBe("Item");
         item.PerUnitPrice.Amount.ShouldBe(10m);
         item.Quantity.Value.ShouldBe(2);
-        item.Total.Amount.ShouldBe(20m);
+        item.Subtotal.Amount.ShouldBe(20m);
     }
 
     [Fact]

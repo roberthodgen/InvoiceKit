@@ -26,6 +26,6 @@ public sealed class AddressTests
     public void Address_ToString_ReturnsValues()
     {
         var address = new AddressTest("123 Main St", "Apt 1", "Anytown", "NY", "12345", "USA");
-        address.ToString().ShouldBe("123 Main St, Apt 1, Anytown, NY, 12345, USA");
+        address.ToString().ShouldBe("123 Main St\nApt 1\nAnytown, NY 12345\nUSA");
     }
 }

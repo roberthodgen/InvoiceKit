@@ -76,6 +76,6 @@ public sealed class CompanyTests
         company.SetAddress(CompanyAddress.CreateNew("123 street", "apartment", "city", "state", "zip", "country"));
         company.SetPhone(CompanyPhone.CreateNew("123-456-7890"));
         company.SetEmail(CompanyEmail.CreateNew("finance@company.com"));
-        company.ToString().ShouldBe("Company LLC\nContact Name\nfinance@company.com\n123-456-7890\n123 street, apartment, city, state, zip, country");
+        company.ToString().ShouldBe("Company LLC\nContact Name\nfinance@company.com\n123-456-7890\n123 street\napartment\ncity, state zip\ncountry");
     }
 }

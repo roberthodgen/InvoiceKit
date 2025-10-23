@@ -29,19 +29,22 @@ public abstract record AddressBase
 
     public sealed override string ToString()
     {
-        var fullAddress = new StringBuilder();
-        fullAddress.Append(Address1);
+        var builder = new StringBuilder();
+
+        builder.AppendLine(Address1);
+
         if (Address2 is not null)
         {
-            fullAddress.Append(", " + Address2);
+            builder.AppendLine(Address2);
         }
-        fullAddress.Append(", " + City);
-        fullAddress.Append(", " + State);
-        fullAddress.Append(", " + ZipCode);
+
+        builder.AppendLine($"{City}, {State} {ZipCode}");
+
         if (Country is not null)
         {
-            fullAddress.Append(", " + Country);
+            builder.AppendLine(Country);
+
         }
-        return fullAddress.ToString();
+        return builder.Remove(builder.Length - 1, 1).ToString();
     }
 }
