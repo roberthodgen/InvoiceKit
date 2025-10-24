@@ -6,7 +6,7 @@ public sealed class InvoiceLineItem
 {
     public AmountOfMoney Subtotal => InvoiceLineItemSubtotal.CreateNew(PerUnitPrice.Amount * Quantity.Value);
 
-    public InvoiceLineItemDescription Description { get; }
+    public InvoiceLineItemDescription? Description { get; }
 
     public InvoiceLineItemPerUnitPrice PerUnitPrice { get; }
 
@@ -15,16 +15,16 @@ public sealed class InvoiceLineItem
     private InvoiceLineItem(
         InvoiceLineItemDescription description,
         InvoiceLineItemPerUnitPrice perUnitPrice,
-        InvoiceLineItemQuantity quantity)
+        InvoiceLineItemQuantity? quantity)
     {
         Description = description;
         PerUnitPrice = perUnitPrice;
-        Quantity = quantity;
+        Quantity = quantity ?? InvoiceLineItemQuantity.One;
     }
 
     public static InvoiceLineItem CreateNew(
         InvoiceLineItemDescription description,
-        InvoiceLineItemPerUnitPrice perUnitPrice, 
+        InvoiceLineItemPerUnitPrice perUnitPrice,
         InvoiceLineItemQuantity quantity)
     {
         return new InvoiceLineItem(description, perUnitPrice, quantity);

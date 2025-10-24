@@ -17,5 +17,5 @@ public sealed record InvoiceTotal : AmountOfMoney
     /// <param name="invoiceLineItems">Readonly ICollection of InvoiceLineItems from the Invoice object.</param>
     /// <returns> New InvoiceTotal object</returns>
     internal static InvoiceTotal SumInvoiceLineItems(ICollection<InvoiceLineItem> invoiceLineItems) => 
-        CreateNew(invoiceLineItems.Sum(x => x.Subtotal.Amount));
+        CreateNew(invoiceLineItems.Sum(invoiceLineItem => invoiceLineItem.Subtotal.Amount));
 }
