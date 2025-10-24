@@ -8,7 +8,7 @@ public sealed class CompanyAddressTests
     [Fact]
     public void CompanyAddress_IsA_Address()
     {
-        typeof(CompanyAddress).IsAssignableTo(typeof(Address)).ShouldBeTrue();
+        typeof(CompanyAddress).IsAssignableTo(typeof(AddressBase)).ShouldBeTrue();
     }
     
     [Fact]
@@ -21,5 +21,12 @@ public sealed class CompanyAddressTests
         address.State.ShouldBe("state");
         address.ZipCode.ShouldBe("zip");
         address.Country.ShouldBe("US");
+    }
+
+    [Fact]
+    public void CompanyAddress_ToString_ReturnsFormattedString()
+    {
+        var companyAddress = CompanyAddress.CreateNew("123 street", "apartment", "city", "state", "zip", "US");
+        companyAddress.ToString().ShouldBe("123 street\napartment\ncity, state zip\nUS");
     }
 }

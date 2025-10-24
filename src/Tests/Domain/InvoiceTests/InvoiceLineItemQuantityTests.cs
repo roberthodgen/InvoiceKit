@@ -5,10 +5,10 @@ namespace InvoiceKit.Tests.Domain.InvoiceTests;
 public sealed class InvoiceLineItemQuantityTests
 {
     [Fact]
-    public void InvoiceLineItemQuantity_Zero_Exists()
+    public void InvoiceLineItemQuantity_One_Exists()
     {
-        InvoiceLineItemQuantity.Zero.Value.ShouldBe(0);
-        InvoiceLineItemQuantity.Zero.ShouldBeAssignableTo<InvoiceLineItemQuantity>();
+        InvoiceLineItemQuantity.One.Value.ShouldBe(1);
+        InvoiceLineItemQuantity.One.ShouldBeAssignableTo<InvoiceLineItemQuantity>();
     }
 
     [Fact]
@@ -16,5 +16,12 @@ public sealed class InvoiceLineItemQuantityTests
     {
         var quantity = InvoiceLineItemQuantity.CreateNew(10);
         quantity.Value.ShouldBe(10);
+    }
+
+    [Fact]
+    public void InvoiceLineItemQuantity_ToString_ReturnsFormattedString()
+    {
+        var quantity = InvoiceLineItemQuantity.CreateNew(10);
+        quantity.ToString().ShouldBe("10");
     }
 }

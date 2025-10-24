@@ -2,7 +2,7 @@ namespace InvoiceKit.Domain.Client;
 
 using Shared.Kernel;
 
-public sealed record ClientAddress : Address
+public sealed record ClientAddress : AddressBase
 {
     private ClientAddress(
         string address1, 

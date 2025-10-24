@@ -17,9 +17,12 @@
 
 ```cs
 var invoice = new InvoiceBuilder()
-    .WithCustomer("Acme Inc.")
-    .AddItem("Widget", 2, 29.99m)
-    .WithDueDate(DateTime.UtcNow.AddDays(30))
+    .WithCompany("IT Services LLC")
+    .WithClient("ACME,  Inc.")
+    .AddItem("Widget", item => item
+        .WithQuantity(2)
+        .WithPricePerUnit(29.99m))
+    .WithStandardTerms(days: 30)
     .Build();
 
 invoice.SaveAsPdf("invoice.pdf");
@@ -29,9 +32,9 @@ invoice.SaveAsPdf("invoice.pdf");
 
 - [x] Build PDF rendering engine
   - [x] Enhance PDF rendering blocks with fluent-API
-  - [ ] Enhance multi-page support
+  - [x] Enhance multi-page support
 - [x] Define core domain models (Invoice, Line Items, Customer) w/ unit tests
-- [ ] Create SDK fluent API
+- [x] Create SDK fluent API
 - [ ] Documentation
 - [ ] Publish SDK on NuGet
 

@@ -38,7 +38,7 @@ public sealed class LayoutContext
     }
 
     /// <summary>
-    /// Used to determine if this layout can accomodate a rect of a certain size.
+    /// Determines if this layout can accomodate a rect of a certain size.
     /// </summary>
     /// <param name="rect">The rect to check.</param>
     /// <returns>True if the rect can be accommodated, false otherwise.</returns>

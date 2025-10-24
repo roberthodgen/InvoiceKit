@@ -1,6 +1,6 @@
-using InvoiceKit.Domain.Invoice;
-
 namespace InvoiceKit.Tests.Domain.InvoiceTests;
+
+using InvoiceKit.Domain.Invoice;
 
 public sealed class InvoiceLineItemDescriptionTests
 {

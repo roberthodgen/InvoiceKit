@@ -4,8 +4,8 @@ using Containers.Tables;
 using Styles.Text;
 
 /// <summary>
-/// A layout is a drawable component that contains one or more children. Layouts are used to compose and create complex
-/// PDF layouts.
+/// A layout is a drawable component that contains one or more children.
+/// Layouts compose and create complex PDF layouts.
 /// </summary>
 public interface IContainer : IViewBuilder
 {

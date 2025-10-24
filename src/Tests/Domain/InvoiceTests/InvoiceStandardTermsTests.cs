@@ -6,7 +6,7 @@ namespace InvoiceKit.Tests.Domain.InvoiceTests;
 public class InvoiceStandardTermsTests
 {
     [Fact]
-    public void InvoiceStandardTerms_CreateNew_SetsValue()
+    public void InvoiceStandardTerms_CreateNewDaysFromNow_SetsValue()
     {
         var systemClock = ManualSystemClock.CreateNew(DateTime.UtcNow);
         var terms = InvoiceStandardTerms.CreateNewDaysFromNow(systemClock, 10);
