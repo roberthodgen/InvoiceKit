@@ -6,14 +6,15 @@ internal class PageBreakLayout : ILayout
 {
     private bool _drawn;
 
-    public SKSize Measure(SKSize available)
+    public SKSize Measure(SKRect available)
     {
         return new SKSize(available.Width, available.Height);
     }
 
-    public LayoutResult Layout(LayoutContext context)
+    public LayoutResult Layout(LayoutContext context, LayoutType layoutType)
     {
-        if (_drawn)
+        // Repeating elements should not have page breaks.
+        if (_drawn || layoutType == LayoutType.RepeatingElement)
         {
             return new LayoutResult([], LayoutStatus.IsFullyDrawn);
         }

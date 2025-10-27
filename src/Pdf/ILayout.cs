@@ -12,5 +12,5 @@ public interface ILayout : IMeasurable
     /// Will be called multiple times. Every object is responsible for maintaining its own state and preventing
     /// duplication.
     /// </summary>
-    LayoutResult Layout(LayoutContext context);
+    LayoutResult Layout(LayoutContext context, LayoutType layoutType);
 }

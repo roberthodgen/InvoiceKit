@@ -10,7 +10,7 @@ internal class HStackLayout(List<ILayout> columns) : ILayout
     /// <summary>
     /// Horizontal stack layout that will split into columns based on the number of children.
     /// </summary>
-    public LayoutResult Layout(LayoutContext context)
+    public LayoutResult Layout(LayoutContext context, LayoutType layoutType)
     {
         if (columns.Count == 0 || _drawn)
         {
@@ -26,7 +26,7 @@ internal class HStackLayout(List<ILayout> columns) : ILayout
             var point = context.Available.Location;
             point.Offset(columnSize.Width * index, 0);
             var childContext = context.GetChildContext(SKRect.Create(point, columnSize));
-            var result = columns[index].Layout(childContext);
+            var result = columns[index].Layout(childContext, layoutType);
             results.Add(
                 new ColumnResult(
                     [new DebugDrawable(childContext.Allocated), ..result.Drawables,],
@@ -43,7 +43,7 @@ internal class HStackLayout(List<ILayout> columns) : ILayout
         }
 
         var drawables = results.SelectMany(result => result.Drawables).ToList();
-        if (status == LayoutStatus.IsFullyDrawn)
+        if (status == LayoutStatus.IsFullyDrawn && layoutType == LayoutType.DrawOnceElement)
         {
             _drawn = true;
         }
@@ -51,9 +51,10 @@ internal class HStackLayout(List<ILayout> columns) : ILayout
         return new LayoutResult(drawables, status);
     }
 
-    public SKSize Measure(SKSize available)
+    public SKSize Measure(SKRect available)
     {
-        return new SKSize(available.Width / columns.Count, available.Height);
+        var maxHeight = columns.Max(column => column.Measure(available).Height);
+        return new SKSize(available.Width, maxHeight);
     }
 
     private record ColumnResult(IReadOnlyCollection<IDrawable> Drawables, LayoutStatus Status, LayoutContext Context);

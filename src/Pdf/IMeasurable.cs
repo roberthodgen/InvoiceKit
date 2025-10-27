@@ -13,5 +13,5 @@ public interface IMeasurable
     /// The sum of all returned sizes may be larger than the available area and indicates a new page or resize is
     /// necessary.
     /// </remarks>
-    SKSize Measure(SKSize available);
+    SKSize Measure(SKRect available);
 }

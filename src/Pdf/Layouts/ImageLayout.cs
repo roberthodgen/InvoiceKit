@@ -31,7 +31,7 @@ internal class ImageLayout : ILayout
         }
     }
 
-    public SKSize Measure(SKSize available)
+    public SKSize Measure(SKRect available)
     {
         if (Svg?.Drawable != null)
         {
@@ -46,7 +46,7 @@ internal class ImageLayout : ILayout
         throw new Exception("Image not loaded.");
     }
 
-    public LayoutResult Layout(LayoutContext context)
+    public LayoutResult Layout(LayoutContext context, LayoutType layoutType)
     {
         if (_drawn)
         {
@@ -54,7 +54,7 @@ internal class ImageLayout : ILayout
         }
 
         var listDrawables = new List<IDrawable>();
-        var size = Measure(context.Available.Size);
+        var size = Measure(context.Available);
 
         var rect = new SKRect(
             context.Available.Left,
@@ -62,24 +62,22 @@ internal class ImageLayout : ILayout
             context.Available.Left + size.Width,
             context.Available.Top + size.Height);
 
-        if (Svg?.Drawable != null)
+        if (context.TryAllocateRect(rect))
         {
-            if (context.TryAllocateRect(rect))
+            if (Svg is not null)
             {
                 listDrawables.Add(new SvgImageDrawable(Svg, rect));
-                _drawn = true;
-                return new LayoutResult(listDrawables, LayoutStatus.IsFullyDrawn);
             }
-        }
-
-        if (Bitmap != null)
-        {
-            if (context.TryAllocateRect(rect))
+            else if (Bitmap is not null)
             {
                 listDrawables.Add(new BitmapImageDrawable(Bitmap, rect));
-                _drawn = true;
-                return new LayoutResult(listDrawables, LayoutStatus.IsFullyDrawn);
             }
+
+            if (layoutType == LayoutType.DrawOnceElement)
+            {
+                _drawn = true;
+            }
+            return new LayoutResult(listDrawables, LayoutStatus.IsFullyDrawn);
         }
 
         // Will only be hit if the page is full.

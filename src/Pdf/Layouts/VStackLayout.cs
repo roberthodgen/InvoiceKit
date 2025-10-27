@@ -13,7 +13,7 @@ internal class VStackLayout(List<ILayout> children, ILayout? header, ILayout? fo
 
     private bool _drawn;
 
-    public LayoutResult Layout(LayoutContext context)
+    public LayoutResult Layout(LayoutContext context, LayoutType layoutType)
     {
         if (_children.Count == 0 || _drawn)
         {
@@ -21,26 +21,25 @@ internal class VStackLayout(List<ILayout> children, ILayout? header, ILayout? fo
         }
 
         var drawables = new List<IDrawable>();
+        LayoutHeader(context, drawables);
+
+        // Creates a new context that saves space for the footer
+        var footerSize = _footer?.Measure(context.Available) ?? SKSize.Empty;
+        var footerContext = context.GetChildContext(
+            new SKRect(
+            context.Available.Left,
+            context.Available.Top,
+            context.Available.Right,
+            context.Available.Bottom + footerSize.Height));
 
         while (_children.Count > 0)
         {
+            var childContext = footerContext.GetChildContext();
             var layout = _children.Peek();
-
-            if (_header is not null)
-            {
-                drawables.AddRange(_header.Layout(context).Drawables);
-            }
-            var available = context.Available;
-            // Todo: Measure isn't properly set up for most layouts
-            var headerSize = _header?.Measure(context.Available.Size) ?? SKSize.Empty;
-            var contentAvailable = SKRect.Create(available.Location, available.Size - headerSize);
-            contentAvailable.Offset(0, headerSize.Height);
-
-            var childContext = context.GetChildContext(contentAvailable);
-            var layoutResult = layout.Layout(childContext);
+            var layoutResult = layout.Layout(childContext, layoutType);
             drawables.Add(new DebugDrawable(childContext.Allocated));
             drawables.AddRange(layoutResult.Drawables);
-            context.CommitChildContext(childContext);
+            footerContext.CommitChildContext(childContext);
 
             if (layoutResult.Status == LayoutStatus.IsFullyDrawn)
             {
@@ -48,16 +47,46 @@ internal class VStackLayout(List<ILayout> children, ILayout? header, ILayout? fo
             }
             else
             {
+                context.CommitChildContext(footerContext);
+                LayoutFooter(context, drawables);
                 return new LayoutResult(drawables, LayoutStatus.NeedsNewPage);
             }
         }
 
-        _drawn = true;
+        if (layoutType == LayoutType.DrawOnceElement)
+        {
+            _drawn = true;
+        }
+        context.CommitChildContext(footerContext);
+        LayoutFooter(context, drawables);
         return new LayoutResult(drawables, LayoutStatus.IsFullyDrawn);
     }
 
-    public SKSize Measure(SKSize available)
+    public SKSize Measure(SKRect available)
     {
-        return new SKSize(available.Width, _children.Sum(child => child.Measure(available).Height));
+        if (_children.Count == 0)
+        {
+            return new SKSize(available.Width, available.Height);
+        }
+        var maxHeight = _children.Max(child => child.Measure(available).Height);
+        return new SKSize(available.Width, maxHeight);
+    }
+
+    private void LayoutHeader(LayoutContext context, List<IDrawable> drawables)
+    {
+        if (_header is not null)
+        {
+            var headerResult = _header.Layout(context, LayoutType.RepeatingElement);
+            drawables.AddRange(headerResult.Drawables);
+        }
+    }
+
+    private void LayoutFooter(LayoutContext context, List<IDrawable> drawables)
+    {
+        if (_footer is not null)
+        {
+            var footerResult = _footer.Layout(context, LayoutType.RepeatingElement);
+            drawables.AddRange(footerResult.Drawables);
+        }
     }
 }

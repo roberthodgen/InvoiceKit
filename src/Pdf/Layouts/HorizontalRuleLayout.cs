@@ -7,12 +7,12 @@ internal class HorizontalRuleLayout : ILayout
 {
     private bool _drawn;
 
-    public SKSize Measure(SKSize available)
+    public SKSize Measure(SKRect available)
     {
         return new SKSize(available.Width, 1);
     }
 
-    public LayoutResult Layout(LayoutContext context)
+    public LayoutResult Layout(LayoutContext context, LayoutType layoutType)
     {
         if (_drawn)
         {
@@ -20,7 +20,7 @@ internal class HorizontalRuleLayout : ILayout
         }
 
         var listDrawables = new List<IDrawable>();
-        var size = Measure(context.Available.Size);
+        var size = Measure(context.Available);
 
         var rect = new SKRect(
             context.Available.Left,
@@ -30,8 +30,11 @@ internal class HorizontalRuleLayout : ILayout
 
         if (context.TryAllocateRect(rect))
         {
+            if (layoutType == LayoutType.DrawOnceElement)
+            {
+                _drawn = true;
+            }
             listDrawables.Add(new HorizontalRuleDrawable(rect));
-            _drawn = true;
             return new LayoutResult(listDrawables, LayoutStatus.IsFullyDrawn);
         }
 
