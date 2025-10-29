@@ -4,8 +4,6 @@ using SkiaSharp;
 
 internal class TableLayout : ILayout
 {
-    private bool _drawn { get; set; }
-
     private List<TableRowViewBuilder> Headers { get; }
 
     private List<TableRowViewBuilder> Rows { get; }
@@ -28,13 +26,8 @@ internal class TableLayout : ILayout
     }
 
     // Todo: Fix tables
-    public LayoutResult Layout(LayoutContext context,  LayoutType layoutType)
+    public LayoutResult Layout(LayoutContext context)
     {
-        if (_drawn)
-        {
-            return new LayoutResult([], LayoutStatus.IsFullyDrawn);
-        }
-
         var listDrawables = new List<IDrawable>();
         var totalSize = new SKSize();
         var top = context.Available.Top;
@@ -71,11 +64,6 @@ internal class TableLayout : ILayout
                 }
                 return new LayoutResult(listDrawables, LayoutStatus.NeedsNewPage);
             }
-        }
-
-        if (layoutType == LayoutType.DrawOnceElement)
-        {
-            _drawn = true;
         }
         return new LayoutResult(listDrawables, LayoutStatus.IsFullyDrawn);
     }

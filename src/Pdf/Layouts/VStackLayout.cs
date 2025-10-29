@@ -3,62 +3,106 @@ namespace InvoiceKit.Pdf.Layouts;
 using Drawables;
 using SkiaSharp;
 
-internal class VStackLayout(List<ILayout> children, ILayout? header, ILayout? footer) : ILayout
+internal class VStackLayout : ILayout
 {
-    private readonly ILayout? _header = header;
+    private readonly Queue<ILayout> _children;
 
-    private readonly ILayout? _footer = footer;
+    private readonly ILayout? _header;
 
-    private readonly Queue<ILayout> _children = new (children);
+    private readonly ILayout? _footer;
 
-    private bool _drawn;
+    private readonly bool _repeating;
 
-    public LayoutResult Layout(LayoutContext context, LayoutType layoutType)
+    internal VStackLayout(List<ILayout> children, ILayout? header, ILayout? footer, bool repeating)
     {
-        if (_children.Count == 0 || _drawn)
+        _footer = footer;
+        _header = header;
+        _children = new (children);
+        _repeating = repeating;
+    }
+
+    public LayoutResult Layout(LayoutContext context)
+    {
+        if (_children.Count == 0)
         {
             return new LayoutResult([], LayoutStatus.IsFullyDrawn);
         }
 
+        if (_repeating)
+        {
+            return RepeatingLayout(context);
+        }
+
         var drawables = new List<IDrawable>();
-        LayoutHeader(context, drawables);
 
-        // Creates a new context that saves space for the footer
-        var footerSize = _footer?.Measure(context.Available) ?? SKSize.Empty;
-        var footerContext = context.GetChildContext(
-            new SKRect(
-            context.Available.Left,
-            context.Available.Top,
-            context.Available.Right,
-            context.Available.Bottom + footerSize.Height));
+        // Lay out the header
+        if (_header is not null)
+        {
+            var headerContext = context.GetChildContext();
+            var headerResult = LayoutHeader(headerContext);
+            drawables.AddRange(headerResult.Drawables);
+            drawables.Add(new DebugDrawable(headerContext.Allocated));
+            context.CommitChildContext(headerContext);
+        }
 
+        // Lay out the footer
+        if (_footer is not null)
+        {
+            var footerSize = _footer.Measure(context.Available);
+            var footerContext = context.GetChildContextFromRect(
+                new SKRect(
+                    context.Available.Left,
+                    context.Available.Bottom - footerSize.Height,
+                    context.Available.Right,
+                    context.Available.Bottom));
+            var footerResult = LayoutFooter(footerContext);
+            drawables.AddRange(footerResult.Drawables);
+            drawables.Add(new DebugDrawable(footerContext.Allocated));
+            context.CommitFooterContext(footerContext);
+        }
+
+        // Lay out all the children
         while (_children.Count > 0)
         {
-            var childContext = footerContext.GetChildContext();
-            var layout = _children.Peek();
-            var layoutResult = layout.Layout(childContext, layoutType);
+            var childContext = context.GetChildContext();
+            var layoutResult = _children.Peek().Layout(childContext);
             drawables.Add(new DebugDrawable(childContext.Allocated));
             drawables.AddRange(layoutResult.Drawables);
-            footerContext.CommitChildContext(childContext);
+            context.CommitChildContext(childContext);
 
-            if (layoutResult.Status == LayoutStatus.IsFullyDrawn)
+            if (layoutResult.Status == LayoutStatus.NeedsNewPage)
             {
-                _children.Dequeue();
+                return new LayoutResult(drawables, LayoutStatus.NeedsNewPage);
             }
-            else
+
+            _children.Dequeue();
+        }
+
+        // Commits children, draws footer, and completes layout.
+        return new LayoutResult(drawables, LayoutStatus.IsFullyDrawn);
+    }
+
+    /// <summary>
+    /// Lays out repeating elements and does not remove them from the queue.
+    /// </summary>
+    /// <remarks>Repeating elements cannot have more repeating elements.</remarks>
+    private LayoutResult RepeatingLayout(LayoutContext context)
+    {
+        var drawables = new List<IDrawable>();
+
+        foreach (var child in _children)
+        {
+            var childContext = context.GetChildContext();
+            var result = child.Layout(childContext);
+            drawables.AddRange(result.Drawables);
+            context.CommitChildContext(childContext);
+
+            if (result.Status == LayoutStatus.NeedsNewPage)
             {
-                context.CommitChildContext(footerContext);
-                LayoutFooter(context, drawables);
                 return new LayoutResult(drawables, LayoutStatus.NeedsNewPage);
             }
         }
 
-        if (layoutType == LayoutType.DrawOnceElement)
-        {
-            _drawn = true;
-        }
-        context.CommitChildContext(footerContext);
-        LayoutFooter(context, drawables);
         return new LayoutResult(drawables, LayoutStatus.IsFullyDrawn);
     }
 
@@ -66,27 +110,29 @@ internal class VStackLayout(List<ILayout> children, ILayout? header, ILayout? fo
     {
         if (_children.Count == 0)
         {
-            return new SKSize(available.Width, available.Height);
+            return SKSize.Empty;
         }
         var maxHeight = _children.Max(child => child.Measure(available).Height);
         return new SKSize(available.Width, maxHeight);
     }
 
-    private void LayoutHeader(LayoutContext context, List<IDrawable> drawables)
+    private LayoutResult LayoutHeader(LayoutContext context)
     {
-        if (_header is not null)
+        var headerResult =  _header!.Layout(context);
+        if (headerResult.Status == LayoutStatus.NeedsNewPage)
         {
-            var headerResult = _header.Layout(context, LayoutType.RepeatingElement);
-            drawables.AddRange(headerResult.Drawables);
+            return new LayoutResult([], LayoutStatus.NeedsNewPage);
         }
+        return headerResult;
     }
 
-    private void LayoutFooter(LayoutContext context, List<IDrawable> drawables)
+    private LayoutResult LayoutFooter(LayoutContext context)
     {
-        if (_footer is not null)
+        var footerResult = _footer!.Layout(context);
+        if (footerResult.Status == LayoutStatus.NeedsNewPage)
         {
-            var footerResult = _footer.Layout(context, LayoutType.RepeatingElement);
-            drawables.AddRange(footerResult.Drawables);
+            return new LayoutResult([], LayoutStatus.NeedsNewPage);
         }
+        return footerResult;
     }
 }

@@ -5,20 +5,13 @@ using SkiaSharp;
 
 internal class HorizontalRuleLayout : ILayout
 {
-    private bool _drawn;
-
     public SKSize Measure(SKRect available)
     {
         return new SKSize(available.Width, 1);
     }
 
-    public LayoutResult Layout(LayoutContext context, LayoutType layoutType)
+    public LayoutResult Layout(LayoutContext context)
     {
-        if (_drawn)
-        {
-            return new LayoutResult([], LayoutStatus.IsFullyDrawn);
-        }
-
         var listDrawables = new List<IDrawable>();
         var size = Measure(context.Available);
 
@@ -30,10 +23,6 @@ internal class HorizontalRuleLayout : ILayout
 
         if (context.TryAllocateRect(rect))
         {
-            if (layoutType == LayoutType.DrawOnceElement)
-            {
-                _drawn = true;
-            }
             listDrawables.Add(new HorizontalRuleDrawable(rect));
             return new LayoutResult(listDrawables, LayoutStatus.IsFullyDrawn);
         }

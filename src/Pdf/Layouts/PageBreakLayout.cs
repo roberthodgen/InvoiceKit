@@ -4,22 +4,17 @@ using SkiaSharp;
 
 internal class PageBreakLayout : ILayout
 {
-    private bool _drawn;
-
     public SKSize Measure(SKRect available)
     {
         return new SKSize(available.Width, available.Height);
     }
 
-    public LayoutResult Layout(LayoutContext context, LayoutType layoutType)
+    public LayoutResult Layout(LayoutContext context)
     {
-        // Repeating elements should not have page breaks.
-        if (_drawn || layoutType == LayoutType.RepeatingElement)
-        {
-            return new LayoutResult([], LayoutStatus.IsFullyDrawn);
-        }
+        // Allocates the rest of the available space and does not return drawables.
+        context.TryAllocateRect(new SKRect(
+                context.Available.Left, context.Available.Top, context.Available.Right, context.Available.Bottom));
 
-        _drawn = true;
-        return new LayoutResult([], LayoutStatus.NeedsNewPage);
+        return new LayoutResult([], LayoutStatus.IsFullyDrawn);
     }
 }

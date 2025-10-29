@@ -6,8 +6,6 @@ using Svg.Skia;
 
 internal class ImageLayout : ILayout
 {
-    private bool _drawn;
-
     private SKSvg? Svg { get; }
 
     private SKBitmap? Bitmap { get; }
@@ -33,12 +31,12 @@ internal class ImageLayout : ILayout
 
     public SKSize Measure(SKRect available)
     {
-        if (Svg?.Drawable != null)
+        if (Svg?.Drawable is not null)
         {
             return new SKSize(Svg.Drawable.Bounds.Width, Svg.Drawable.Bounds.Height);
         }
 
-        if (Bitmap != null)
+        if (Bitmap is not null)
         {
             return new SKSize(Bitmap.Width, Bitmap.Height);
         }
@@ -46,13 +44,8 @@ internal class ImageLayout : ILayout
         throw new Exception("Image not loaded.");
     }
 
-    public LayoutResult Layout(LayoutContext context, LayoutType layoutType)
+    public LayoutResult Layout(LayoutContext context)
     {
-        if (_drawn)
-        {
-            return new LayoutResult([], LayoutStatus.IsFullyDrawn);
-        }
-
         var listDrawables = new List<IDrawable>();
         var size = Measure(context.Available);
 
@@ -73,10 +66,6 @@ internal class ImageLayout : ILayout
                 listDrawables.Add(new BitmapImageDrawable(Bitmap, rect));
             }
 
-            if (layoutType == LayoutType.DrawOnceElement)
-            {
-                _drawn = true;
-            }
             return new LayoutResult(listDrawables, LayoutStatus.IsFullyDrawn);
         }
 

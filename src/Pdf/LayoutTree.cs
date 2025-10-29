@@ -6,26 +6,19 @@ internal class LayoutTree(IViewBuilder root)
 {
     private readonly ILayout _root = root.ToLayout();
 
-    private bool _isFullyDrawn;
-
     /// Depth-first search that skips layouts that were already fully drawn.
     private PageLayoutResult LayoutPage(LayoutContext context)
     {
         var page = new Page();
 
-        while (!_isFullyDrawn)
+        var childContext = context.GetChildContext();
+        var layoutResult = _root.Layout(childContext);
+        page.AddDrawables(layoutResult.Drawables);
+        context.CommitChildContext(childContext);
+
+        if (layoutResult.Status == LayoutStatus.NeedsNewPage)
         {
-            var childContext = context.GetChildContext();
-            var layoutResult = _root.Layout(childContext, LayoutType.DrawOnceElement);
-            page.AddDrawables(layoutResult.Drawables);
-            context.CommitChildContext(childContext);
-
-            if (layoutResult.Status == LayoutStatus.NeedsNewPage)
-            {
-                return new PageLayoutResult(page, LayoutStatus.NeedsNewPage);
-            }
-
-            _isFullyDrawn = true;
+            return new PageLayoutResult(page, LayoutStatus.NeedsNewPage);
         }
 
         return new PageLayoutResult(page, LayoutStatus.IsFullyDrawn);

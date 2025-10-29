@@ -5,28 +5,28 @@ using SkiaSharp;
 
 internal class HStackLayout(List<ILayout> columns) : ILayout
 {
-    private bool _drawn;
+    private readonly List<ILayout> _columns = [..columns];
 
     /// <summary>
     /// Horizontal stack layout that will split into columns based on the number of children.
     /// </summary>
-    public LayoutResult Layout(LayoutContext context, LayoutType layoutType)
+    public LayoutResult Layout(LayoutContext context)
     {
-        if (columns.Count == 0 || _drawn)
+        if (_columns.Count == 0)
         {
             return new LayoutResult([], LayoutStatus.IsFullyDrawn);
         }
 
         var results = new List<ColumnResult>();
-        var columnSize = new SKSize(context.Available.Width / columns.Count, context.Available.Height);
+        var columnSize = new SKSize(context.Available.Width / _columns.Count, context.Available.Height);
 
         // Loops for the number of columns once. Children that need a new page are added back to the stack.
-        foreach (var index in Enumerable.Range(0, columns.Count))
+        foreach (var index in Enumerable.Range(0, _columns.Count))
         {
             var point = context.Available.Location;
             point.Offset(columnSize.Width * index, 0);
-            var childContext = context.GetChildContext(SKRect.Create(point, columnSize));
-            var result = columns[index].Layout(childContext, layoutType);
+            var childContext = context.GetChildContextFromIntersect(SKRect.Create(point, columnSize));
+            var result = _columns[index].Layout(childContext);
             results.Add(
                 new ColumnResult(
                     [new DebugDrawable(childContext.Allocated), ..result.Drawables,],
@@ -36,24 +36,23 @@ internal class HStackLayout(List<ILayout> columns) : ILayout
 
         var maxHeight = results.MaxBy(result => result.Context.Allocated.Height);
         context.CommitChildContext(maxHeight!.Context);
-        var status = LayoutStatus.IsFullyDrawn;
-        if (results.Any(result => result.Status == LayoutStatus.NeedsNewPage))
-        {
-            status = LayoutStatus.NeedsNewPage;
-        }
 
         var drawables = results.SelectMany(result => result.Drawables).ToList();
-        if (status == LayoutStatus.IsFullyDrawn && layoutType == LayoutType.DrawOnceElement)
+        if (results.Any(result => result.Status == LayoutStatus.NeedsNewPage))
         {
-            _drawn = true;
+            return new LayoutResult(drawables, LayoutStatus.NeedsNewPage);
         }
 
-        return new LayoutResult(drawables, status);
+        return new LayoutResult(drawables, LayoutStatus.IsFullyDrawn);
     }
 
     public SKSize Measure(SKRect available)
     {
-        var maxHeight = columns.Max(column => column.Measure(available).Height);
+        if (_columns.Count == 0)
+        {
+            return SKSize.Empty;
+        }
+        var maxHeight = _columns.Max(column => column.Measure(available).Height);
         return new SKSize(available.Width, maxHeight);
     }
 

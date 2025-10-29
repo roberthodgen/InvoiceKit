@@ -10,7 +10,9 @@ using SkiaSharp;
 /// </remarks>
 public sealed class LayoutContext
 {
-    private readonly List<float> _allocated = [];
+    private readonly List<float> _allocatedTop = [];
+
+    private readonly List<float> _allocatedBottom = [];
 
     private readonly SKRect _originalSpace;
 
@@ -21,7 +23,7 @@ public sealed class LayoutContext
         _originalSpace.Left,
         _originalSpace.Top,
         _originalSpace.Right,
-        _originalSpace.Top + _allocated.Sum());
+        _originalSpace.Top + _allocatedTop.Sum());
 
     /// <summary>
     /// Gets the available space left for this layout.
@@ -30,7 +32,7 @@ public sealed class LayoutContext
         _originalSpace.Left,
         Allocated.Bottom,
         _originalSpace.Right,
-        _originalSpace.Bottom);
+        _originalSpace.Bottom - _allocatedBottom.Sum());
 
     internal LayoutContext(SKRect available)
     {
@@ -52,7 +54,7 @@ public sealed class LayoutContext
             return false;
         }
 
-        _allocated.Add(rect.Height);
+        _allocatedTop.Add(rect.Height);
         return true;
     }
 
@@ -62,7 +64,12 @@ public sealed class LayoutContext
     /// <param name="child">Another layout to allocate on this layout.</param>
     public void CommitChildContext(LayoutContext child)
     {
-        _allocated.Add(child.Allocated.Height);
+        _allocatedTop.Add(child.Allocated.Height);
+    }
+
+    public void CommitFooterContext(LayoutContext child)
+    {
+        _allocatedBottom.Add(child.Allocated.Height);
     }
 
     /// <summary>
@@ -77,8 +84,21 @@ public sealed class LayoutContext
     /// Creates a new child context from the remaining available space that intersects with the given rect.
     /// </summary>
     /// <param name="intersectingRect">A rect to limit the child context to.</param>
-    public LayoutContext GetChildContext(SKRect intersectingRect)
+    public LayoutContext GetChildContextFromIntersect(SKRect intersectingRect)
     {
         return new LayoutContext(SKRect.Intersect(Available, intersectingRect));
+    }
+
+    /// <summary>
+    /// Creates a new child context from a given rect.
+    /// </summary>
+    /// <param name="rect">A rect containing the space for an element to draw into.</param>
+    public LayoutContext GetChildContextFromRect(SKRect rect)
+    {
+        if (rect.Width > Available.Width || rect.Height > Available.Height)
+        {
+            throw new Exception("Child context is bigger than available space.");
+        }
+        return new LayoutContext(rect);
     }
 }

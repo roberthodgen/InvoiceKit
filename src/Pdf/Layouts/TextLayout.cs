@@ -10,8 +10,6 @@ using Styles.Text;
 /// </summary>
 internal class TextLayout : ILayout
 {
-    private bool _drawn;
-
     private TextStyle Style { get; }
 
     private readonly List<string> _lines = [];
@@ -41,17 +39,20 @@ internal class TextLayout : ILayout
     public SKSize Measure(SKRect available)
     {
         var wrappedLines = _lines.SelectMany(line => WrapText(line, Style, available.Width)).ToList();
-        var height = available.Top;
+        var height = 0f;
 
-        for (int index = 0; index < wrappedLines.Count; index++)
+        for (var index = 0; index < wrappedLines.Count; index++)
         {
-            height += MeasureFullLineRect(available, height, index).Height;
+            height += MeasureFullLineRect(available, height, index, wrappedLines.Count).Height;
         }
 
         return new SKSize(available.Width, height);
     }
 
-    private SKRect MeasureFullLineRect(SKRect available, float top, int index)
+    /// <summary>
+    /// Measures how much space a line of text takes.
+    /// </summary>
+    private SKRect MeasureFullLineRect(SKRect available, float top, int index, int totalLines)
     {
         var bottom = top;
 
@@ -63,13 +64,17 @@ internal class TextLayout : ILayout
         bottom += HalfLineHeight - Style.ToFont().Metrics.Ascent;
         bottom += HalfLineHeight + Style.ToFont().Metrics.Descent;
 
-        if (index == _wrappedLines.Count - 1)
+        if (index == totalLines - 1)
         {
             bottom += Style.ParagraphSpacingAfter;
         }
+
         return new SKRect(available.Left, top, available.Right, bottom);
     }
 
+    /// <summary>
+    /// Creates a rect for the location of a text drawable.
+    /// </summary>
     private SKRect MeasureTextLineRect(SKRect available, float top, int index)
     {
         var textLineLocation = top + HalfLineHeight - Style.ToFont().Metrics.Ascent;
@@ -79,11 +84,7 @@ internal class TextLayout : ILayout
             textLineLocation += Style.ParagraphSpacingBefore;
         }
 
-        return new SKRect(
-            available.Left,
-            textLineLocation,
-            available.Right,
-            textLineLocation);
+        return new SKRect(available.Left, textLineLocation, available.Right, textLineLocation);
     }
 
     /// <summary>
@@ -125,13 +126,8 @@ internal class TextLayout : ILayout
         return lines;
     }
 
-    public LayoutResult Layout(LayoutContext context, LayoutType layoutType)
+    public LayoutResult Layout(LayoutContext context)
     {
-        if (_drawn || _lines.Count == 0)
-        {
-            return new LayoutResult([], LayoutStatus.IsFullyDrawn);
-        }
-
         if (_wrappedLines.Count == 0)
         {
             _wrappedLines = _lines.SelectMany(line => WrapText(line, Style, context.Available.Width)).ToList();
@@ -144,7 +140,7 @@ internal class TextLayout : ILayout
         {
             var textRect = MeasureTextLineRect(context.Available, top, _currentIndex);
 
-            var allocationRect = MeasureFullLineRect(context.Available, top, _currentIndex);
+            var allocationRect = MeasureFullLineRect(context.Available, top, _currentIndex, _wrappedLines.Count);
 
             // Tries to allocate the rect to the current page. If it fails, the page is marked full and a new page is created.
             if (context.TryAllocateRect(allocationRect))
@@ -160,14 +156,7 @@ internal class TextLayout : ILayout
             }
         }
 
-        if (layoutType == LayoutType.RepeatingElement)
-        {
-            _currentIndex = 0;
-        }
-        else
-        {
-            _drawn = true;
-        }
+        _currentIndex = 0;
         return new LayoutResult(listDrawables, LayoutStatus.IsFullyDrawn);
     }
 }
