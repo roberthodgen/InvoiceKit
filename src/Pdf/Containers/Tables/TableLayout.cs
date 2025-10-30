@@ -19,10 +19,9 @@ internal class TableLayout : ILayout
 
     public SKSize Measure(SKRect available)
     {
-        var width = available.Width; // always fills the available width
         var height = Rows.Sum(row => row.Measure(available).Height);
         height += Headers.Sum(row => row.Measure(available).Height);
-        return new SKSize(width, height);
+        return new SKSize(available.Width, height);
     }
 
     // Todo: Fix tables

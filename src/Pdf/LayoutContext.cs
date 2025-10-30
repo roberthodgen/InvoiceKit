@@ -67,7 +67,12 @@ public sealed class LayoutContext
         _allocatedTop.Add(child.Allocated.Height);
     }
 
-    public void CommitFooterContext(LayoutContext child)
+    /// <summary>
+    /// Commits the allocated space of a child layout context.
+    /// </summary>
+    /// <param name="child">Another layout to allocate on this layout.</param>
+    /// <remarks>Should only be used when allocating the footer.</remarks>
+    public void CommitContextFromBottom(LayoutContext child)
     {
         _allocatedBottom.Add(child.Allocated.Height);
     }
@@ -87,18 +92,5 @@ public sealed class LayoutContext
     public LayoutContext GetChildContextFromIntersect(SKRect intersectingRect)
     {
         return new LayoutContext(SKRect.Intersect(Available, intersectingRect));
-    }
-
-    /// <summary>
-    /// Creates a new child context from a given rect.
-    /// </summary>
-    /// <param name="rect">A rect containing the space for an element to draw into.</param>
-    public LayoutContext GetChildContextFromRect(SKRect rect)
-    {
-        if (rect.Width > Available.Width || rect.Height > Available.Height)
-        {
-            throw new Exception("Child context is bigger than available space.");
-        }
-        return new LayoutContext(rect);
     }
 }

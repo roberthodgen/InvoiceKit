@@ -49,7 +49,7 @@ internal class VStackLayout : ILayout
         if (_footer is not null)
         {
             var footerSize = _footer.Measure(context.Available);
-            var footerContext = context.GetChildContextFromRect(
+            var footerContext = context.GetChildContextFromIntersect(
                 new SKRect(
                     context.Available.Left,
                     context.Available.Bottom - footerSize.Height,
@@ -58,7 +58,7 @@ internal class VStackLayout : ILayout
             var footerResult = LayoutFooter(footerContext);
             drawables.AddRange(footerResult.Drawables);
             drawables.Add(new DebugDrawable(footerContext.Allocated));
-            context.CommitFooterContext(footerContext);
+            context.CommitContextFromBottom(footerContext);
         }
 
         // Lay out all the children
