@@ -45,26 +45,33 @@ internal class VStackLayout : ILayout
             context.CommitChildContext(headerContext);
         }
 
+        // Get footer size and context to use on child layout.
+        var footerSize = _footer?.Measure(context.Available.Size) ?? SKSize.Empty;
+        var footerContext = context.GetChildContext(
+            new SKRect(
+                context.Available.Left,
+                context.Available.Bottom - footerSize.Height,
+                context.Available.Right,
+                context.Available.Bottom));
+
         // Lay out the footer
         if (_footer is not null)
         {
-            var footerSize = _footer.Measure(context.Available);
-            var footerContext = context.GetChildContext(
-                new SKRect(
-                    context.Available.Left,
-                    context.Available.Bottom - footerSize.Height,
-                    context.Available.Right,
-                    context.Available.Bottom));
             var footerResult = LayoutFooter(footerContext);
             drawables.AddRange(footerResult.Drawables);
             drawables.Add(new DebugDrawable(footerContext.Allocated));
-            context.CommitContextFromBottom(footerContext);
         }
 
-        // Lay out all the children
+        var rectWithoutFooter = new SKRect(
+            context.Available.Left,
+            context.Available.Top,
+            context.Available.Right,
+            context.Available.Bottom - footerSize.Height);
+
+        // Lay out all the children, then commit the footer context.
         while (_children.Count > 0)
         {
-            var childContext = context.GetChildContext();
+            var childContext = context.GetChildContext(rectWithoutFooter);
             var layoutResult = _children.Peek().Layout(childContext);
             drawables.Add(new DebugDrawable(childContext.Allocated));
             drawables.AddRange(layoutResult.Drawables);
@@ -72,6 +79,7 @@ internal class VStackLayout : ILayout
 
             if (layoutResult.Status == LayoutStatus.NeedsNewPage)
             {
+                context.CommitChildContext(footerContext);
                 return new LayoutResult(drawables, LayoutStatus.NeedsNewPage);
             }
 
@@ -79,6 +87,7 @@ internal class VStackLayout : ILayout
         }
 
         // Commits children, draws footer, and completes layout.
+        context.CommitChildContext(footerContext);
         return new LayoutResult(drawables, LayoutStatus.IsFullyDrawn);
     }
 
@@ -106,14 +115,17 @@ internal class VStackLayout : ILayout
         return new LayoutResult(drawables, LayoutStatus.IsFullyDrawn);
     }
 
-    public SKSize Measure(SKRect available)
+    public SKSize Measure(SKSize available)
     {
         if (_children.Count == 0)
         {
             return SKSize.Empty;
         }
-        var maxHeight = _children.Max(child => child.Measure(available).Height);
-        return new SKSize(available.Width, maxHeight);
+        var headerHeight = _header?.Measure(available).Height ?? 0f;
+        var footerHeight = _footer?.Measure(available).Height ?? 0f;
+        var maxChildHeight = _children.Max(child => child.Measure(available).Height);
+        var totalHeight = headerHeight + footerHeight + maxChildHeight;
+        return new SKSize(available.Width, totalHeight);
     }
 
     private LayoutResult LayoutHeader(LayoutContext context)

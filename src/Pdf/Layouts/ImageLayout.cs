@@ -29,7 +29,7 @@ internal class ImageLayout : ILayout
         }
     }
 
-    public SKSize Measure(SKRect available)
+    public SKSize Measure(SKSize available)
     {
         if (Svg?.Drawable is not null)
         {
@@ -47,16 +47,13 @@ internal class ImageLayout : ILayout
     public LayoutResult Layout(LayoutContext context)
     {
         var listDrawables = new List<IDrawable>();
-        var size = Measure(context.Available);
+        var size = Measure(context.Available.Size);
+        var top = context.Available.Top;    // Save position before allocation
 
-        var rect = new SKRect(
-            context.Available.Left,
-            context.Available.Top,
-            context.Available.Left + size.Width,
-            context.Available.Top + size.Height);
-
-        if (context.TryAllocateRect(rect))
+        if (context.TryAllocate(size))
         {
+            var rect = new SKRect(context.Available.Left, top, context.Available.Left + size.Width, top + size.Height);
+
             if (Svg is not null)
             {
                 listDrawables.Add(new SvgImageDrawable(Svg, rect));

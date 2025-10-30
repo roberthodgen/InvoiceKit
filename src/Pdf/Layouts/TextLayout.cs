@@ -36,14 +36,14 @@ internal class TextLayout : ILayout
         }
     }
 
-    public SKSize Measure(SKRect available)
+    public SKSize Measure(SKSize available)
     {
         var wrappedLines = _lines.SelectMany(line => WrapText(line, Style, available.Width)).ToList();
         var height = 0f;
 
-        for (var index = 0; index < wrappedLines.Count; index++)
+        foreach (var index in Enumerable.Range(0, wrappedLines.Count))
         {
-            height += MeasureFullLineRect(available, height, index, wrappedLines.Count).Height;
+            height += MeasureFullLineSize(available, index, wrappedLines.Count).Height;
         }
 
         return new SKSize(available.Width, height);
@@ -52,24 +52,24 @@ internal class TextLayout : ILayout
     /// <summary>
     /// Measures how much space a line of text takes.
     /// </summary>
-    private SKRect MeasureFullLineRect(SKRect available, float top, int index, int totalLines)
+    private SKSize MeasureFullLineSize(SKSize available, int index, int totalLines)
     {
-        var bottom = top;
+        var height = 0f;
 
         if (index == 0)
         {
-            bottom += Style.ParagraphSpacingBefore;
+            height += Style.ParagraphSpacingBefore;
         }
 
-        bottom += HalfLineHeight - Style.ToFont().Metrics.Ascent;
-        bottom += HalfLineHeight + Style.ToFont().Metrics.Descent;
+        height += HalfLineHeight - Style.ToFont().Metrics.Ascent;
+        height += HalfLineHeight + Style.ToFont().Metrics.Descent;
 
         if (index == totalLines - 1)
         {
-            bottom += Style.ParagraphSpacingAfter;
+            height += Style.ParagraphSpacingAfter;
         }
 
-        return new SKRect(available.Left, top, available.Right, bottom);
+        return new SKSize(available.Width, height);
     }
 
     /// <summary>
@@ -133,30 +133,28 @@ internal class TextLayout : ILayout
             _wrappedLines = _lines.SelectMany(line => WrapText(line, Style, context.Available.Width)).ToList();
         }
 
-        var listDrawables = new List<IDrawable>();
-        var top = context.Available.Top;
+        var drawables = new List<IDrawable>();
 
         while (_currentIndex < _wrappedLines.Count)
         {
-            var textRect = MeasureTextLineRect(context.Available, top, _currentIndex);
+            var top = context.Available.Top;    // Save the top position before allocation
+            var allocationSize = MeasureFullLineSize(context.Available.Size, _currentIndex, _wrappedLines.Count);
 
-            var allocationRect = MeasureFullLineRect(context.Available, top, _currentIndex, _wrappedLines.Count);
-
-            // Tries to allocate the rect to the current page. If it fails, the page is marked full and a new page is created.
-            if (context.TryAllocateRect(allocationRect))
+            // Tries to allocate the size within the current page or calls for a new page.
+            if (context.TryAllocate(allocationSize))
             {
-                listDrawables.Add(new TextDrawable(_wrappedLines[_currentIndex], textRect, Style));
+                var textRect = MeasureTextLineRect(context.Available, top, _currentIndex);
+                drawables.Add(new TextDrawable(_wrappedLines[_currentIndex], textRect, Style));
                 _currentIndex++;
-                top = allocationRect.Bottom;
             }
             else
             {
                 // Will only be hit if the page is full.
-                return new LayoutResult(listDrawables, LayoutStatus.NeedsNewPage);
+                return new LayoutResult(drawables, LayoutStatus.NeedsNewPage);
             }
         }
 
         _currentIndex = 0;
-        return new LayoutResult(listDrawables, LayoutStatus.IsFullyDrawn);
+        return new LayoutResult(drawables, LayoutStatus.IsFullyDrawn);
     }
 }

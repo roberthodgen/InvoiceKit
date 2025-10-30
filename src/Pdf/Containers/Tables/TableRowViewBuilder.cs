@@ -32,7 +32,7 @@ public sealed class TableRowViewBuilder : IViewBuilder
     /// single row is considered the smallest drawable component for a table, and the entire row must be rendered on the
     /// same page.
     /// </summary>
-    public SKRect Measure(SKRect available)
+    public SKSize Measure(SKSize available)
     {
         float height = 0;
         // for (var i = 0; i < Cells.Count - 1; i++)
@@ -41,7 +41,7 @@ public sealed class TableRowViewBuilder : IViewBuilder
         //     height = Math.Max(height, cellHeight);
         // }
 
-        return new SKRect(available.Left, available.Top, available.Right, available.Top + height);
+        return new SKSize(available.Width, available.Height + height);
     }
 
     // public void Draw(SKCanvas canvas, IPage page)

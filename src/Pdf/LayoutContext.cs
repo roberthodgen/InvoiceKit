@@ -40,21 +40,21 @@ public sealed class LayoutContext
     }
 
     /// <summary>
-    /// Determines if this layout can accomodate a rect of a certain size.
+    /// Determines if this layout can accomodate the size of a rect.
     /// </summary>
-    /// <param name="rect">The rect to check.</param>
+    /// <param name="size">The size to check.</param>
     /// <returns>True if the rect can be accommodated, false otherwise.</returns>
     /// <remarks>
     /// This method will automatically add the height of the rect to the allocated space when it returns true.
     /// </remarks>
-    public bool TryAllocateRect(SKRect rect)
+    public bool TryAllocate(SKSize size)
     {
-        if (rect.Height > Available.Height || rect.Width > Available.Width)
+        if (size.Height > Available.Height || size.Width > Available.Width)
         {
             return false;
         }
 
-        _allocatedTop.Add(rect.Height);
+        _allocatedTop.Add(size.Height);
         return true;
     }
 
@@ -65,16 +65,6 @@ public sealed class LayoutContext
     public void CommitChildContext(LayoutContext child)
     {
         _allocatedTop.Add(child.Allocated.Height);
-    }
-
-    /// <summary>
-    /// Commits the allocated space of a child layout context.
-    /// </summary>
-    /// <param name="child">Another layout to allocate on this layout.</param>
-    /// <remarks>Should only be used when allocating the footer.</remarks>
-    public void CommitContextFromBottom(LayoutContext child)
-    {
-        _allocatedBottom.Add(child.Allocated.Height);
     }
 
     /// <summary>

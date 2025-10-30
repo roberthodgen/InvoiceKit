@@ -4,7 +4,7 @@ using SkiaSharp;
 
 internal class PageBreakLayout : ILayout
 {
-    public SKSize Measure(SKRect available)
+    public SKSize Measure(SKSize available)
     {
         return new SKSize(available.Width, available.Height);
     }
@@ -12,9 +12,7 @@ internal class PageBreakLayout : ILayout
     public LayoutResult Layout(LayoutContext context)
     {
         // Allocates the rest of the available space and does not return drawables.
-        context.TryAllocateRect(new SKRect(
-                context.Available.Left, context.Available.Top, context.Available.Right, context.Available.Bottom));
-
+        context.TryAllocate(context.Available.Size);
         return new LayoutResult([], LayoutStatus.IsFullyDrawn);
     }
 }

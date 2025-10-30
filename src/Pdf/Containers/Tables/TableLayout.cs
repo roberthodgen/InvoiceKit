@@ -17,7 +17,7 @@ internal class TableLayout : ILayout
         ShowRowSeparators = showRowSeparators;
     }
 
-    public SKSize Measure(SKRect available)
+    public SKSize Measure(SKSize available)
     {
         var height = Rows.Sum(row => row.Measure(available).Height);
         height += Headers.Sum(row => row.Measure(available).Height);
@@ -35,13 +35,13 @@ internal class TableLayout : ILayout
         {
             while (true)
             {
-                var rowHeight = row.Measure(context.Available);
+                var rowHeight = row.Measure(context.Available.Size);
                 var rect = new SKRect(context.Available.Left, top, context.Available.Right, top + rowHeight.Height);
-                if (context.TryAllocateRect(rect))
+                if (context.TryAllocate(rect.Size))
                 {
                     listDrawables.Add(new TableRowDrawable(rect, row));
                     top += rowHeight.Height;
-                    totalSize += rowHeight.Size;
+                    totalSize += rowHeight;
                     break;
                 }
                 return new LayoutResult(listDrawables, LayoutStatus.NeedsNewPage);
@@ -52,13 +52,13 @@ internal class TableLayout : ILayout
         {
             while (true)
             {
-                var rowHeight = row.Measure(context.Available);
+                var rowHeight = row.Measure(context.Available.Size);
                 var rect = new SKRect(context.Available.Left, top, context.Available.Right, top + rowHeight.Height);
-                if (context.TryAllocateRect(rect))
+                if (context.TryAllocate(rect.Size))
                 {
                     listDrawables.Add(new TableRowDrawable(rect, row));
                     top += rowHeight.Height;
-                    totalSize += rowHeight.Size;
+                    totalSize += rowHeight;
                     break;
                 }
                 return new LayoutResult(listDrawables, LayoutStatus.NeedsNewPage);
