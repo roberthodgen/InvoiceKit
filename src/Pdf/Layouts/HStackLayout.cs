@@ -25,7 +25,7 @@ internal class HStackLayout(List<ILayout> columns) : ILayout
         {
             var point = context.Available.Location;
             point.Offset(columnSize.Width * index, 0);
-            var childContext = context.GetChildContextFromIntersect(SKRect.Create(point, columnSize));
+            var childContext = context.GetChildContext(SKRect.Create(point, columnSize));
             var result = _columns[index].Layout(childContext);
             results.Add(
                 new ColumnResult(

@@ -89,7 +89,7 @@ public sealed class LayoutContext
     /// Creates a new child context from the remaining available space that intersects with the given rect.
     /// </summary>
     /// <param name="intersectingRect">A rect to limit the child context to.</param>
-    public LayoutContext GetChildContextFromIntersect(SKRect intersectingRect)
+    public LayoutContext GetChildContext(SKRect intersectingRect)
     {
         return new LayoutContext(SKRect.Intersect(Available, intersectingRect));
     }

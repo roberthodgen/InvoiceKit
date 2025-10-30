@@ -49,7 +49,7 @@ internal class VStackLayout : ILayout
         if (_footer is not null)
         {
             var footerSize = _footer.Measure(context.Available);
-            var footerContext = context.GetChildContextFromIntersect(
+            var footerContext = context.GetChildContext(
                 new SKRect(
                     context.Available.Left,
                     context.Available.Bottom - footerSize.Height,
