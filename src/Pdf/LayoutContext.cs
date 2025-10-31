@@ -60,11 +60,10 @@ public sealed class LayoutContext
     /// Determines if the measurable can fit onto the page and returns a rect.
     /// </summary>
     /// <param name="measurable">Takes in a IMeasurable.</param>
-    /// <param name="contextSize">LayoutContext width.</param>
     /// <param name="rect">Outputs a SKRect for the drawable.</param>
-    public bool TryAllocate(IMeasurable measurable, SKSize contextSize,  out SKRect rect)
+    public bool TryAllocate(IMeasurable measurable,  out SKRect rect)
     {
-        var size = measurable.Measure(contextSize);
+        var size = measurable.Measure(Available.Size);
         rect = new SKRect(Available.Left, Available.Top, Available.Left + size.Width, Available.Top + size.Height);
         return TryAllocate(size);
     }
