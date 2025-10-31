@@ -146,7 +146,6 @@ internal class TextLayout : ILayout
             }
             else
             {
-                // Will only be hit if the page is full.
                 return new LayoutResult(drawables, LayoutStatus.NeedsNewPage);
             }
         }

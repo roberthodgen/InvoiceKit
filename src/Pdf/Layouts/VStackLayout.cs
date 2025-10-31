@@ -38,10 +38,10 @@ internal class VStackLayout : ILayout
         // Lay out the header
         drawables.AddRange(LayoutHeader(context).Drawables);
 
-        // Get footer size and context to use on child layout.
+        // Get footer size for child context
         var footerSize = _footer?.Measure(context.Available.Size) ?? SKSize.Empty;
 
-        // Lay out all the children, then commit the footer context.
+        // Lay out the children
         while (_children.Count > 0)
         {
             var childContext = context.GetChildContext(new SKRect(
@@ -68,7 +68,6 @@ internal class VStackLayout : ILayout
         // Lay out the footer
         drawables.AddRange(LayoutFooter(context).Drawables);
 
-        // Commits children, draws footer, and completes layout.
         return new LayoutResult(drawables, LayoutStatus.IsFullyDrawn);
     }
 
