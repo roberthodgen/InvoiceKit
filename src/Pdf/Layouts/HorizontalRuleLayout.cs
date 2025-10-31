@@ -12,20 +12,13 @@ internal class HorizontalRuleLayout : ILayout
 
     public LayoutResult Layout(LayoutContext context)
     {
-        var listDrawables = new List<IDrawable>();
-        var size = Measure(context.Available.Size);
-
-        if (context.TryAllocate(size))
+        var drawables = new List<IDrawable>();
+        if (context.TryAllocate(this, out var rect))
         {
-            listDrawables.Add(new HorizontalRuleDrawable(
-                new SKRect(
-                context.Available.Left,
-                context.Available.Top,
-                context.Available.Right,
-                context.Available.Top + size.Height)));
-            return new LayoutResult(listDrawables, LayoutStatus.IsFullyDrawn);
+            drawables.Add(new HorizontalRuleDrawable(rect));
+            return new LayoutResult(drawables, LayoutStatus.IsFullyDrawn);
         }
 
-        return new LayoutResult(listDrawables, LayoutStatus.NeedsNewPage);
+        return new LayoutResult(drawables, LayoutStatus.NeedsNewPage);
     }
 }

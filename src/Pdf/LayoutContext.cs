@@ -58,6 +58,17 @@ public sealed class LayoutContext
         return true;
     }
 
+    public bool TryAllocate(IMeasurable measurable, out SKRect rect)
+    {
+        var size = measurable.Measure(Available.Size);
+        rect = new SKRect(
+            Available.Left,
+            Available.Top,
+            Available.Right + size.Width,
+            Available.Top + size.Height);
+        return TryAllocate(size);
+    }
+
     /// <summary>
     /// Commits the allocated space of a child layout context.
     /// </summary>

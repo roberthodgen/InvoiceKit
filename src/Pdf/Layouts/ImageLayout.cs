@@ -47,13 +47,8 @@ internal class ImageLayout : ILayout
     public LayoutResult Layout(LayoutContext context)
     {
         var listDrawables = new List<IDrawable>();
-        var size = Measure(context.Available.Size);
-        var top = context.Available.Top;    // Save position before allocation
-
-        if (context.TryAllocate(size))
+        if (context.TryAllocate(this, out var rect))
         {
-            var rect = new SKRect(context.Available.Left, top, context.Available.Left + size.Width, top + size.Height);
-
             if (Svg is not null)
             {
                 listDrawables.Add(new SvgImageDrawable(Svg, rect));
@@ -66,7 +61,6 @@ internal class ImageLayout : ILayout
             return new LayoutResult(listDrawables, LayoutStatus.IsFullyDrawn);
         }
 
-        // Will only be hit if the page is full.
         return new LayoutResult(listDrawables, LayoutStatus.NeedsNewPage);
     }
 }
