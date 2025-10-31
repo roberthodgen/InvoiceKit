@@ -11,14 +11,11 @@ internal class VStackLayout : ILayout
 
     private readonly ILayout? _footer;
 
-    private readonly bool _repeating;
-
-    internal VStackLayout(List<ILayout> children, ILayout? header, ILayout? footer, bool repeating)
+    internal VStackLayout(List<ILayout> children, ILayout? header, ILayout? footer)
     {
         _footer = footer;
         _header = header;
         _children = new (children);
-        _repeating = repeating;
     }
 
     public LayoutResult Layout(LayoutContext context)
@@ -26,11 +23,6 @@ internal class VStackLayout : ILayout
         if (_children.Count == 0)
         {
             return new LayoutResult([], LayoutStatus.IsFullyDrawn);
-        }
-
-        if (_repeating)
-        {
-            return RepeatingLayout(context);
         }
 
         var drawables = new List<IDrawable>();
@@ -71,31 +63,6 @@ internal class VStackLayout : ILayout
         return new LayoutResult(drawables, LayoutStatus.IsFullyDrawn);
     }
 
-    /// <summary>
-    /// Lays out repeating elements and does not remove them from the queue.
-    /// </summary>
-    /// <remarks>Repeating elements cannot have more repeating elements.</remarks>
-    private LayoutResult RepeatingLayout(LayoutContext context)
-    {
-        var drawables = new List<IDrawable>();
-
-        foreach (var child in _children)
-        {
-            var childContext = context.GetChildContext();
-            var result = child.Layout(childContext);
-            drawables.AddRange(result.Drawables);
-            drawables.Add(new DebugDrawable(childContext.Allocated));
-            context.CommitChildContext(childContext);
-
-            if (result.Status == LayoutStatus.NeedsNewPage)
-            {
-                return new LayoutResult(drawables, LayoutStatus.NeedsNewPage);
-            }
-        }
-
-        return new LayoutResult(drawables, LayoutStatus.IsFullyDrawn);
-    }
-
     public SKSize Measure(SKSize available)
     {
         if (_children.Count == 0)
@@ -105,7 +72,7 @@ internal class VStackLayout : ILayout
 
         var headerHeight = _header?.Measure(available).Height ?? 0f;
         var footerHeight = _footer?.Measure(available).Height ?? 0f;
-        var maxChildHeight = _children.Max(child => child.Measure(available).Height);
+        var maxChildHeight = _children.Sum(child => child.Measure(available).Height);
         var totalHeight = headerHeight + footerHeight + maxChildHeight;
         return new SKSize(available.Width, totalHeight);
     }

@@ -28,7 +28,12 @@ public sealed class VStack : ContainerBase
     public override ILayout ToLayout()
     {
         var childrenLayouts = Children.Select(child => child.ToLayout()).ToList();
-        return new VStackLayout(childrenLayouts, _header?.ToLayout(), _footer?.ToLayout(), _repeating);
+        if (_repeating)
+        {
+            return new VStackRepeatingLayout(childrenLayouts);
+        }
+
+        return new VStackLayout(childrenLayouts, _header?.ToLayout(), _footer?.ToLayout());
     }
 
     public VStack WithHeader(Action<VStack> configure)
@@ -37,6 +42,7 @@ public sealed class VStack : ContainerBase
         {
             throw new Exception("Cannot add a repeating stack to another repeating stack.");
         }
+
         _header = new VStack(DefaultTextStyle, true);
         configure(_header);
         return this;
@@ -48,6 +54,7 @@ public sealed class VStack : ContainerBase
         {
             throw new Exception("Cannot add a repeating stack to another repeating stack.");
         }
+
         _footer = new VStack(DefaultTextStyle, true);
         configure(_footer);
         return this;
