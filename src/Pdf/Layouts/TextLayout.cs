@@ -44,7 +44,6 @@ internal class TextLayout : ILayout
         }
 
         var height = _wrappedLines.Select((line, index) => MeasureFullLineSize(available, index).Height).Sum();
-
         return new SKSize(available.Width, height);
     }
 
@@ -74,9 +73,9 @@ internal class TextLayout : ILayout
     /// <summary>
     /// Creates a rect for the location of a text drawable.
     /// </summary>
-    private SKRect MeasureTextLineRect(SKRect available, float top, int index)
+    private SKRect MeasureTextLineRect(SKRect available, int index)
     {
-        var textLineLocation = top + HalfLineHeight - Style.ToFont().Metrics.Ascent;
+        var textLineLocation = available.Top + HalfLineHeight - Style.ToFont().Metrics.Ascent;
 
         if (index == 0)
         {
@@ -137,9 +136,9 @@ internal class TextLayout : ILayout
         while (_currentIndex < _wrappedLines.Count)
         {
             // Tries to allocate the size within the current page or calls for a new page.
-            if (context.TryAllocate(MeasureFullLineSize(context.Available.Size, _currentIndex), out var origin))
+            if (context.TryAllocate(MeasureFullLineSize(context.Available.Size, _currentIndex), out var rect))
             {
-                var textRect = MeasureTextLineRect(context.Available, origin, _currentIndex);
+                var textRect = MeasureTextLineRect(rect, _currentIndex);
                 drawables.Add(new TextDrawable(_wrappedLines[_currentIndex], textRect, Style));
                 _currentIndex++;
             }

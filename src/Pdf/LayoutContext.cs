@@ -60,22 +60,30 @@ public sealed class LayoutContext
     /// Determines if the measurable can fit onto the page and returns a rect.
     /// </summary>
     /// <param name="measurable">Takes in a IMeasurable.</param>
-    /// <param name="rect">Outputs a SKRect for the drawable.</param>
-    public bool TryAllocate(IMeasurable measurable,  out SKRect rect)
+    public bool TryAllocate(IMeasurable measurable)
+    {
+        return TryAllocate(measurable, out _);
+    }
+
+    /// <summary>
+    /// Determines if the measurable can fit onto the page and returns a rect.
+    /// </summary>
+    /// <param name="measurable">Takes in a IMeasurable.</param>
+    /// <param name="rect">Outputs the allocated rect for the drawing.</param>
+    public bool TryAllocate(IMeasurable measurable, out SKRect rect)
     {
         var size = measurable.Measure(Available.Size);
-        rect = new SKRect(Available.Left, Available.Top, Available.Left + size.Width, Available.Top + size.Height);
-        return TryAllocate(size);
+        return TryAllocate(size, out rect);
     }
 
     /// <summary>
     /// Determines if the measurable can fit onto the page and returns a rect.
     /// </summary>
     /// <param name="size">SKSize of the element being allocated.</param>
-    /// <param name="origin">Outputs a float for the available size's top before allocation.</param>
-    public bool TryAllocate(SKSize size,  out float origin)
+    /// <param name="rect">Outputs the allocated rect for the drawing.</param>
+    public bool TryAllocate(SKSize size, out SKRect rect)
     {
-        origin = Allocated.Bottom;
+        rect = new SKRect(Available.Left, Available.Top, Available.Left + size.Width, Available.Top + size.Height);
         return TryAllocate(size);
     }
 

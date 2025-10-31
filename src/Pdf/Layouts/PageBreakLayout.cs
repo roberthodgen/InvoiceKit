@@ -12,7 +12,7 @@ internal class PageBreakLayout : ILayout
     public LayoutResult Layout(LayoutContext context)
     {
         // Allocates the rest of the available space and does not return drawables.
-        context.TryAllocate(context.Available.Size);
+        context.TryAllocate(this);
         return new LayoutResult([], LayoutStatus.IsFullyDrawn);
     }
 }
