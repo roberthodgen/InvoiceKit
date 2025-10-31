@@ -81,6 +81,86 @@ public class DocumentTests(ITestOutputHelper testOutputHelper)
     }
 
     [Fact]
+    public void HeaderAndFooter_SinglePageTest()
+    {
+        const string fileName = "HeaderAndFooterSinglePage.pdf";
+        File.Delete(fileName);
+
+        using var stream = File.OpenWrite(fileName);
+        using var builder = PdfDocument.UsLetter;
+        var pdfBytes = builder
+            .DisplayLayoutGuidelines()
+            .DefaultFont("Open Sans/Regular")
+            .WithVStack(vStack => vStack
+                .WithHeader(header => header.AddText(text => text.WithText("This is the header.")))
+                .WithFooter(footer => footer.AddText(text => text.WithText("This is the footer.")))
+                .AddText(text => text.WithText("This is inside the first page's body."))
+                .AddText(text => text.WithText("This is inside the first page's body."))
+                .AddText(text => text.WithText("This is inside the first page's body.")))
+            .Build();
+
+        stream.Write(pdfBytes);
+        testOutputHelper.WriteLine($"PDF created: {Path.GetFullPath(fileName)}");
+        File.Exists(fileName).ShouldBeTrue();
+    }
+
+    [Fact]
+    public void HeaderAndFooter_MultiPageTest()
+    {
+        const string fileName = "HeaderAndFooterMultiPage.pdf";
+        File.Delete(fileName);
+
+        using var stream = File.OpenWrite(fileName);
+        using var builder = PdfDocument.UsLetter;
+        var pdfBytes = builder
+            .DisplayLayoutGuidelines()
+            .DefaultFont("Open Sans/Regular")
+            .WithVStack(vStack => vStack
+                .WithHeader(header => header.AddText(text => text.WithText("This is the header.")))
+                .WithFooter(footer => footer.AddText(text => text.WithText("This is the footer.")))
+                .AddText(text => text.WithText("This is inside the first page's body."))
+                .AddText(text => text.WithText("This is inside the first page's body."))
+                .AddText(text => text.WithText("This is inside the first page's body."))
+                .AddText(text => text.WithText("This is inside the second page's body."))
+                .AddText(text => text.WithText("This is inside the second page's body."))
+                .AddText(text => text.WithText("This is inside the second page's body."))
+                .AddText(text => text.WithText("This is inside the second page's body."))
+                .AddText(text => text.WithText("This is inside the second page's body."))
+                .AddText(text => text.WithText("This is inside the second page's body."))
+                .AddText(text => text.WithText("This is inside the second page's body."))
+                .AddText(text => text.WithText("This is inside the second page's body."))
+                .AddText(text => text.WithText("This is inside the second page's body."))
+                .AddText(text => text.WithText("This is inside the second page's body."))
+                .AddText(text => text.WithText("This is inside the second page's body."))
+                .AddText(text => text.WithText("This is inside the second page's body."))
+                .AddText(text => text.WithText("This is inside the second page's body."))
+                .AddText(text => text.WithText("This is inside the second page's body."))
+                .AddText(text => text.WithText("This is inside the second page's body."))
+                .AddText(text => text.WithText("This is inside the second page's body."))
+                .AddText(text => text.WithText("This is inside the second page's body."))
+                .AddText(text => text.WithText("This is inside the second page's body."))
+                .AddText(text => text.WithText("This is inside the second page's body."))
+                .AddText(text => text.WithText("This is inside the second page's body."))
+                .AddText(text => text.WithText("This is inside the second page's body."))
+                .AddText(text => text.WithText("This is inside the second page's body."))
+                .AddText(text => text.WithText("This is inside the second page's body."))
+                .AddText(text => text.WithText("This is inside the second page's body."))
+                .AddText(text => text.WithText("This is inside the second page's body."))
+                .AddText(text => text.WithText("This is inside the second page's body."))
+                .AddText(text => text.WithText("This is inside the second page's body."))
+                .AddText(text => text.WithText("This is inside the second page's body."))
+                .AddText(text => text.WithText("This is inside the second page's body."))
+                .AddText(text => text.WithText("This is inside the second page's body."))
+                .AddText(text => text.WithText("This is inside the second page's body."))
+                .AddText(text => text.WithText("This is inside the second page's body.")))
+            .Build();
+
+        stream.Write(pdfBytes);
+        testOutputHelper.WriteLine($"PDF created: {Path.GetFullPath(fileName)}");
+        File.Exists(fileName).ShouldBeTrue();
+    }
+
+    [Fact]
     public void Example_Document_Test()
     {
         const string fileName = "Example-Document.pdf";

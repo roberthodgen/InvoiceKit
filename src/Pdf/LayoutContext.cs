@@ -38,22 +38,53 @@ public sealed class LayoutContext
     }
 
     /// <summary>
-    /// Determines if this layout can accomodate a rect of a certain size.
+    /// Determines if this layout can accomodate the size of a rect.
     /// </summary>
-    /// <param name="rect">The rect to check.</param>
+    /// <param name="size">The size to check.</param>
     /// <returns>True if the rect can be accommodated, false otherwise.</returns>
     /// <remarks>
     /// This method will automatically add the height of the rect to the allocated space when it returns true.
     /// </remarks>
-    public bool TryAllocateRect(SKRect rect)
+    public bool TryAllocate(SKSize size)
     {
-        if (rect.Height > Available.Height || rect.Width > Available.Width)
+        if (size.Height > Available.Height || size.Width > Available.Width)
         {
             return false;
         }
 
-        _allocated.Add(rect.Height);
+        _allocated.Add(size.Height);
         return true;
+    }
+
+    /// <summary>
+    /// Determines if the measurable can fit onto the page and returns a rect.
+    /// </summary>
+    /// <param name="measurable">Takes in a IMeasurable.</param>
+    public bool TryAllocate(IMeasurable measurable)
+    {
+        return TryAllocate(measurable, out _);
+    }
+
+    /// <summary>
+    /// Determines if the measurable can fit onto the page and returns a rect.
+    /// </summary>
+    /// <param name="measurable">Takes in a IMeasurable.</param>
+    /// <param name="rect">Outputs the allocated rect for the drawing.</param>
+    public bool TryAllocate(IMeasurable measurable, out SKRect rect)
+    {
+        var size = measurable.Measure(Available.Size);
+        return TryAllocate(size, out rect);
+    }
+
+    /// <summary>
+    /// Determines if the measurable can fit onto the page and returns a rect.
+    /// </summary>
+    /// <param name="size">SKSize of the element being allocated.</param>
+    /// <param name="rect">Outputs the allocated rect for the drawing.</param>
+    public bool TryAllocate(SKSize size, out SKRect rect)
+    {
+        rect = new SKRect(Available.Left, Available.Top, Available.Left + size.Width, Available.Top + size.Height);
+        return TryAllocate(size);
     }
 
     /// <summary>
