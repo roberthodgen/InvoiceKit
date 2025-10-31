@@ -6,6 +6,8 @@ internal class SpacingBlockLayout(float height) : ILayout
 {
     private bool _drawn;
 
+    public IReadOnlyCollection<ILayout> Children => [];
+
     public SKSize Measure(SKSize available)
     {
         return new SKSize(available.Width, height);

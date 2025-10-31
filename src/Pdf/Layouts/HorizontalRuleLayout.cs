@@ -7,6 +7,8 @@ internal class HorizontalRuleLayout : ILayout
 {
     private bool _drawn;
 
+    public IReadOnlyCollection<ILayout> Children => [];
+
     public SKSize Measure(SKSize available)
     {
         return new SKSize(available.Width, 1);

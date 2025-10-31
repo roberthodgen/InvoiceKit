@@ -69,7 +69,9 @@ public sealed class PdfDocument : IPdfDocument
             throw new ApplicationException("No root view builder added to document.");
         }
 
-        foreach (var page in new LayoutTree(_rootViewBuilder).ToPages(DrawableArea))
+        using var layout = new LayoutEngine(_rootViewBuilder);
+        layout.LayoutDocument(DrawableArea);
+        foreach (var page in layout.Pages)
         {
             using var canvas = _document.BeginPage(_pageSize.Width, _pageSize.Height);
             using var drawableContext = new DrawableContext(canvas, DrawableArea, _debug);

@@ -7,6 +7,8 @@ internal class HStackLayout(List<ILayout> columns) : ILayout
 {
     private bool _drawn;
 
+    public IReadOnlyCollection<ILayout> Children => throw new NotImplementedException();
+
     /// <summary>
     /// Horizontal stack layout that will split into columns based on the number of children.
     /// </summary>

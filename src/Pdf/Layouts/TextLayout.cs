@@ -20,6 +20,8 @@ internal class TextLayout : ILayout
 
     private int _currentIndex = 0;
 
+    public IReadOnlyCollection<ILayout> Children => [];
+
     internal TextLayout(TextStyle style, string text)
     {
         Style = style;

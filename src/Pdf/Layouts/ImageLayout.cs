@@ -12,6 +12,8 @@ internal class ImageLayout : ILayout
 
     private SKBitmap? Bitmap { get; }
 
+    public IReadOnlyCollection<ILayout> Children => [];
+
     internal ImageLayout(string path, ImageType type)
     {
         if (type == ImageType.Svg)

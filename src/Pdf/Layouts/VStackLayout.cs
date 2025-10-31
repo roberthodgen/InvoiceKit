@@ -9,13 +9,10 @@ internal class VStackLayout(List<ILayout> children) : ILayout
 
     private bool _drawn;
 
+    public IReadOnlyCollection<ILayout> Children => [];
+
     public LayoutResult Layout(LayoutContext context)
     {
-        if (_children.Count == 0 || _drawn)
-        {
-            return new LayoutResult([], LayoutStatus.IsFullyDrawn);
-        }
-
         var drawables = new List<IDrawable>();
 
         while (_children.Count > 0)
