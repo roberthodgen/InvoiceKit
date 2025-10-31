@@ -84,6 +84,7 @@ internal class VStackLayout : ILayout
             var childContext = context.GetChildContext();
             var result = child.Layout(childContext);
             drawables.AddRange(result.Drawables);
+            drawables.Add(new DebugDrawable(childContext.Allocated));
             context.CommitChildContext(childContext);
 
             if (result.Status == LayoutStatus.NeedsNewPage)

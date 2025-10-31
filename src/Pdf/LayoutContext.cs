@@ -69,6 +69,17 @@ public sealed class LayoutContext
     }
 
     /// <summary>
+    /// Determines if the measurable can fit onto the page and returns a rect.
+    /// </summary>
+    /// <param name="size">SKSize of the element being allocated.</param>
+    /// <param name="origin">Outputs a float for the available size's top before allocation.</param>
+    public bool TryAllocate(SKSize size,  out float origin)
+    {
+        origin = Allocated.Bottom;
+        return TryAllocate(size);
+    }
+
+    /// <summary>
     /// Commits the allocated space of a child layout context.
     /// </summary>
     /// <param name="child">Another layout to allocate on this layout.</param>

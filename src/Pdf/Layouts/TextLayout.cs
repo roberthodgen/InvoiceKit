@@ -38,10 +38,12 @@ internal class TextLayout : ILayout
 
     public SKSize Measure(SKSize available)
     {
-        var wrappedLines = _lines.SelectMany(line => WrapText(line, Style, available.Width)).ToList();
+        if (_wrappedLines.Count == 0)
+        {
+            _wrappedLines = _lines.SelectMany(line => WrapText(line, Style, available.Width)).ToList();
+        }
 
-        var height = wrappedLines.Select(
-            (line, index) => MeasureFullLineSize(available, index, wrappedLines.Count).Height).Sum();
+        var height = _wrappedLines.Select((line, index) => MeasureFullLineSize(available, index).Height).Sum();
 
         return new SKSize(available.Width, height);
     }
@@ -49,7 +51,7 @@ internal class TextLayout : ILayout
     /// <summary>
     /// Measures how much space a line of text takes.
     /// </summary>
-    private SKSize MeasureFullLineSize(SKSize available, int index, int totalLines)
+    private SKSize MeasureFullLineSize(SKSize available, int index)
     {
         var height = 0f;
 
@@ -61,7 +63,7 @@ internal class TextLayout : ILayout
         height += HalfLineHeight - Style.ToFont().Metrics.Ascent;
         height += HalfLineHeight + Style.ToFont().Metrics.Descent;
 
-        if (index == totalLines - 1)
+        if (index == _wrappedLines.Count - 1)
         {
             height += Style.ParagraphSpacingAfter;
         }
@@ -134,13 +136,10 @@ internal class TextLayout : ILayout
 
         while (_currentIndex < _wrappedLines.Count)
         {
-            var top = context.Available.Top;    // Save the top position before allocation
-            var allocationSize = MeasureFullLineSize(context.Available.Size, _currentIndex, _wrappedLines.Count);
-
             // Tries to allocate the size within the current page or calls for a new page.
-            if (context.TryAllocate(allocationSize))
+            if (context.TryAllocate(MeasureFullLineSize(context.Available.Size, _currentIndex), out var origin))
             {
-                var textRect = MeasureTextLineRect(context.Available, top, _currentIndex);
+                var textRect = MeasureTextLineRect(context.Available, origin, _currentIndex);
                 drawables.Add(new TextDrawable(_wrappedLines[_currentIndex], textRect, Style));
                 _currentIndex++;
             }
