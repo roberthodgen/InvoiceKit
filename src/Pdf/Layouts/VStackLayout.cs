@@ -36,42 +36,19 @@ internal class VStackLayout : ILayout
         var drawables = new List<IDrawable>();
 
         // Lay out the header
-        if (_header is not null)
-        {
-            var headerContext = context.GetChildContext();
-            var headerResult = LayoutHeader(headerContext);
-            drawables.AddRange(headerResult.Drawables);
-            drawables.Add(new DebugDrawable(headerContext.Allocated));
-            context.CommitChildContext(headerContext);
-        }
+        drawables.AddRange(LayoutHeader(context).Drawables);
 
         // Get footer size and context to use on child layout.
         var footerSize = _footer?.Measure(context.Available.Size) ?? SKSize.Empty;
-        var footerContext = context.GetChildContext(
-            new SKRect(
-                context.Available.Left,
-                context.Available.Bottom - footerSize.Height,
-                context.Available.Right,
-                context.Available.Bottom));
-
-        // Lay out the footer
-        if (_footer is not null)
-        {
-            var footerResult = LayoutFooter(footerContext);
-            drawables.AddRange(footerResult.Drawables);
-            drawables.Add(new DebugDrawable(footerContext.Allocated));
-        }
-
-        var rectWithoutFooter = new SKRect(
-            context.Available.Left,
-            context.Available.Top,
-            context.Available.Right,
-            context.Available.Bottom - footerSize.Height);
 
         // Lay out all the children, then commit the footer context.
         while (_children.Count > 0)
         {
-            var childContext = context.GetChildContext(rectWithoutFooter);
+            var childContext = context.GetChildContext(new SKRect(
+                context.Available.Left,
+                context.Available.Top,
+                context.Available.Right,
+                context.Available.Bottom - footerSize.Height));
             var layoutResult = _children.Peek().Layout(childContext);
             drawables.Add(new DebugDrawable(childContext.Allocated));
             drawables.AddRange(layoutResult.Drawables);
@@ -79,15 +56,19 @@ internal class VStackLayout : ILayout
 
             if (layoutResult.Status == LayoutStatus.NeedsNewPage)
             {
-                context.CommitChildContext(footerContext);
+                // Lay out the footer
+                drawables.AddRange(LayoutFooter(context).Drawables);
+
                 return new LayoutResult(drawables, LayoutStatus.NeedsNewPage);
             }
 
             _children.Dequeue();
         }
 
+        // Lay out the footer
+        drawables.AddRange(LayoutFooter(context).Drawables);
+
         // Commits children, draws footer, and completes layout.
-        context.CommitChildContext(footerContext);
         return new LayoutResult(drawables, LayoutStatus.IsFullyDrawn);
     }
 
@@ -121,6 +102,7 @@ internal class VStackLayout : ILayout
         {
             return SKSize.Empty;
         }
+
         var headerHeight = _header?.Measure(available).Height ?? 0f;
         var footerHeight = _footer?.Measure(available).Height ?? 0f;
         var maxChildHeight = _children.Max(child => child.Measure(available).Height);
@@ -130,21 +112,31 @@ internal class VStackLayout : ILayout
 
     private LayoutResult LayoutHeader(LayoutContext context)
     {
-        var headerResult =  _header!.Layout(context);
-        if (headerResult.Status == LayoutStatus.NeedsNewPage)
+        if (_header is not null)
         {
-            return new LayoutResult([], LayoutStatus.NeedsNewPage);
+            var headerResult = _header.Layout(context);
+            if (headerResult.Status == LayoutStatus.NeedsNewPage)
+            {
+                return new LayoutResult([], LayoutStatus.NeedsNewPage);
+            }
+
+            return headerResult;
         }
-        return headerResult;
+        return new LayoutResult([], LayoutStatus.IsFullyDrawn);
     }
 
     private LayoutResult LayoutFooter(LayoutContext context)
     {
-        var footerResult = _footer!.Layout(context);
-        if (footerResult.Status == LayoutStatus.NeedsNewPage)
+        if (_footer is not null)
         {
-            return new LayoutResult([], LayoutStatus.NeedsNewPage);
+            var footerResult = _footer.Layout(context);
+            if (footerResult.Status == LayoutStatus.NeedsNewPage)
+            {
+                return new LayoutResult([], LayoutStatus.NeedsNewPage);
+            }
+
+            return footerResult;
         }
-        return footerResult;
+        return new LayoutResult([], LayoutStatus.IsFullyDrawn);
     }
 }

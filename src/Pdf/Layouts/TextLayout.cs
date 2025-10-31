@@ -39,12 +39,9 @@ internal class TextLayout : ILayout
     public SKSize Measure(SKSize available)
     {
         var wrappedLines = _lines.SelectMany(line => WrapText(line, Style, available.Width)).ToList();
-        var height = 0f;
 
-        foreach (var index in Enumerable.Range(0, wrappedLines.Count))
-        {
-            height += MeasureFullLineSize(available, index, wrappedLines.Count).Height;
-        }
+        var height = wrappedLines.Select(
+            (line, index) => MeasureFullLineSize(available, index, wrappedLines.Count).Height).Sum();
 
         return new SKSize(available.Width, height);
     }

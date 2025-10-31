@@ -13,7 +13,7 @@ internal class HorizontalRuleLayout : ILayout
     public LayoutResult Layout(LayoutContext context)
     {
         var drawables = new List<IDrawable>();
-        if (context.TryAllocate(this, out var rect))
+        if (context.TryAllocate(this, context.Available.Size, out var rect))
         {
             drawables.Add(new HorizontalRuleDrawable(rect));
             return new LayoutResult(drawables, LayoutStatus.IsFullyDrawn);

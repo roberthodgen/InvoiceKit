@@ -10,9 +10,7 @@ using SkiaSharp;
 /// </remarks>
 public sealed class LayoutContext
 {
-    private readonly List<float> _allocatedTop = [];
-
-    private readonly List<float> _allocatedBottom = [];
+    private readonly List<float> _allocated = [];
 
     private readonly SKRect _originalSpace;
 
@@ -23,7 +21,7 @@ public sealed class LayoutContext
         _originalSpace.Left,
         _originalSpace.Top,
         _originalSpace.Right,
-        _originalSpace.Top + _allocatedTop.Sum());
+        _originalSpace.Top + _allocated.Sum());
 
     /// <summary>
     /// Gets the available space left for this layout.
@@ -32,7 +30,7 @@ public sealed class LayoutContext
         _originalSpace.Left,
         Allocated.Bottom,
         _originalSpace.Right,
-        _originalSpace.Bottom - _allocatedBottom.Sum());
+        _originalSpace.Bottom);
 
     internal LayoutContext(SKRect available)
     {
@@ -54,18 +52,20 @@ public sealed class LayoutContext
             return false;
         }
 
-        _allocatedTop.Add(size.Height);
+        _allocated.Add(size.Height);
         return true;
     }
 
-    public bool TryAllocate(IMeasurable measurable, out SKRect rect)
+    /// <summary>
+    /// Determines if the measurable can fit onto the page and returns a rect.
+    /// </summary>
+    /// <param name="measurable">Takes in a IMeasurable.</param>
+    /// <param name="contextSize">LayoutContext width.</param>
+    /// <param name="rect">Outputs a SKRect for the drawable.</param>
+    public bool TryAllocate(IMeasurable measurable, SKSize contextSize,  out SKRect rect)
     {
-        var size = measurable.Measure(Available.Size);
-        rect = new SKRect(
-            Available.Left,
-            Available.Top,
-            Available.Right + size.Width,
-            Available.Top + size.Height);
+        var size = measurable.Measure(contextSize);
+        rect = new SKRect(Available.Left, Available.Top, Available.Left + size.Width, Available.Top + size.Height);
         return TryAllocate(size);
     }
 
@@ -75,7 +75,7 @@ public sealed class LayoutContext
     /// <param name="child">Another layout to allocate on this layout.</param>
     public void CommitChildContext(LayoutContext child)
     {
-        _allocatedTop.Add(child.Allocated.Height);
+        _allocated.Add(child.Allocated.Height);
     }
 
     /// <summary>

@@ -47,7 +47,7 @@ internal class ImageLayout : ILayout
     public LayoutResult Layout(LayoutContext context)
     {
         var listDrawables = new List<IDrawable>();
-        if (context.TryAllocate(this, out var rect))
+        if (context.TryAllocate(this, context.Available.Size, out var rect))
         {
             if (Svg is not null)
             {
