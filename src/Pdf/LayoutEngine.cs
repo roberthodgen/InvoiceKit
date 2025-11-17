@@ -2,18 +2,20 @@ namespace InvoiceKit.Pdf;
 
 using SkiaSharp;
 
+/// <summary>
+/// Implements the layout algorithm for a document. That is, it takes a root <see cref="ILayout"/> and calls
+/// <see cref="ILayout.Layout"/> on it until fully drawn.
+/// </summary>
 internal class LayoutEngine(IViewBuilder root) : IDisposable
 {
     private readonly ILayout _root = root.ToLayout();
-
-    private readonly HashSet<ILayout> _completed = [];
 
     private readonly List<Page> _pages = [];
 
     public IReadOnlyCollection<Page> Pages => _pages.AsReadOnly();
 
     /// <summary>
-    /// Lays out a page from traversing the root layout and recursively calling layout on it and its children.
+    /// Lays out a page.
     /// </summary>
     /// <param name="context">The page's layout context to track drawn space on.</param>
     /// <returns>
@@ -21,39 +23,13 @@ internal class LayoutEngine(IViewBuilder root) : IDisposable
     /// </returns>
     private PageLayoutResult LayoutPage(LayoutContext context)
     {
+        var layoutResult = _root.Layout(context);
         var page = new Page();
-        var needsLayout = new Stack<ILayout>();
-        needsLayout.Push(_root);
-        var completed = new Stack<ILayout>();
+        page.AddDrawables(layoutResult.Drawables);
 
-        while (needsLayout.TryPop(out var layout))
+        if (layoutResult.Status == LayoutStatus.NeedsNewPage)
         {
-            if (_completed.Contains(layout))
-            {
-                continue;
-            }
-
-            var childContext = context.GetChildContext();
-            var layoutResult = layout.Layout(childContext);
-            page.AddDrawables(layoutResult.Drawables);
-            context.CommitChildContext(childContext);
-
-            if (layoutResult.Status == LayoutStatus.NeedsNewPage)
-            {
-                return new PageLayoutResult(page, LayoutStatus.NeedsNewPage);
-            }
-
-            // Only complete the layout if it's fully drawn
-            completed.Push(layout);
-            foreach (var child in layout.Children)
-            {
-                needsLayout.Push(child);
-            }
-        }
-
-        while (completed.TryPop(out var layout))
-        {
-            _completed.Add(layout);
+            return new PageLayoutResult(page, LayoutStatus.NeedsNewPage);
         }
 
         return new PageLayoutResult(page, LayoutStatus.IsFullyDrawn);

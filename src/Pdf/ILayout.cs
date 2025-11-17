@@ -8,11 +8,6 @@ namespace InvoiceKit.Pdf;
 public interface ILayout : IMeasurable
 {
     /// <summary>
-    /// Children of this layout that also require being laid out.
-    /// </summary>
-    IReadOnlyCollection<ILayout> Children { get; }
-
-    /// <summary>
     /// Used by VStack and HStack to lay out their children.
     /// Will be called multiple times. Every object is responsible for maintaining its own state and preventing
     /// duplication.

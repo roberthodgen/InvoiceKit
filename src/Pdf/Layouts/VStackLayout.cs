@@ -18,8 +18,6 @@ internal class VStackLayout : ILayout
         _children = new (children);
     }
 
-    public IReadOnlyCollection<ILayout> Children => [];
-
     public LayoutResult Layout(LayoutContext context)
     {
         if (_children.Count == 0)
