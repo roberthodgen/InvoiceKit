@@ -41,7 +41,7 @@ public sealed class TableRowViewBuilder : IViewBuilder
         //     height = Math.Max(height, cellHeight);
         // }
 
-        return new SKSize(available.Width, height);
+        return new SKSize(available.Width, available.Height + height);
     }
 
     // public void Draw(SKCanvas canvas, IPage page)

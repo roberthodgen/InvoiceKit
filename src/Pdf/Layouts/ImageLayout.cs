@@ -6,8 +6,6 @@ using Svg.Skia;
 
 internal class ImageLayout : ILayout
 {
-    private bool _drawn;
-
     private SKSvg? Svg { get; }
 
     private SKBitmap? Bitmap { get; }
@@ -35,12 +33,12 @@ internal class ImageLayout : ILayout
 
     public SKSize Measure(SKSize available)
     {
-        if (Svg?.Drawable != null)
+        if (Svg?.Drawable is not null)
         {
             return new SKSize(Svg.Drawable.Bounds.Width, Svg.Drawable.Bounds.Height);
         }
 
-        if (Bitmap != null)
+        if (Bitmap is not null)
         {
             return new SKSize(Bitmap.Width, Bitmap.Height);
         }
@@ -50,41 +48,21 @@ internal class ImageLayout : ILayout
 
     public LayoutResult Layout(LayoutContext context)
     {
-        if (_drawn)
-        {
-            return new LayoutResult([], LayoutStatus.IsFullyDrawn);
-        }
-
         var listDrawables = new List<IDrawable>();
-        var size = Measure(context.Available.Size);
-
-        var rect = new SKRect(
-            context.Available.Left,
-            context.Available.Top,
-            context.Available.Left + size.Width,
-            context.Available.Top + size.Height);
-
-        if (Svg?.Drawable != null)
+        if (context.TryAllocate(this, out var rect))
         {
-            if (context.TryAllocateRect(rect))
+            if (Svg is not null)
             {
                 listDrawables.Add(new SvgImageDrawable(Svg, rect));
-                _drawn = true;
-                return new LayoutResult(listDrawables, LayoutStatus.IsFullyDrawn);
             }
-        }
-
-        if (Bitmap != null)
-        {
-            if (context.TryAllocateRect(rect))
+            else if (Bitmap is not null)
             {
                 listDrawables.Add(new BitmapImageDrawable(Bitmap, rect));
-                _drawn = true;
-                return new LayoutResult(listDrawables, LayoutStatus.IsFullyDrawn);
             }
+
+            return new LayoutResult(listDrawables, LayoutStatus.IsFullyDrawn);
         }
 
-        // Will only be hit if the page is full.
         return new LayoutResult(listDrawables, LayoutStatus.NeedsNewPage);
     }
 }

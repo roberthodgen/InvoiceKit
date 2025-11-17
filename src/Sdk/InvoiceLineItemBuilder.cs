@@ -34,7 +34,7 @@ public sealed class InvoiceLineItemBuilder : IInvoiceLineItemBuilder
     {
         if (_perUnitPrice is null)
         {
-            throw new Exception("PerUnitPrice must be set..");
+            throw new Exception("PerUnitPrice must be set.");
         }
         return InvoiceLineItem.CreateNew(_description, _perUnitPrice, _quantity);
     }
