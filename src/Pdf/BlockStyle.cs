@@ -22,7 +22,7 @@ public readonly record struct BlockStyle()
     /// <summary>
     /// Should be specified as <c>Font Name/Style</c>, e.g.: <c>Open Sans/SemiBold</c>.
     /// </summary>
-    public string? FontPath { get; init; } = null;
+    public string? FontPath { get; init; } = "Open Sans/Regular";
 
     /// <summary>
     /// Text line height.
@@ -53,6 +53,8 @@ public readonly record struct BlockStyle()
     /// The product of the <see cref="FontSize"/> and <see cref="After"/>.
     /// </summary>
     public float ParagraphSpacingAfter => (FontSize * After) - FontSize;
+
+    public BoxBorder Border { get; init; } = new ();
 
     public SKPaint ToPaint()
     {

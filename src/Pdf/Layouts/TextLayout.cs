@@ -131,7 +131,6 @@ internal class TextLayout : ILayout
         }
 
         var drawables = new List<IDrawable>();
-
         while (_currentIndex < _wrappedLines.Count)
         {
             // Tries to allocate the size within the current page or calls for a new page.
@@ -143,11 +142,13 @@ internal class TextLayout : ILayout
             }
             else
             {
+                drawables.Add(new BorderDrawable(context.Allocated, Style));
                 return new LayoutResult(drawables, LayoutStatus.NeedsNewPage);
             }
         }
 
         _currentIndex = 0;
+        drawables.Add(new BorderDrawable(context.Allocated, Style));
         return new LayoutResult(drawables, LayoutStatus.IsFullyDrawn);
     }
 }
