@@ -19,7 +19,7 @@ public class TextLayoutTests(ITestOutputHelper testOutputHelper)
             .WithVStack(vStack => vStack
                 .AddText(
                     "Test Document",
-                    style => style with { Text = style.Text with { FontPath = "Open Sans/Bold", FontSize = 24f, }, })
+                    style => style with {  FontPath = "Open Sans/Bold", FontSize = 24f, })
                 .AddText(
                     "Sample document for text block layout and rendering.",
                     style => style with { ForegroundColor = SKColors.DimGray, })
@@ -28,30 +28,15 @@ public class TextLayoutTests(ITestOutputHelper testOutputHelper)
                     "Spacing after: The quick brown fox jumps over the lazy dog.",
                     style => style with
                     {
-                        Text = style.Text with
-                        {
-                            ParagraphSpacing = new ParagraphSpacing()
-                            {
-                                After = 2f,
-                            }
-                        }
+                        After = 2f,
                     })
                 .AddText("None: The quick brown fox jumps over the lazy dog.")
                 .AddText(
                     "Spacing before: The quick brown fox jumps over the lazy dog.",
-                    style => style with
-                    {
-                        Text = style.Text with
-                        {
-                            ParagraphSpacing = new ParagraphSpacing()
-                            {
-                                Before = 2f,
-                            }
-                        }
-                    })
+                    style => style with { Before = 2f, })
                 .AddText(
                     "Double line height: The quick brown fox jumps over the lazy dog.",
-                    style => style with { Text = style.Text with { LineHeight = 2f, }, })
+                    style => style with { LineHeight = 2f, })
                 .AddText(
                     "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pharetra neque nec sapien pharetra gravida. Aenean quis sapien enim. In semper quis nisi laoreet sollicitudin. Morbi vehicula massa sed erat egestas tempus. Duis tincidunt odio elit, a efficitur est dictum quis. Cras egestas ante et mi vulputate, in dapibus nisi suscipit. Sed sodales nibh leo, eu hendrerit nibh semper non. Praesent id nunc sed eros aliquam tristique eget ut erat. Pellentesque dignissim mattis justo sed viverra.")
                 .AddText(
@@ -73,11 +58,11 @@ public class TextLayoutTests(ITestOutputHelper testOutputHelper)
         using var builder = PdfDocument.UsLetter;
         var pdfBytes = builder
             .DisplayLayoutGuidelines()
-            .WithDefaultStyle(style => style with { Text = style.Text with { LineHeight = 1.5f, }, })
+            .WithDefaultStyle(style => style with { LineHeight = 1.5f, })
             .WithVStack(vStack => vStack
                 .AddText(
                     "Test Document",
-                    style => style with { Text = style.Text with { FontPath = "Open Sans/Bold ", FontSize = 24f, }, })
+                    style => style with {  FontPath = "Open Sans/Bold ", FontSize = 24f, })
                 .AddText(
                     "Sample document for text block layout and rendering.",
                     style => style with { ForegroundColor = SKColors.DimGray, })
@@ -117,7 +102,7 @@ public class TextLayoutTests(ITestOutputHelper testOutputHelper)
                 .AddSpacing(50f)
                 .AddHorizontalRule()
                 .AddHStack(stack => stack
-                    .WithDefaultStyle(style => style with { Text = style.Text with { LineHeight = 1f, }, })
+                    .WithDefaultStyle(style => style with {  LineHeight = 1f, })
                     .AddText(
                         """
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut euismod gravida ligula, ac interdum sapien viverra eget. Fusce pellentesque enim tristique interdum aliquet. Nulla quam ex, elementum at lorem ut, pellentesque luctus purus. Curabitur feugiat id tortor ut rutrum. Integer id velit suscipit, maximus nisi ac, sollicitudin odio. Maecenas imperdiet lacus velit, id aliquet sapien consectetur faucibus. Nunc lobortis gravida dui, cursus condimentum ex gravida id. Cras at erat quis mi tempor tempus. Nullam consequat velit non interdum vestibulum. Nulla quis magna ac augue molestie luctus sit amet at dolor. Integer aliquam quam quis lacinia scelerisque. Nunc ante velit, tempor quis luctus id, volutpat non enim. Suspendisse rhoncus imperdiet diam, at semper tellus congue at. In sit amet gravida est, nec viverra erat. Phasellus volutpat blandit ipsum, in condimentum nunc congue ut. Sed lacinia finibus elit eget molestie.

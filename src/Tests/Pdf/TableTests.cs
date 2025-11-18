@@ -19,7 +19,7 @@ public class TableTests(ITestOutputHelper testOutputHelper)
             .WithVStack(vStack => vStack
                 .AddText(
                     "Simple Table",
-                    style => style with { Text = style.Text with { FontPath = "Open Sans/Bold", FontSize = 24f, }, })
+                    style => style with { FontPath = "Open Sans/Bold", FontSize = 24f, })
                 .AddText("The table below contains two rows and 3 equally spaced columns with row separators.")
                 .AddTable(table => table
                     .UseEquallySpaceColumns()
@@ -36,7 +36,7 @@ public class TableTests(ITestOutputHelper testOutputHelper)
                         .AddCell(cell => cell.AddText("$ 20.00"))))
                 .AddText(
                     "Fixed Width Columns",
-                    style => style with { Text = style.Text with { FontPath = "Open Sans/Bold", FontSize = 24f, }, })
+                    style => style with { FontPath = "Open Sans/Bold", FontSize = 24f, })
                 .AddText("The table below contains 3 fixed-percentage width columns.")
                 .AddTable(table => table
                     .UseFixedColumnWidths(
@@ -59,7 +59,7 @@ public class TableTests(ITestOutputHelper testOutputHelper)
                         .AddCell(cell => cell.AddText("$ 20.00"))))
                 .AddText(
                     "Consistent Row Heights",
-                    style => style with { Text = style.Text with { FontPath = "Open Sans/Bold", FontSize = 24f, }, })
+                    style => style with { FontPath = "Open Sans/Bold", FontSize = 24f, })
                 .AddText("All rows are the same height with row separators.")
                 .AddTable(table => table
                     .UseFixedColumnWidths(

@@ -43,24 +43,6 @@ public sealed class PdfDocument : IPdfDocument
     }
 
     /// <summary>
-    /// Sets the default text style for this document.
-    /// </summary>
-    public PdfDocument DefaultFont(string fontPath, float fontSize = TextStyle.DefaultFontSize, SKColor? color = null)
-    {
-        DefaultStyle = new BlockStyle
-        {
-            ForegroundColor = color ?? SKColors.Black,
-            Text = new TextStyle
-            {
-                FontPath = fontPath,
-                FontSize = fontSize,
-            },
-        };
-
-        return this;
-    }
-
-    /// <summary>
     /// Renders all views in this document into a PDF byte array.
     /// </summary>
     /// <returns>A byte array containing the PDF document.</returns>

@@ -17,7 +17,7 @@ internal class TextLayout : ILayout
 
     private int _currentIndex;
 
-    private float HalfLineHeight => (Style.Text.LineHeight * Style.Text.FontSize - Style.Text.FontSize) / 2;
+    private float HalfLineHeight => (Style.LineHeight * Style.FontSize - Style.FontSize) / 2;
 
     internal TextLayout(BlockStyle style, string text)
     {
@@ -55,7 +55,7 @@ internal class TextLayout : ILayout
 
         if (index == 0)
         {
-            height += Style.Text.ParagraphSpacingBefore;
+            height += Style.ParagraphSpacingBefore;
         }
 
         height += HalfLineHeight - Style.ToFont().Metrics.Ascent;
@@ -63,7 +63,7 @@ internal class TextLayout : ILayout
 
         if (index == _wrappedLines.Count - 1)
         {
-            height += Style.Text.ParagraphSpacingAfter;
+            height += Style.ParagraphSpacingAfter;
         }
 
         return new SKSize(available.Width, height);
@@ -78,7 +78,7 @@ internal class TextLayout : ILayout
 
         if (index == 0)
         {
-            textLineLocation += Style.Text.ParagraphSpacingBefore;
+            textLineLocation += Style.ParagraphSpacingBefore;
         }
 
         return new SKRect(available.Left, textLineLocation, available.Right, textLineLocation);

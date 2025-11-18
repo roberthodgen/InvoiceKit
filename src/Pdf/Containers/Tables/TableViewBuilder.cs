@@ -26,7 +26,7 @@ public sealed class TableViewBuilder : IViewBuilder
         _defaultTextStyle = defaultTextStyle;
         TableHeaderStyle = defaultTextStyle with
         {
-            Text = defaultTextStyle.Text with { FontPath = "Open Sans/Bold", },
+            FontPath = "Open Sans/Bold",
         };
     }
 
