@@ -1,4 +1,4 @@
-namespace InvoiceKit.Pdf.Styles.Text;
+namespace InvoiceKit.Pdf;
 
 /// <summary>
 /// Paragraph spacing relative to the font size.

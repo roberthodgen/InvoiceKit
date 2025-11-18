@@ -1,14 +1,12 @@
 namespace InvoiceKit.Pdf.Containers.Tables;
 
-using Styles.Text;
-
 public sealed class TableViewBuilder : IViewBuilder
 {
     private readonly List<TableRowViewBuilder> _headers = [];
 
     private readonly List<TableRowViewBuilder> _rows = [];
 
-    private readonly TextStyle _defaultTextStyle; // TODO make this editable for the table
+    private readonly BlockStyle _defaultTextStyle; // TODO make this editable for the table
 
     /// <summary>
     /// Specifies how column sizes will be computed.
@@ -17,16 +15,19 @@ public sealed class TableViewBuilder : IViewBuilder
 
     private List<ColumnWidthPercent> ColumnWidthPercentages { get; set; } = [];
 
-    private TextStyle TableHeaderStyle { get; }
+    private BlockStyle TableHeaderStyle { get; }
 
     private bool ShowRowSeparators { get; set; }
 
     public IReadOnlyCollection<IViewBuilder> Children => [];
 
-    internal TableViewBuilder(TextStyle defaultTextStyle)
+    internal TableViewBuilder(BlockStyle defaultTextStyle)
     {
         _defaultTextStyle = defaultTextStyle;
-        TableHeaderStyle = defaultTextStyle with {FontPath = "Open Sans/Bold"};
+        TableHeaderStyle = defaultTextStyle with
+        {
+            Text = defaultTextStyle.Text with { FontPath = "Open Sans/Bold", },
+        };
     }
 
     public TableViewBuilder AddHeader(Action<TableRowViewBuilder> config)

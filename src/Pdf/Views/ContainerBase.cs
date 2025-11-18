@@ -1,24 +1,30 @@
 namespace InvoiceKit.Pdf.Views;
 
 using Containers.Tables;
-using Styles.Text;
 
 public abstract class ContainerBase : IContainer
 {
     private readonly List<IViewBuilder> _children = [];
 
-    public TextStyle DefaultTextStyle { get; protected set; }
+    public BlockStyle DefaultStyle { get; protected set; }
 
     protected IReadOnlyCollection<IViewBuilder> Children => _children.AsReadOnly();
 
-    protected ContainerBase(TextStyle defaultTextStyle)
+    protected ContainerBase(BlockStyle defaultStyle)
     {
-        DefaultTextStyle = defaultTextStyle;
+        DefaultStyle = defaultStyle;
     }
 
-    public IContainer AddText(Func<TextViewBuilder, IViewBuilder> builder)
+    public IContainer AddText(string text)
     {
-        var child = builder(new TextViewBuilder(DefaultTextStyle));
+        var child = new TextViewBuilder(text, DefaultStyle);
+        _children.Add(child);
+        return this;
+    }
+
+    public IContainer AddText(string text, Func<BlockStyle, BlockStyle> configureTextStyle)
+    {
+        var child = new TextViewBuilder(text, configureTextStyle(DefaultStyle));
         _children.Add(child);
         return this;
     }
@@ -39,7 +45,7 @@ public abstract class ContainerBase : IContainer
 
     public IContainer AddHStack(Action<HStack> configure)
     {
-        var child = new HStack(DefaultTextStyle);
+        var child = new HStack(DefaultStyle);
         configure(child);
         _children.Add(child);
         return this;
@@ -47,7 +53,7 @@ public abstract class ContainerBase : IContainer
 
     public IContainer AddVStack(Action<VStack> configure)
     {
-        var child = new VStack(DefaultTextStyle);
+        var child = new VStack(DefaultStyle);
         configure(child);
         _children.Add(child);
         return this;
@@ -62,7 +68,7 @@ public abstract class ContainerBase : IContainer
 
     public IContainer AddTable(Action<TableViewBuilder> configure)
     {
-        var child = new TableViewBuilder(DefaultTextStyle);
+        var child = new TableViewBuilder(DefaultStyle);
         configure(child);
         _children.Add(child);
         return this;
@@ -72,6 +78,12 @@ public abstract class ContainerBase : IContainer
     {
         var child = new PageBreakViewBuilder();
         _children.Add(child);
+        return this;
+    }
+
+    public IContainer WithDefaultStyle(Func<BlockStyle, BlockStyle> configureStyle)
+    {
+        DefaultStyle = configureStyle(DefaultStyle);
         return this;
     }
 

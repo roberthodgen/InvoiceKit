@@ -2,7 +2,6 @@ namespace InvoiceKit.Pdf.Layouts;
 
 using Drawables;
 using SkiaSharp;
-using Styles.Text;
 
 /// <summary>
 /// A text block represents a single paragraph's text. Line breaks may be added to prevent paragraph spacing. Automatic
@@ -10,17 +9,17 @@ using Styles.Text;
 /// </summary>
 internal class TextLayout : ILayout
 {
-    private TextStyle Style { get; }
+    private BlockStyle Style { get; }
 
     private readonly List<string> _lines = [];
 
     private List<string> _wrappedLines = [];
 
-    private int _currentIndex = 0;
+    private int _currentIndex;
 
-    private float HalfLineHeight => (Style.LineHeight * Style.FontSize - Style.FontSize) / 2;
+    private float HalfLineHeight => (Style.Text.LineHeight * Style.Text.FontSize - Style.Text.FontSize) / 2;
 
-    internal TextLayout(TextStyle style, string text)
+    internal TextLayout(BlockStyle style, string text)
     {
         Style = style;
         using var reader = new StringReader(text);
@@ -43,7 +42,7 @@ internal class TextLayout : ILayout
             _wrappedLines = _lines.SelectMany(line => WrapText(line, Style, available.Width)).ToList();
         }
 
-        var height = _wrappedLines.Select((line, index) => MeasureFullLineSize(available, index).Height).Sum();
+        var height = _wrappedLines.Select((_, index) => MeasureFullLineSize(available, index).Height).Sum();
         return new SKSize(available.Width, height);
     }
 
@@ -56,7 +55,7 @@ internal class TextLayout : ILayout
 
         if (index == 0)
         {
-            height += Style.ParagraphSpacingBefore;
+            height += Style.Text.ParagraphSpacingBefore;
         }
 
         height += HalfLineHeight - Style.ToFont().Metrics.Ascent;
@@ -64,7 +63,7 @@ internal class TextLayout : ILayout
 
         if (index == _wrappedLines.Count - 1)
         {
-            height += Style.ParagraphSpacingAfter;
+            height += Style.Text.ParagraphSpacingAfter;
         }
 
         return new SKSize(available.Width, height);
@@ -79,7 +78,7 @@ internal class TextLayout : ILayout
 
         if (index == 0)
         {
-            textLineLocation += Style.ParagraphSpacingBefore;
+            textLineLocation += Style.Text.ParagraphSpacingBefore;
         }
 
         return new SKRect(available.Left, textLineLocation, available.Right, textLineLocation);
@@ -88,7 +87,7 @@ internal class TextLayout : ILayout
     /// <summary>
     /// Separates a single string into multiple lines based on the width of the available space.
     /// </summary>
-    private static List<string> WrapText(string text, TextStyle style, float maxWidth)
+    private static List<string> WrapText(string text, BlockStyle style, float maxWidth)
     {
         var font = style.ToFont();
         var paint = style.ToPaint();

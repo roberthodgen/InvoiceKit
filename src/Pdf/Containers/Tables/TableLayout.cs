@@ -10,9 +10,6 @@ internal class TableLayout : ILayout
 
     private bool ShowRowSeparators { get; }
 
-    public IReadOnlyCollection<ILayout> Children => throw new NotImplementedException();
-
-
     internal TableLayout(List<TableRowViewBuilder> headers, List<TableRowViewBuilder> rows, bool showRowSeparators)
     {
         Headers = headers;

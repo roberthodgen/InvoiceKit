@@ -1,7 +1,6 @@
 namespace InvoiceKit.Pdf.Views;
 
 using Containers.Tables;
-using Styles.Text;
 
 /// <summary>
 /// A layout is a drawable component that contains one or more children.
@@ -9,12 +8,17 @@ using Styles.Text;
 /// </summary>
 public interface IContainer : IViewBuilder
 {
-    TextStyle DefaultTextStyle { get; }
+    BlockStyle DefaultStyle { get; }
 
     /// <summary>
     /// Adds a new text block.
     /// </summary>
-    IContainer AddText(Func<TextViewBuilder, IViewBuilder> builder);
+    IContainer AddText(string text);
+
+    /// <summary>
+    /// Adds a new text block with custom styling.
+    /// </summary>
+    IContainer AddText(string text, Func<BlockStyle, BlockStyle> configureTextStyle);
 
     /// <summary>
     /// Adds a new image.
@@ -51,4 +55,11 @@ public interface IContainer : IViewBuilder
     /// Fills the rest of the page with blank space and starts a new page.
     /// </summary>
     IContainer AddPageBreak();
+
+    /// <summary>
+    /// Configures the view's style.
+    /// </summary>
+    /// <param name="configureStyle">The base/parent style which may be modified as needed.</param>
+    /// <returns>The style to be applied to this view.</returns>
+    IContainer WithDefaultStyle(Func<BlockStyle, BlockStyle> configureStyle);
 }

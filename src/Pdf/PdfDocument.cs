@@ -1,7 +1,6 @@
 namespace InvoiceKit.Pdf;
 
 using SkiaSharp;
-using Styles.Text;
 using Views;
 
 /// <summary>
@@ -29,7 +28,7 @@ public sealed class PdfDocument : IPdfDocument
     /// </summary>
     public static PdfDocument UsLetter => new (8.5f * PointsPerInch, 11f * PointsPerInch);
 
-    private TextStyle DefaultTextStyle { get; set; } = new ();
+    private BlockStyle DefaultStyle { get; set; } = new ();
 
     private SKRect DrawableArea => SKRect.Create(
         Margin,
@@ -48,11 +47,14 @@ public sealed class PdfDocument : IPdfDocument
     /// </summary>
     public PdfDocument DefaultFont(string fontPath, float fontSize = TextStyle.DefaultFontSize, SKColor? color = null)
     {
-        DefaultTextStyle = new TextStyle
+        DefaultStyle = new BlockStyle
         {
-            FontPath = fontPath,
-            FontSize = fontSize,
-            Color = color ?? SKColors.Black
+            ForegroundColor = color ?? SKColors.Black,
+            Text = new TextStyle
+            {
+                FontPath = fontPath,
+                FontSize = fontSize,
+            },
         };
 
         return this;
@@ -87,6 +89,12 @@ public sealed class PdfDocument : IPdfDocument
         return _stream.ToArray();
     }
 
+    public PdfDocument WithDefaultStyle(Func<BlockStyle, BlockStyle> configureStyle)
+    {
+        DefaultStyle = configureStyle(DefaultStyle);
+        return this;
+    }
+
     /// <summary>
     /// Enables visual layout guidelines while rendering (useful for debugging).
     /// </summary>
@@ -107,7 +115,7 @@ public sealed class PdfDocument : IPdfDocument
     /// </summary>
     public PdfDocument WithVStack(Action<VStack> action)
     {
-        var vStack = new VStack(DefaultTextStyle);
+        var vStack = new VStack(DefaultStyle);
         action(vStack);
         _rootViewBuilder = vStack;
         return this;
