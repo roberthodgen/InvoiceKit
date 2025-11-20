@@ -4,8 +4,6 @@ using SkiaSharp;
 
 public readonly record struct BlockStyle()
 {
-    public const float DefaultFontSize = 12f;
-
     /// <summary>
     /// Sets the foreground color for text and horizontal rules.
     /// </summary>
@@ -32,7 +30,7 @@ public readonly record struct BlockStyle()
     /// <summary>
     /// Text font size.
     /// </summary>
-    public float FontSize { get; init; } = DefaultFontSize;
+    public float FontSize { get; init; } = 12f;
 
     /// <summary>
     /// The relative amount of spacing before paragraphs.

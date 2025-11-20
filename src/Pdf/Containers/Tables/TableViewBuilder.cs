@@ -6,7 +6,7 @@ public sealed class TableViewBuilder : IViewBuilder
 
     private readonly List<TableRowViewBuilder> _rows = [];
 
-    private readonly BlockStyle _defaultTextStyle; // TODO make this editable for the table
+    private readonly BlockStyle _defaultStyle; // TODO make this editable for the table
 
     /// <summary>
     /// Specifies how column sizes will be computed.
@@ -21,10 +21,10 @@ public sealed class TableViewBuilder : IViewBuilder
 
     public IReadOnlyCollection<IViewBuilder> Children => [];
 
-    internal TableViewBuilder(BlockStyle defaultTextStyle)
+    internal TableViewBuilder(BlockStyle defaultStyle)
     {
-        _defaultTextStyle = defaultTextStyle;
-        TableHeaderStyle = defaultTextStyle with
+        _defaultStyle = defaultStyle;
+        TableHeaderStyle = defaultStyle with
         {
             FontPath = "Open Sans/Bold",
         };
@@ -40,7 +40,7 @@ public sealed class TableViewBuilder : IViewBuilder
 
     public TableViewBuilder AddRow(Action<TableRowViewBuilder> config)
     {
-        var row = new TableRowViewBuilder(_defaultTextStyle, ColumnWidthPercentages);
+        var row = new TableRowViewBuilder(_defaultStyle, ColumnWidthPercentages);
         config(row);
         _rows.Add(row);
         return this;
