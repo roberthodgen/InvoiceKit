@@ -1,7 +1,6 @@
 namespace InvoiceKit.Pdf;
 
 using SkiaSharp;
-using Styles.Text;
 using Views;
 
 /// <summary>
@@ -29,7 +28,7 @@ public sealed class PdfDocument : IPdfDocument
     /// </summary>
     public static PdfDocument UsLetter => new (8.5f * PointsPerInch, 11f * PointsPerInch);
 
-    private TextStyle DefaultTextStyle { get; set; } = new ();
+    private BlockStyle DefaultStyle { get; set; } = new ();
 
     private SKRect DrawableArea => SKRect.Create(
         Margin,
@@ -44,21 +43,6 @@ public sealed class PdfDocument : IPdfDocument
     }
 
     /// <summary>
-    /// Sets the default text style for this document.
-    /// </summary>
-    public PdfDocument DefaultFont(string fontPath, float fontSize = TextStyle.DefaultFontSize, SKColor? color = null)
-    {
-        DefaultTextStyle = new TextStyle
-        {
-            FontPath = fontPath,
-            FontSize = fontSize,
-            Color = color ?? SKColors.Black
-        };
-
-        return this;
-    }
-
-    /// <summary>
     /// Renders all views in this document into a PDF byte array.
     /// </summary>
     /// <returns>A byte array containing the PDF document.</returns>
@@ -69,7 +53,9 @@ public sealed class PdfDocument : IPdfDocument
             throw new ApplicationException("No root view builder added to document.");
         }
 
-        foreach (var page in new LayoutTree(_rootViewBuilder).ToPages(DrawableArea))
+        using var layout = new LayoutEngine(_rootViewBuilder);
+        layout.LayoutDocument(DrawableArea);
+        foreach (var page in layout.Pages)
         {
             using var canvas = _document.BeginPage(_pageSize.Width, _pageSize.Height);
             using var drawableContext = new DrawableContext(canvas, DrawableArea, _debug);
@@ -83,6 +69,12 @@ public sealed class PdfDocument : IPdfDocument
 
         _document.Close();
         return _stream.ToArray();
+    }
+
+    public PdfDocument WithDefaultStyle(Func<BlockStyle, BlockStyle> configureStyle)
+    {
+        DefaultStyle = configureStyle(DefaultStyle);
+        return this;
     }
 
     /// <summary>
@@ -105,7 +97,7 @@ public sealed class PdfDocument : IPdfDocument
     /// </summary>
     public PdfDocument WithVStack(Action<VStack> action)
     {
-        var vStack = new VStack(DefaultTextStyle);
+        var vStack = new VStack(DefaultStyle);
         action(vStack);
         _rootViewBuilder = vStack;
         return this;

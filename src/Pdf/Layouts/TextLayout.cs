@@ -2,7 +2,6 @@ namespace InvoiceKit.Pdf.Layouts;
 
 using Drawables;
 using SkiaSharp;
-using Styles.Text;
 
 /// <summary>
 /// A text block represents a single paragraph's text. Line breaks may be added to prevent paragraph spacing. Automatic
@@ -10,17 +9,17 @@ using Styles.Text;
 /// </summary>
 internal class TextLayout : ILayout
 {
-    private TextStyle Style { get; }
+    private BlockStyle Style { get; }
 
     private readonly List<string> _lines = [];
 
     private List<string> _wrappedLines = [];
 
-    private int _currentIndex = 0;
+    private int _currentIndex;
 
     private float HalfLineHeight => (Style.LineHeight * Style.FontSize - Style.FontSize) / 2;
 
-    internal TextLayout(TextStyle style, string text)
+    internal TextLayout(BlockStyle style, string text)
     {
         Style = style;
         using var reader = new StringReader(text);
@@ -43,7 +42,7 @@ internal class TextLayout : ILayout
             _wrappedLines = _lines.SelectMany(line => WrapText(line, Style, available.Width)).ToList();
         }
 
-        var height = _wrappedLines.Select((line, index) => MeasureFullLineSize(available, index).Height).Sum();
+        var height = _wrappedLines.Select((_, index) => MeasureFullLineSize(available, index).Height).Sum();
         return new SKSize(available.Width, height);
     }
 
@@ -88,7 +87,7 @@ internal class TextLayout : ILayout
     /// <summary>
     /// Separates a single string into multiple lines based on the width of the available space.
     /// </summary>
-    private static List<string> WrapText(string text, TextStyle style, float maxWidth)
+    private static List<string> WrapText(string text, BlockStyle style, float maxWidth)
     {
         var font = style.ToFont();
         var paint = style.ToPaint();
@@ -132,7 +131,6 @@ internal class TextLayout : ILayout
         }
 
         var drawables = new List<IDrawable>();
-
         while (_currentIndex < _wrappedLines.Count)
         {
             // Tries to allocate the size within the current page or calls for a new page.
@@ -144,11 +142,13 @@ internal class TextLayout : ILayout
             }
             else
             {
+                drawables.Add(new BorderDrawable(context.Allocated, Style));
                 return new LayoutResult(drawables, LayoutStatus.NeedsNewPage);
             }
         }
 
         _currentIndex = 0;
+        drawables.Add(new BorderDrawable(context.Allocated, Style));
         return new LayoutResult(drawables, LayoutStatus.IsFullyDrawn);
     }
 }

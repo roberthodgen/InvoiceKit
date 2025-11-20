@@ -1,7 +1,6 @@
 namespace InvoiceKit.Pdf.Containers.Tables;
 
 using Layouts;
-using Styles.Text;
 using Views;
 
 /// <summary>
@@ -12,8 +11,8 @@ public class TableCell : ContainerBase
     /// <summary>
     ///
     /// </summary>
-    internal TableCell(TextStyle defaultTextStyle)
-        : base(defaultTextStyle)
+    internal TableCell(BlockStyle defaultStyle)
+        : base(defaultStyle)
     {
     }
 

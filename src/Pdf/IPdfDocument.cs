@@ -7,4 +7,10 @@ public interface IPdfDocument : IDisposable
     /// </summary>
     /// <returns></returns>
     byte[] Build();
+
+    /// <summary>
+    /// Configures the document's default style.
+    /// </summary>
+    /// <param name="configureStyle">The base/parent style which may be modified as needed.</param>
+    PdfDocument WithDefaultStyle(Func<BlockStyle, BlockStyle> configureStyle);
 }

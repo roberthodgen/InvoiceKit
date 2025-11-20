@@ -1,7 +1,6 @@
 namespace InvoiceKit.Pdf.Containers.Tables;
 
 using SkiaSharp;
-using Styles.Text;
 
 public sealed class TableRowViewBuilder : IViewBuilder
 {
@@ -9,13 +8,13 @@ public sealed class TableRowViewBuilder : IViewBuilder
 
     private List<ColumnWidthPercent> ColumnWidths { get; }
 
-    private TextStyle Style { get; }
+    private BlockStyle Style { get; }
 
     public IReadOnlyCollection<IViewBuilder> Children => [];
 
-    internal TableRowViewBuilder(TextStyle defaultTextStyle, List<ColumnWidthPercent> columnWidths)
+    internal TableRowViewBuilder(BlockStyle defaultStyle, List<ColumnWidthPercent> columnWidths)
     {
-        Style = defaultTextStyle;
+        Style = defaultStyle;
         ColumnWidths = columnWidths;
     }
 
