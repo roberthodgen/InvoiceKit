@@ -5,6 +5,13 @@ using SkiaSharp;
 
 internal class HorizontalRuleLayout : ILayout
 {
+    private BlockStyle Style { get; }
+
+    internal HorizontalRuleLayout(BlockStyle style)
+    {
+        Style = style;
+    }
+
     public SKSize Measure(SKSize available)
     {
         return new SKSize(available.Width, 1);
@@ -15,7 +22,7 @@ internal class HorizontalRuleLayout : ILayout
         var drawables = new List<IDrawable>();
         if (context.TryAllocate(this, out var rect))
         {
-            drawables.Add(new HorizontalRuleDrawable(rect));
+            drawables.Add(new HorizontalRuleDrawable(rect, Style));
             return new LayoutResult(drawables, LayoutStatus.IsFullyDrawn);
         }
 

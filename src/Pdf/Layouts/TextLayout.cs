@@ -90,7 +90,7 @@ internal class TextLayout : ILayout
     private static List<string> WrapText(string text, BlockStyle style, float maxWidth)
     {
         var font = style.ToFont();
-        var paint = style.ToPaint();
+        var paint = style.ForegroundToPaint();
         var words = text.Split(' ');
         var lines = new List<string>();
         var currentLine = "";
@@ -137,6 +137,7 @@ internal class TextLayout : ILayout
             if (context.TryAllocate(MeasureFullLineSize(context.Available.Size, _currentIndex), out var rect))
             {
                 var textRect = MeasureTextLineRect(rect, _currentIndex);
+                drawables.Add(new BackgroundDrawable(rect, Style));
                 drawables.Add(new TextDrawable(_wrappedLines[_currentIndex], textRect, Style));
                 _currentIndex++;
             }

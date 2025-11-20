@@ -49,6 +49,40 @@ public class TextLayoutTests(ITestOutputHelper testOutputHelper)
     }
 
     [Fact]
+    public void Text_ForegroundAndBackground_Test()
+    {
+        const string fileName = "Text_ForegroundAndBackground_Test.pdf";
+        File.Delete(fileName);
+
+        using var stream = File.OpenWrite(fileName);
+        using var builder = PdfDocument.UsLetter;
+        var pdfBytes = builder
+            // .DisplayLayoutGuidelines()
+            .WithDefaultStyle(style => style with { ForegroundColor = SKColors.Black })
+            .WithVStack(vStack => vStack
+                .AddText("Text_ForegroundAndBackground_Test.pdf")
+                .AddHorizontalRule()
+                .AddSpacing()
+                .AddHStack(hStack => hStack
+                    .AddText("Default black text on no background")
+                    .AddText("White text w/ black background.",
+                        style => style with { ForegroundColor = SKColors.White, BackgroundColor = SKColors.Black })
+                    .AddText("Cyan text w/ pink background.",
+                        style => style with { ForegroundColor = SKColors.Cyan, BackgroundColor = SKColors.Pink }))
+                .AddText("Default black text on no background")
+                .AddText("White text w/ black background.",
+                    style => style with { ForegroundColor = SKColors.White, BackgroundColor = SKColors.Black })
+                .AddText("Cyan text w/ pink background.",
+                    style => style with { ForegroundColor = SKColors.Cyan, BackgroundColor = SKColors.Pink })
+                .AddSpacing()
+                .AddHorizontalRule(style => style with { ForegroundColor = SKColors.Red })
+            ).Build();
+        stream.Write(pdfBytes);
+        testOutputHelper.WriteLine($"PDF created: {Path.GetFullPath(fileName)}");
+        File.Exists(fileName).ShouldBeTrue();
+    }
+
+    [Fact]
     public void Text_WithBorders_Test()
     {
         const string fileName = "Text_WithBorders_Test.pdf";
@@ -157,7 +191,7 @@ public class TextLayoutTests(ITestOutputHelper testOutputHelper)
             .WithVStack(vStack => vStack
                 .AddText(
                     "Test Document",
-                    style => style with {  FontPath = "Open Sans/Bold ", FontSize = 24f, })
+                    style => style with { FontPath = "Open Sans/Bold ", FontSize = 24f, })
                 .AddText(
                     "Sample document for text block layout and rendering.",
                     style => style with { ForegroundColor = SKColors.DimGray, })
@@ -197,7 +231,7 @@ public class TextLayoutTests(ITestOutputHelper testOutputHelper)
                 .AddSpacing(50f)
                 .AddHorizontalRule()
                 .AddHStack(stack => stack
-                    .WithDefaultStyle(style => style with {  LineHeight = 1f, })
+                    .WithDefaultStyle(style => style with { LineHeight = 1f, })
                     .AddText(
                         """
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut euismod gravida ligula, ac interdum sapien viverra eget. Fusce pellentesque enim tristique interdum aliquet. Nulla quam ex, elementum at lorem ut, pellentesque luctus purus. Curabitur feugiat id tortor ut rutrum. Integer id velit suscipit, maximus nisi ac, sollicitudin odio. Maecenas imperdiet lacus velit, id aliquet sapien consectetur faucibus. Nunc lobortis gravida dui, cursus condimentum ex gravida id. Cras at erat quis mi tempor tempus. Nullam consequat velit non interdum vestibulum. Nulla quis magna ac augue molestie luctus sit amet at dolor. Integer aliquam quam quis lacinia scelerisque. Nunc ante velit, tempor quis luctus id, volutpat non enim. Suspendisse rhoncus imperdiet diam, at semper tellus congue at. In sit amet gravida est, nec viverra erat. Phasellus volutpat blandit ipsum, in condimentum nunc congue ut. Sed lacinia finibus elit eget molestie.

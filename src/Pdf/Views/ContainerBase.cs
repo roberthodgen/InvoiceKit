@@ -38,7 +38,14 @@ public abstract class ContainerBase : IContainer
 
     public IContainer AddHorizontalRule()
     {
-        var child = new HorizontalRuleViewBuilder();
+        var child = new HorizontalRuleViewBuilder(DefaultStyle);
+        _children.Add(child);
+        return this;
+    }
+
+    public IContainer AddHorizontalRule(Func<BlockStyle, BlockStyle> configureTextStyle)
+    {
+        var child = new HorizontalRuleViewBuilder(configureTextStyle(DefaultStyle));
         _children.Add(child);
         return this;
     }

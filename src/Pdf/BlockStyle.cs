@@ -12,10 +12,7 @@ public readonly record struct BlockStyle()
     /// <summary>
     /// Sets the background fill color for blocks.
     /// </summary>
-    /// <remarks>
-    /// A <c>null</c> value should be treated as transparent.
-    /// </remarks>
-    public SKColor? BackgroundColor { get; init; } = null;
+    public SKColor BackgroundColor { get; init; } = SKColor.Empty;
 
     /// <summary>
     /// Should be specified as <c>Font Name/Style</c>, e.g.: <c>Open Sans/SemiBold</c>.
@@ -54,11 +51,22 @@ public readonly record struct BlockStyle()
 
     public BoxBorder Border { get; init; } = new ();
 
-    public SKPaint ToPaint()
+    public SKPaint ForegroundToPaint()
     {
         var paint = new SKPaint
         {
             Color = ForegroundColor,
+            IsAntialias = true,
+        };
+
+        return paint;
+    }
+
+    public SKPaint BackgroundToPaint()
+    {
+        var paint = new SKPaint
+        {
+            Color = BackgroundColor,
             IsAntialias = true,
         };
 

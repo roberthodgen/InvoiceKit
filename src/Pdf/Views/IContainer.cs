@@ -18,7 +18,7 @@ public interface IContainer : IViewBuilder
     /// <summary>
     /// Adds a new text block with custom styling.
     /// </summary>
-    IContainer AddText(string text, Func<BlockStyle, BlockStyle> configureTextStyle);
+    IContainer AddText(string text, Func<BlockStyle, BlockStyle> configureStyle);
 
     /// <summary>
     /// Adds a new image.
@@ -29,6 +29,11 @@ public interface IContainer : IViewBuilder
     /// Adds a new horizontal rule.
     /// </summary>
     IContainer AddHorizontalRule();
+
+    /// <summary>
+    /// Adds a new horizontal rule with custom styling.
+    /// </summary>
+    IContainer AddHorizontalRule(Func<BlockStyle, BlockStyle> configureStyle);
 
     /// <summary>
     /// Adds a stack of columns.

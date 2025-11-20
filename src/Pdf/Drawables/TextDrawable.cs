@@ -21,7 +21,7 @@ internal class TextDrawable(string text, SKRect rect, BlockStyle style) : IDrawa
                 });
         }
 
-        context.Canvas.DrawText(text, rect.Left, rect.Top, SKTextAlign.Left, style.ToFont(), style.ToPaint());
+        context.Canvas.DrawText(text, rect.Left, rect.Top, SKTextAlign.Left, style.ToFont(), style.ForegroundToPaint());
     }
 
     public void Dispose()
