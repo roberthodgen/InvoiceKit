@@ -12,6 +12,16 @@ public readonly record struct BoxBorder(BorderStyle Top, BorderStyle Bottom, Bor
         Right = style,
     };
 
+    public SKRect GetRect(SKRect rect)
+    {
+        return new SKRect(
+            rect.Left - Left.Width,
+            rect.Top - Top.Width,
+            rect.Right + Right.Width,
+            rect.Bottom + Bottom.Width);
+    }
+
+
     public (SKPoint, SKPoint) GetTopPoints(SKRect rect)
     {
         return (

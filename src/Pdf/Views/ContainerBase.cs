@@ -1,6 +1,7 @@
 namespace InvoiceKit.Pdf.Views;
 
 using Containers.Tables;
+using Styles;
 
 public abstract class ContainerBase : IContainer
 {

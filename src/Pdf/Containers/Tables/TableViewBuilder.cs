@@ -1,5 +1,7 @@
 namespace InvoiceKit.Pdf.Containers.Tables;
 
+using Styles;
+
 public sealed class TableViewBuilder : IViewBuilder
 {
     private readonly List<TableRowViewBuilder> _headers = [];

@@ -1,4 +1,4 @@
-namespace InvoiceKit.Pdf;
+namespace InvoiceKit.Pdf.Styles;
 
 using SkiaSharp;
 
@@ -51,6 +51,10 @@ public readonly record struct BlockStyle()
 
     public BoxBorder Border { get; init; } = new ();
 
+    public Margin Margin { get; init; } = new ();
+
+    public Padding Padding { get; init; } = new ();
+
     public SKPaint ForegroundToPaint()
     {
         var paint = new SKPaint
@@ -87,5 +91,15 @@ public readonly record struct BlockStyle()
         }
 
         return font;
+    }
+
+    public SKRect GetBorderRect(SKRect rect)
+    {
+        return Border.GetRect(rect);
+    }
+
+    public SKRect GetContentRect(SKRect rect)
+    {
+        return Padding.GetRect(Border.GetRect(Margin.GetRect(rect)));
     }
 }

@@ -1,6 +1,7 @@
 namespace InvoiceKit.Tests.Pdf;
 
 using InvoiceKit.Pdf;
+using InvoiceKit.Pdf.Styles;
 using Xunit.Abstractions;
 
 public class DocumentTests(ITestOutputHelper testOutputHelper)
@@ -77,7 +78,7 @@ public class DocumentTests(ITestOutputHelper testOutputHelper)
                     .AddImage(image =>
                         image.WithSvgImage(Path.Combine(Directory.GetCurrentDirectory(), "Images/circle.svg")))
                     .AddVStack(stack => stack
-                        .AddText("Customer Co.", style => style with { FontPath = "Open Sans/Bold",})
+                        .AddText("Customer Co.", style => style with { FontPath = "Open Sans/Bold", })
                         .AddText("Invoice No.: 123\nDue: July 1, 2025"))))
             .Build();
 
@@ -195,10 +196,41 @@ public class DocumentTests(ITestOutputHelper testOutputHelper)
                         .AddText("(800) 444 - 5555")))
                 .AddSpacing(20f)
                 .AddText("IT Services")
-                .AddText("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut euismod gravida ligula, ac interdum sapien viverra eget. Fusce pellentesque enim tristique interdum aliquet. Nulla quam ex, elementum at lorem ut, pellentesque luctus purus. Curabitur feugiat id tortor ut rutrum. Integer id velit suscipit, maximus nisi ac, sollicitudin odio. Maecenas imperdiet lacus velit, id aliquet sapien consectetur faucibus. Nunc lobortis gravida dui, cursus condimentum ex gravida id. Cras at erat quis mi tempor tempus. Nullam consequat velit non interdum vestibulum. Nulla quis magna ac augue molestie luctus sit amet at dolor. Integer aliquam quam quis lacinia scelerisque. Nunc ante velit, tempor quis luctus id, volutpat non enim. Suspendisse rhoncus imperdiet diam, at semper tellus congue at. In sit amet gravida est, nec viverra erat. Phasellus volutpat blandit ipsum, in condimentum nunc congue ut. Sed lacinia finibus elit eget molestie.")
+                .AddText(
+                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut euismod gravida ligula, ac interdum sapien viverra eget. Fusce pellentesque enim tristique interdum aliquet. Nulla quam ex, elementum at lorem ut, pellentesque luctus purus. Curabitur feugiat id tortor ut rutrum. Integer id velit suscipit, maximus nisi ac, sollicitudin odio. Maecenas imperdiet lacus velit, id aliquet sapien consectetur faucibus. Nunc lobortis gravida dui, cursus condimentum ex gravida id. Cras at erat quis mi tempor tempus. Nullam consequat velit non interdum vestibulum. Nulla quis magna ac augue molestie luctus sit amet at dolor. Integer aliquam quam quis lacinia scelerisque. Nunc ante velit, tempor quis luctus id, volutpat non enim. Suspendisse rhoncus imperdiet diam, at semper tellus congue at. In sit amet gravida est, nec viverra erat. Phasellus volutpat blandit ipsum, in condimentum nunc congue ut. Sed lacinia finibus elit eget molestie.")
                 .AddSpacing(20f)
                 .AddText("Add a table here", style => style with { FontSize = 18f, }))
             .Build();
+
+        stream.Write(pdfBytes);
+        testOutputHelper.WriteLine($"PDF created: {Path.GetFullPath(fileName)}");
+        File.Exists(fileName).ShouldBeTrue();
+    }
+
+    [Fact]
+    public void MarginAndPadding_Test()
+    {
+        const string fileName = "MarginAndPaddingTest.pdf";
+        File.Delete(fileName);
+
+        using var stream = File.OpenWrite(fileName);
+        using var builder = PdfDocument.UsLetter;
+        var pdfBytes = builder
+            .DisplayLayoutGuidelines()
+            .WithDefaultStyle(style => style with
+            {
+                Margin = new Margin { Left = 5f, Top = 5f, Right = 5f, Bottom = 5f },
+                Padding = new Padding(5f, 5f, 5f, 5f),
+            })
+            .WithVStack(vStack => vStack
+                .AddText("Margin and Padding Test")
+                .AddHStack(hStack => hStack
+                    .AddText("Left Column")
+                    .AddImage(image =>
+                        image.WithSvgImage(Path.Combine(Directory.GetCurrentDirectory(), "Images/circle.svg")))
+                    .AddText("Right Column"))
+                .AddText("Outside HStack")
+            ).Build();
 
         stream.Write(pdfBytes);
         testOutputHelper.WriteLine($"PDF created: {Path.GetFullPath(fileName)}");

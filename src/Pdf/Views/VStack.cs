@@ -1,6 +1,7 @@
 namespace InvoiceKit.Pdf.Views;
 
 using Layouts;
+using Styles;
 
 /// <summary>
 /// Renders content vertically. Each row is rendered on a new line.

@@ -1,6 +1,7 @@
 namespace InvoiceKit.Pdf.Drawables;
 
 using SkiaSharp;
+using Styles;
 
 internal class HorizontalRuleDrawable(SKRect rect, BlockStyle style) : IDrawable
 {

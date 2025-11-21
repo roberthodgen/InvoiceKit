@@ -2,6 +2,7 @@ namespace InvoiceKit.Pdf.Layouts;
 
 using Drawables;
 using SkiaSharp;
+using Styles;
 
 internal class HorizontalRuleLayout : ILayout
 {

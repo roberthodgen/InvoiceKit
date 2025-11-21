@@ -1,6 +1,7 @@
 namespace InvoiceKit.Pdf.Drawables;
 
 using SkiaSharp;
+using Styles;
 
 internal class BorderDrawable(SKRect rect, BlockStyle style) : IDrawable
 {

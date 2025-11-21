@@ -1,6 +1,7 @@
 namespace InvoiceKit.Pdf.Views;
 
 using Containers.Tables;
+using Styles;
 
 /// <summary>
 /// A layout is a drawable component that contains one or more children.

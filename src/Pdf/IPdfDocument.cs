@@ -1,5 +1,7 @@
 namespace InvoiceKit.Pdf;
 
+using Styles;
+
 public interface IPdfDocument : IDisposable
 {
     /// <summary>

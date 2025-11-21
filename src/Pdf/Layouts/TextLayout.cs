@@ -2,6 +2,7 @@ namespace InvoiceKit.Pdf.Layouts;
 
 using Drawables;
 using SkiaSharp;
+using Styles;
 
 /// <summary>
 /// A text block represents a single paragraph's text. Line breaks may be added to prevent paragraph spacing. Automatic
