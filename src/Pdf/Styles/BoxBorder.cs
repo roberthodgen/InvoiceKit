@@ -1,4 +1,4 @@
-namespace InvoiceKit.Pdf;
+namespace InvoiceKit.Pdf.Styles;
 
 using SkiaSharp;
 
@@ -12,7 +12,16 @@ public readonly record struct BoxBorder(BorderStyle Top, BorderStyle Bottom, Bor
         Right = style,
     };
 
-    public SKRect GetRect(SKRect rect)
+    public SKRect GetContentRect(SKRect rect)
+    {
+        return new SKRect(
+            rect.Left + Left.Width,
+            rect.Top + Top.Width,
+            rect.Right - Right.Width,
+            rect.Bottom - Bottom.Width);
+    }
+
+    public SKRect GetDrawableRect(SKRect rect)
     {
         return new SKRect(
             rect.Left - Left.Width,

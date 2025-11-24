@@ -4,14 +4,9 @@ using Drawables;
 using SkiaSharp;
 using Styles;
 
-internal class HorizontalRuleLayout : ILayout
+internal class HorizontalRuleLayout(BlockStyle style) : ILayout
 {
-    private BlockStyle Style { get; }
-
-    internal HorizontalRuleLayout(BlockStyle style)
-    {
-        Style = style;
-    }
+    public BlockStyle Style { get; } = style;
 
     public SKSize Measure(SKSize available)
     {

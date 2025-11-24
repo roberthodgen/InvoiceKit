@@ -82,7 +82,7 @@ public sealed class TableViewBuilder : IViewBuilder
 
     public ILayout ToLayout()
     {
-        return new TableLayout(_headers, _rows, ShowRowSeparators);
+        return new TableLayout(_headers, _rows, ShowRowSeparators, _defaultStyle);
     }
 
     public void Dispose()

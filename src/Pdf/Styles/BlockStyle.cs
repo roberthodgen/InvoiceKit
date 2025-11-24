@@ -29,26 +29,6 @@ public readonly record struct BlockStyle()
     /// </summary>
     public float FontSize { get; init; } = 12f;
 
-    /// <summary>
-    /// The relative amount of spacing before paragraphs.
-    /// </summary>
-    public float Before { get; init; } = 1.25f;
-
-    /// <summary>
-    /// The relative amount of spacing after paragraphs.
-    /// </summary>
-    public float After { get; init; } = 1.25f;
-
-    /// <summary>
-    /// The product of the <see cref="FontSize"/> and <see cref="Before"/>.
-    /// </summary>
-    public float ParagraphSpacingBefore => (FontSize * Before) - FontSize;
-
-    /// <summary>
-    /// The product of the <see cref="FontSize"/> and <see cref="After"/>.
-    /// </summary>
-    public float ParagraphSpacingAfter => (FontSize * After) - FontSize;
-
     public BoxBorder Border { get; init; } = new ();
 
     public Margin Margin { get; init; } = new ();
@@ -93,13 +73,54 @@ public readonly record struct BlockStyle()
         return font;
     }
 
-    public SKRect GetBorderRect(SKRect rect)
+    /// <summary>
+    /// Returns a new SKSize for the available size after styling adjustments.
+    /// </summary>
+    /// <param name="available">The available size for the context.</param>
+    public SKSize GetContentSize(SKSize available)
     {
-        return Border.GetRect(rect);
+        // Todo:
+        return new SKSize(available.Width, available.Height);
     }
 
-    public SKRect GetContentRect(SKRect rect)
+    /// <summary>
+    /// Creates a drawable area after removing styling sizes.
+    /// </summary>
+    /// <param name="available">Available drawing size.</param>
+    public SKRect GetContentRect(SKRect available)
     {
-        return Padding.GetRect(Border.GetRect(Margin.GetRect(rect)));
+        return Padding.GetContentRect(Border.GetContentRect(Margin.GetContentRect(available)));
+    }
+
+    /// <summary>
+    /// Creates a drawable area for the background by expanding from the contentRect.
+    /// </summary>
+    /// <param name="contentRect">The SKRect of the element that was allocated.</param>
+    public SKRect GetBackgroundRect(SKRect contentRect)
+    {
+        return Padding.GetDrawableRect(contentRect);
+    }
+
+    /// <summary>
+    /// Creates a drawable rect for the border by expanding from the contentRect.
+    /// </summary>
+    /// <param name="contentRect">The SKRect of the element that was allocated.</param>
+    public SKRect GetBorderRect(SKRect contentRect)
+    {
+        return Border.GetDrawableRect(Padding.GetDrawableRect(contentRect));
+    }
+
+    /// <summary>
+    /// Creates a rect to outline where the margin starts.
+    /// </summary>
+    /// <param name="contentRect">The allocated element rect.</param>
+    public SKRect GetMarginDebugRect(SKRect contentRect)
+    {
+        return Margin.GetDrawableRect(Border.GetDrawableRect(Padding.GetDrawableRect(contentRect)));
+    }
+
+    public SKRect GetPaddingDebugRect(SKRect contentRect)
+    {
+        return Padding.GetDrawableRect(contentRect);
     }
 }

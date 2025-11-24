@@ -1,6 +1,7 @@
 namespace InvoiceKit.Tests.Pdf;
 
 using InvoiceKit.Pdf;
+using InvoiceKit.Pdf.Styles;
 using SkiaSharp;
 using Xunit.Abstractions;
 
@@ -26,14 +27,11 @@ public class TextLayoutTests(ITestOutputHelper testOutputHelper)
                 .AddText("Default: The quick brown fox jumps over the lazy dog.")
                 .AddText(
                     "Spacing after: The quick brown fox jumps over the lazy dog.",
-                    style => style with
-                    {
-                        After = 2f,
-                    })
+                    style => style with { Margin = new Margin(0, 0, 0, 2f) })
                 .AddText("None: The quick brown fox jumps over the lazy dog.")
                 .AddText(
                     "Spacing before: The quick brown fox jumps over the lazy dog.",
-                    style => style with { Before = 2f, })
+                    style => style with { Margin = new Margin(0, 2f, 0, 0) })
                 .AddText(
                     "Double line height: The quick brown fox jumps over the lazy dog.",
                     style => style with { LineHeight = 2f, })

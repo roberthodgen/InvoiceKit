@@ -1,5 +1,7 @@
 namespace InvoiceKit.Pdf;
 
+using Styles;
+
 /// <summary>
 /// A layout represents a stateful object that will attempt to split itself across multiple pages. While doing so, it
 /// may have its <see cref="Layout"/> method called multiple times. <see cref="ILayout"/> objects should track what

@@ -1,19 +1,16 @@
 namespace InvoiceKit.Pdf.Views;
 
 using Layouts;
+using Styles;
 
 /// <summary>
 /// Adds an image to the document.
 /// </summary>
-public sealed class ImageViewBuilder : IViewBuilder
+public sealed class ImageViewBuilder(BlockStyle style) : IViewBuilder
 {
     private string Path { get; set; } = "";
 
     private ImageType Type { get; set; }
-
-    internal ImageViewBuilder()
-    {
-    }
 
     public IViewBuilder WithBitmapImage(string path)
     {
@@ -31,6 +28,6 @@ public sealed class ImageViewBuilder : IViewBuilder
 
     public ILayout ToLayout()
     {
-        return new ImageLayout(Path, Type);
+        return new ImageLayout(Path, Type, style);
     }
 }

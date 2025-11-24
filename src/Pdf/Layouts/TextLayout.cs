@@ -10,7 +10,7 @@ using Styles;
 /// </summary>
 internal class TextLayout : ILayout
 {
-    private BlockStyle Style { get; }
+    public BlockStyle Style { get; }
 
     private readonly List<string> _lines = [];
 
@@ -38,34 +38,25 @@ internal class TextLayout : ILayout
 
     public SKSize Measure(SKSize available)
     {
+        var sizeAfterStyling = Style.GetContentSize(available);
         if (_wrappedLines.Count == 0)
         {
-            _wrappedLines = _lines.SelectMany(line => WrapText(line, Style, available.Width)).ToList();
+            _wrappedLines = _lines.SelectMany(line =>
+                WrapText(line, Style, sizeAfterStyling.Width)).ToList();
         }
 
-        var height = _wrappedLines.Select((_, index) => MeasureFullLineSize(available, index).Height).Sum();
+        var height = _wrappedLines.Select(_ => MeasureFullLineSize(sizeAfterStyling).Height).Sum();
         return new SKSize(available.Width, height);
     }
 
     /// <summary>
     /// Measures how much space a line of text takes.
     /// </summary>
-    private SKSize MeasureFullLineSize(SKSize available, int index)
+    private SKSize MeasureFullLineSize(SKSize available)
     {
         var height = 0f;
-
-        if (index == 0)
-        {
-            height += Style.ParagraphSpacingBefore;
-        }
-
         height += HalfLineHeight - Style.ToFont().Metrics.Ascent;
         height += HalfLineHeight + Style.ToFont().Metrics.Descent;
-
-        if (index == _wrappedLines.Count - 1)
-        {
-            height += Style.ParagraphSpacingAfter;
-        }
 
         return new SKSize(available.Width, height);
     }
@@ -73,14 +64,9 @@ internal class TextLayout : ILayout
     /// <summary>
     /// Creates a rect for the location of a text drawable.
     /// </summary>
-    private SKRect MeasureTextLineRect(SKRect available, int index)
+    private SKRect MeasureTextLineRect(SKRect available)
     {
         var textLineLocation = available.Top + HalfLineHeight - Style.ToFont().Metrics.Ascent;
-
-        if (index == 0)
-        {
-            textLineLocation += Style.ParagraphSpacingBefore;
-        }
 
         return new SKRect(available.Left, textLineLocation, available.Right, textLineLocation);
     }
@@ -126,31 +112,49 @@ internal class TextLayout : ILayout
 
     public LayoutResult Layout(LayoutContext context)
     {
+        var textContext = context.GetChildContext(Style.GetContentRect(context.Available));
         if (_wrappedLines.Count == 0)
         {
-            _wrappedLines = _lines.SelectMany(line => WrapText(line, Style, context.Available.Width)).ToList();
+            _wrappedLines = _lines.SelectMany(line => WrapText(line, Style, textContext.Available.Width)).ToList();
         }
 
         var drawables = new List<IDrawable>();
         while (_currentIndex < _wrappedLines.Count)
         {
             // Tries to allocate the size within the current page or calls for a new page.
-            if (context.TryAllocate(MeasureFullLineSize(context.Available.Size, _currentIndex), out var rect))
+            if (textContext.TryAllocate(MeasureFullLineSize(textContext.Available.Size), out var rect))
             {
-                var textRect = MeasureTextLineRect(rect, _currentIndex);
-                drawables.Add(new BackgroundDrawable(rect, Style));
+                var textRect = MeasureTextLineRect(rect);
+                drawables.Add(new DebugDrawable(textRect, DebugDrawable.TextDebug));
                 drawables.Add(new TextDrawable(_wrappedLines[_currentIndex], textRect, Style));
                 _currentIndex++;
+                continue;   // Skip to the next line.
             }
-            else
-            {
-                drawables.Add(new BorderDrawable(context.Allocated, Style));
-                return new LayoutResult(drawables, LayoutStatus.NeedsNewPage);
-            }
+
+            // Add background and border drawables.
+            drawables.Add(new BackgroundDrawable(Style.GetBackgroundRect(textContext.Allocated), Style.BackgroundToPaint()));
+            drawables.Add(new BorderDrawable(Style.GetBorderRect(textContext.Allocated), Style.Border));
+
+            // Add margin and padding debug drawables.
+            drawables.Add(new DebugDrawable(Style.GetMarginDebugRect(textContext.Allocated), DebugDrawable.MarginDebug));
+            drawables.Add(new DebugDrawable(Style.GetPaddingDebugRect(textContext.Allocated), DebugDrawable.PaddingDebug));
+
+            context.CommitChildContext(textContext);
+            return new LayoutResult(drawables, LayoutStatus.NeedsNewPage);
         }
 
+        // Reset index for repeating layouts.
         _currentIndex = 0;
-        drawables.Add(new BorderDrawable(context.Allocated, Style));
+
+        // Add background and border drawables.
+        drawables.Add(new BackgroundDrawable(Style.GetBackgroundRect(textContext.Allocated), Style.BackgroundToPaint()));
+        drawables.Add(new BorderDrawable(Style.GetBorderRect(textContext.Allocated), Style.Border));
+
+        // Add margin and padding debug drawables.
+        drawables.Add(new DebugDrawable(Style.GetMarginDebugRect(textContext.Allocated), DebugDrawable.MarginDebug));
+        drawables.Add(new DebugDrawable(Style.GetPaddingDebugRect(textContext.Allocated), DebugDrawable.PaddingDebug));
+
+        context.CommitChildContext(textContext);
         return new LayoutResult(drawables, LayoutStatus.IsFullyDrawn);
     }
 }

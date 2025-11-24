@@ -30,10 +30,10 @@ public sealed class VStack : ContainerBase
         var childrenLayouts = Children.Select(child => child.ToLayout()).ToList();
         if (_repeating)
         {
-            return new VStackRepeatingLayout(childrenLayouts);
+            return new VStackRepeatingLayout(childrenLayouts, DefaultStyle);
         }
 
-        return new VStackLayout(childrenLayouts, _header?.ToLayout(), _footer?.ToLayout());
+        return new VStackLayout(childrenLayouts, _header?.ToLayout(), _footer?.ToLayout(), DefaultStyle);
     }
 
     public VStack WithHeader(Action<VStack> configure)

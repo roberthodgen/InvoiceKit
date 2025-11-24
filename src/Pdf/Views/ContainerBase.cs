@@ -32,7 +32,14 @@ public abstract class ContainerBase : IContainer
 
     public IContainer AddImage(Func<ImageViewBuilder, IViewBuilder> builder)
     {
-        var child = builder(new ImageViewBuilder());
+        var child = builder(new ImageViewBuilder(DefaultStyle));
+        _children.Add(child);
+        return this;
+    }
+
+    public IContainer AddImage(Func<ImageViewBuilder, IViewBuilder> builder,  Func<BlockStyle, BlockStyle> configureStyle)
+    {
+        var child = builder(new ImageViewBuilder(configureStyle(DefaultStyle)));
         _children.Add(child);
         return this;
     }
