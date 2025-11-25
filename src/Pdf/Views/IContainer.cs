@@ -27,6 +27,11 @@ public interface IContainer : IViewBuilder
     IContainer AddImage(Func<ImageViewBuilder, IViewBuilder> builder);
 
     /// <summary>
+    /// Adds a new image.
+    /// </summary>
+    IContainer AddImage(Func<ImageViewBuilder, IViewBuilder> builder, Func<BlockStyle, BlockStyle> configureStyle);
+
+    /// <summary>
     /// Adds a new horizontal rule.
     /// </summary>
     IContainer AddHorizontalRule();

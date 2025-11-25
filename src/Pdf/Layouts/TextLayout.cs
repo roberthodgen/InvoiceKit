@@ -119,6 +119,7 @@ internal class TextLayout : ILayout
         {
             if (textContext.TryAllocate(MeasureFullLineSize(textContext.Available.Size), out var rect))
             {
+                drawables.Add(new BackgroundDrawable(rect, Style.BackgroundToPaint()));
                 drawables.Add(new DebugDrawable(rect, DebugDrawable.ContentDebug));
                 drawables.Add(new TextDrawable(_wrappedLines[_currentIndex], rect, Style));
                 _currentIndex++;

@@ -9,7 +9,6 @@ internal class TextDrawable(string text, SKRect rect, BlockStyle style) : IDrawa
 
     public void Draw(IDrawableContext context)
     {
-        context.Canvas.DrawRect(rect, style.BackgroundToPaint());
         var location = rect.Top + HalfLineHeight - style.ToFont().Metrics.Ascent;
         context.Canvas.DrawText(text, rect.Left, location, SKTextAlign.Left, style.ToFont(), style.ForegroundToPaint());
     }

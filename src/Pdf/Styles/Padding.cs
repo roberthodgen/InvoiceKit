@@ -2,8 +2,32 @@ namespace InvoiceKit.Pdf.Styles;
 
 using SkiaSharp;
 
-public readonly record struct Padding(float Left, float Top, float Right, float Bottom)
+public readonly record struct Padding
 {
+    public float Left { get; init; }
+
+    public float Top { get; init; }
+
+    public float Right { get; init; }
+
+    public float Bottom { get; init; }
+
+    public Padding(float left, float top, float right, float bottom)
+    {
+        Left = left;
+        Top = top;
+        Right = right;
+        Bottom = bottom;
+    }
+
+    public Padding(float padding)
+    {
+        Left = padding;
+        Top = padding;
+        Right = padding;
+        Bottom = padding;
+    }
+
     public SKRect GetDrawableRect(SKRect rect)
     {
         return new SKRect(

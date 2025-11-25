@@ -70,6 +70,20 @@ public readonly record struct BlockStyle()
     }
 
     /// <summary>
+    /// Creates a copy of the current style for a child element.
+    /// </summary>
+    /// <returns>A copy of the current styling without margin, padding, and border.</returns>
+    public BlockStyle CopyForChild()
+    {
+        return this with
+        {
+            Border = new BoxBorder(),
+            Margin = new Margin(),
+            Padding = new Padding(),
+        };
+    }
+
+    /// <summary>
     /// Returns a new SKSize for the available size after styling adjustments.
     /// </summary>
     public SKSize GetStyleSize()

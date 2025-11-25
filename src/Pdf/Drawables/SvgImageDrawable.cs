@@ -8,7 +8,6 @@ internal class SvgImageDrawable(SKSvg svg, SKRect rect, BlockStyle style) : IDra
 {
     public void Draw(IDrawableContext context)
     {
-        context.Canvas.DrawRect(rect, style.BackgroundToPaint());
         context.Canvas.DrawPicture(svg.Picture, rect.Location);
     }
 

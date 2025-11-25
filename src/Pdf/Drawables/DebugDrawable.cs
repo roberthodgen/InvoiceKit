@@ -8,11 +8,11 @@ internal class DebugDrawable(SKRect rect, SKColor color) : IDrawable
 
     public static SKColor AllocatedDebug => SKColors.Cyan;
 
-    public static SKColor MarginDebug => SKColors.Red;
+    public static SKColor MarginDebug => SKColors.Cyan;
 
-    public static SKColor PaddingDebug => SKColors.Blue;
+    public static SKColor PaddingDebug => SKColors.Magenta;
 
-    public static SKColor ContentDebug => SKColors.Gray;
+    public static SKColor ContentDebug => SKColors.Yellow;
 
     public void Draw(IDrawableContext context)
     {

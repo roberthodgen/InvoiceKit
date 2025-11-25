@@ -56,19 +56,16 @@ public class TextLayoutTests(ITestOutputHelper testOutputHelper)
         using var builder = PdfDocument.UsLetter;
         var pdfBytes = builder
             // .DisplayLayoutGuidelines()
-            .WithDefaultStyle(style => style with { ForegroundColor = SKColors.Black })
             .WithVStack(vStack => vStack
                 .AddText("Text_ForegroundAndBackground_Test.pdf")
                 .AddHorizontalRule()
-                .AddSpacing()
                 .AddHStack(hStack => hStack
-                    .AddText("Default black text on no background")
+                    .AddText("Default Styling")
                     .AddText("White text w/ black background.",
                         style => style with { ForegroundColor = SKColors.White, BackgroundColor = SKColors.Black })
                     .AddText("Cyan text w/ pink background.",
                         style => style with { ForegroundColor = SKColors.Cyan, BackgroundColor = SKColors.Pink }))
-                .AddSpacing()
-                .AddText("Default black text on no background")
+                .AddText("Default Styling")
                 .AddText("White text w/ black background.",
                     style => style with { ForegroundColor = SKColors.White, BackgroundColor = SKColors.Black })
                 .AddText("Cyan text w/ pink background.",
@@ -186,7 +183,7 @@ public class TextLayoutTests(ITestOutputHelper testOutputHelper)
         using var builder = PdfDocument.UsLetter;
         var pdfBytes = builder
             .DisplayLayoutGuidelines()
-            .WithDefaultStyle(style => style with { LineHeight = 1.5f, })
+            .WithDocumentStyle(style => style with { LineHeight = 1.5f, })
             .WithVStack(vStack => vStack
                 .AddText(
                     "Test Document",

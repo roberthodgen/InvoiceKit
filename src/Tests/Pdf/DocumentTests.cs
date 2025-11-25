@@ -2,6 +2,7 @@ namespace InvoiceKit.Tests.Pdf;
 
 using InvoiceKit.Pdf;
 using InvoiceKit.Pdf.Styles;
+using SkiaSharp;
 using Xunit.Abstractions;
 
 public class DocumentTests(ITestOutputHelper testOutputHelper)
@@ -217,19 +218,18 @@ public class DocumentTests(ITestOutputHelper testOutputHelper)
         using var builder = PdfDocument.UsLetter;
         var pdfBytes = builder
             .DisplayLayoutGuidelines()
-            .WithDefaultStyle(style => style with
-            {
-                Margin = new Margin { Left = 5f, Top = 5f, Right = 5f, Bottom = 5f },
-                Padding = new Padding(5f, 5f, 5f, 5f),
-            })
             .WithVStack(vStack => vStack
-                .AddText("Margin and Padding Test")
+                .WithDefaultStyle(style => style with { Margin = new Margin(5f), Padding = new Padding(5f) })
+                .AddText("Margin and Padding Test",
+                    style => style with { Margin = new Margin(5f), Padding = new Padding(5f) })
                 .AddHStack(hStack => hStack
-                    .AddText("Left Column")
+                    .WithDefaultStyle(style => style with { Margin = new Margin(5f), Padding = new Padding(5f) })
+                    .AddText("Left Column", style => style with { Margin = new Margin(5f), Padding = new Padding(5f) })
                     .AddImage(image =>
-                        image.WithSvgImage(Path.Combine(Directory.GetCurrentDirectory(), "Images/circle.svg")))
-                    .AddText("Right Column"))
-                .AddText("Outside HStack")
+                            image.WithSvgImage(Path.Combine(Directory.GetCurrentDirectory(), "Images/circle.svg")),
+                        style => style with { BackgroundColor = SKColors.BlanchedAlmond })
+                    .AddText("Right Column",style => style with { Margin = new Margin(5f), Padding = new Padding(5f) }))
+                .AddText("Outside HStack", style => style with { Margin = new Margin(5f), Padding = new Padding(5f) })
             ).Build();
 
         stream.Write(pdfBytes);

@@ -10,12 +10,11 @@ using Styles;
 /// flexible path to building complex layouts for invoices and other documents.
 /// </summary>
 /// <remarks>
-/// Units are points (1 inch = 72 points). Margin is handled internally (currently 50 points on each side).
+/// Units are points (1 inch = 72 points). Currently, 1 inch on every side.
 /// </remarks>
 public sealed class PdfDocument : IPdfDocument
 {
     private const float PointsPerInch = 72f;
-    private const float Margin = 50f;
 
     private readonly SKSize _pageSize;
     private readonly MemoryStream _stream = new ();
@@ -29,13 +28,12 @@ public sealed class PdfDocument : IPdfDocument
     /// </summary>
     public static PdfDocument UsLetter => new (8.5f * PointsPerInch, 11f * PointsPerInch);
 
-    private BlockStyle DefaultStyle { get; set; } = new ();
+    private BlockStyle DocumentStyle { get; set; } = new ()
+    {
+        Margin = new Margin(1f * PointsPerInch)
+    };
 
-    private SKRect DrawableArea => SKRect.Create(
-        Margin,
-        Margin,
-        _pageSize.Width - Margin * 2,
-        _pageSize.Height - Margin * 2);
+    private SKRect DrawableArea => SKRect.Create(_pageSize);
 
     private PdfDocument(float width, float height)
     {
@@ -72,9 +70,14 @@ public sealed class PdfDocument : IPdfDocument
         return _stream.ToArray();
     }
 
-    public PdfDocument WithDefaultStyle(Func<BlockStyle, BlockStyle> configureStyle)
+    /// <summary>
+    /// Defines the margin and padding for the document.
+    /// </summary>
+    /// <param name="configureStyle"></param>
+    /// <returns></returns>
+    public PdfDocument WithDocumentStyle(Func<BlockStyle, BlockStyle> configureStyle)
     {
-        DefaultStyle = configureStyle(DefaultStyle);
+        DocumentStyle = configureStyle(DocumentStyle);
         return this;
     }
 
@@ -98,7 +101,7 @@ public sealed class PdfDocument : IPdfDocument
     /// </summary>
     public PdfDocument WithVStack(Action<VStack> action)
     {
-        var vStack = new VStack(DefaultStyle);
+        var vStack = new VStack(DocumentStyle);
         action(vStack);
         _rootViewBuilder = vStack;
         return this;

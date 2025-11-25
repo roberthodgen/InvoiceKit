@@ -7,7 +7,6 @@ internal class BitmapImageDrawable(SKBitmap bitmap, SKRect rect, BlockStyle styl
 {
     public void Draw(IDrawableContext context)
     {
-        context.Canvas.DrawRect(rect, style.BackgroundToPaint());
         context.Canvas.DrawBitmap(bitmap, rect);
     }
 

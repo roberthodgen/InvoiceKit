@@ -62,11 +62,13 @@ internal class ImageLayout : ILayout
         {
             if (Svg is not null)
             {
+                drawables.Add(new BackgroundDrawable(rect, Style.BackgroundToPaint()));
                 drawables.Add(new DebugDrawable(rect, DebugDrawable.ContentDebug));
                 drawables.Add(new SvgImageDrawable(Svg, rect, Style));
             }
             else if (Bitmap is not null)
             {
+                drawables.Add(new BackgroundDrawable(rect, Style.BackgroundToPaint()));
                 drawables.Add(new DebugDrawable(rect, DebugDrawable.ContentDebug));
                 drawables.Add(new BitmapImageDrawable(Bitmap, rect, Style));
             }
