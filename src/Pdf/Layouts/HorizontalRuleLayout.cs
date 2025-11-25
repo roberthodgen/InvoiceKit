@@ -6,7 +6,7 @@ using Styles;
 
 internal class HorizontalRuleLayout(BlockStyle style) : ILayout
 {
-    public BlockStyle Style { get; } = style;
+    private BlockStyle Style { get; } = style;
 
     public SKSize Measure(SKSize available)
     {

@@ -7,7 +7,7 @@ using Svg.Skia;
 
 internal class ImageLayout : ILayout
 {
-    public BlockStyle Style { get; }
+    private BlockStyle Style { get; }
 
     private SKSvg? Svg { get; }
 
@@ -53,22 +53,28 @@ internal class ImageLayout : ILayout
         var drawables = new List<IDrawable>();
         var imageContext = context.GetChildContext(Style.GetContentRect(context.Available));
 
+        if (context.TryAllocate(Style.GetStyleSize()) == false)
+        {
+            return new LayoutResult(drawables, LayoutStatus.NeedsNewPage);
+        }
+
         if (imageContext.TryAllocate(this, out var rect))
         {
             if (Svg is not null)
             {
-                drawables.Add(new SvgImageDrawable(Svg, rect));
+                drawables.Add(new DebugDrawable(rect, DebugDrawable.ContentDebug));
+                drawables.Add(new SvgImageDrawable(Svg, rect, Style));
             }
             else if (Bitmap is not null)
             {
-                drawables.Add(new BitmapImageDrawable(Bitmap, rect));
+                drawables.Add(new DebugDrawable(rect, DebugDrawable.ContentDebug));
+                drawables.Add(new BitmapImageDrawable(Bitmap, rect, Style));
             }
 
-            // Add background and border drawables
-            drawables.Add(new BackgroundDrawable(Style.GetBackgroundRect(imageContext.Allocated), Style.BackgroundToPaint()));
+            // Add and border drawable.
             drawables.Add(new BorderDrawable(Style.GetBorderRect(imageContext.Allocated), Style.Border));
 
-            // Add margin and padding debug drawables
+            // Add margin and padding debug drawables.
             drawables.Add(new DebugDrawable(Style.GetMarginDebugRect(imageContext.Allocated), DebugDrawable.MarginDebug));
             drawables.Add(new DebugDrawable(Style.GetPaddingDebugRect(imageContext.Allocated), DebugDrawable.PaddingDebug));
 

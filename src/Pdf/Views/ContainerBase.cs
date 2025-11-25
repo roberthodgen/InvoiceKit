@@ -3,18 +3,13 @@ namespace InvoiceKit.Pdf.Views;
 using Containers.Tables;
 using Styles;
 
-public abstract class ContainerBase : IContainer
+public abstract class ContainerBase(BlockStyle defaultStyle) : IContainer
 {
     private readonly List<IViewBuilder> _children = [];
 
-    public BlockStyle DefaultStyle { get; protected set; }
+    public BlockStyle DefaultStyle { get; private set; } = defaultStyle;
 
     protected IReadOnlyCollection<IViewBuilder> Children => _children.AsReadOnly();
-
-    protected ContainerBase(BlockStyle defaultStyle)
-    {
-        DefaultStyle = defaultStyle;
-    }
 
     public IContainer AddText(string text)
     {

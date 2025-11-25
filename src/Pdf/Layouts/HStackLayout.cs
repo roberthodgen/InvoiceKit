@@ -6,7 +6,7 @@ using Styles;
 
 internal class HStackLayout(List<ILayout> columns, BlockStyle style) : ILayout
 {
-    public BlockStyle Style { get; } = style;
+    private BlockStyle Style { get; } = style;
 
     /// <summary>
     /// Horizontal stack layout that will split into columns based on the number of children.
@@ -19,11 +19,16 @@ internal class HStackLayout(List<ILayout> columns, BlockStyle style) : ILayout
         }
 
         var drawables = new List<IDrawable>();
+        var contentRect = Style.GetContentRect(context.Available);
+        var stackContext = context.GetChildContext(contentRect);
+
+        if (context.TryAllocate(Style.GetStyleSize()) == false)
+        {
+            return new LayoutResult(drawables, LayoutStatus.IsFullyDrawn);
+        }
 
         var results = new List<ColumnResult>();
 
-        var contentRect = Style.GetContentRect(context.Available);
-        var stackContext = context.GetChildContext(contentRect);
         var columnSize = new SKSize(contentRect.Width / columns.Count, contentRect.Height);
 
         // Loops for the number of columns once. Children that need a new page are added back to the stack.

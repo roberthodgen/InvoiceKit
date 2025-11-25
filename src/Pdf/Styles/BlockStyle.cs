@@ -37,24 +37,20 @@ public readonly record struct BlockStyle()
 
     public SKPaint ForegroundToPaint()
     {
-        var paint = new SKPaint
+        return new SKPaint
         {
             Color = ForegroundColor,
             IsAntialias = true,
         };
-
-        return paint;
     }
 
     public SKPaint BackgroundToPaint()
     {
-        var paint = new SKPaint
+        return new SKPaint
         {
             Color = BackgroundColor,
             IsAntialias = true,
         };
-
-        return paint;
     }
 
     public SKFont ToFont()
@@ -76,11 +72,11 @@ public readonly record struct BlockStyle()
     /// <summary>
     /// Returns a new SKSize for the available size after styling adjustments.
     /// </summary>
-    /// <param name="available">The available size for the context.</param>
-    public SKSize GetContentSize(SKSize available)
+    public SKSize GetStyleSize()
     {
-        // Todo:
-        return new SKSize(available.Width, available.Height);
+        var width = Padding.Left + Padding.Right + Margin.Left + Margin.Right + Border.Left.Width + Border.Right.Width;
+        var height = Padding.Top + Padding.Bottom + Margin.Top + Margin.Bottom + Border.Top.Width + Border.Bottom.Width;
+        return new SKSize(width, height);
     }
 
     /// <summary>

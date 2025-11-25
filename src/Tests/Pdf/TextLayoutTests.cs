@@ -67,6 +67,7 @@ public class TextLayoutTests(ITestOutputHelper testOutputHelper)
                         style => style with { ForegroundColor = SKColors.White, BackgroundColor = SKColors.Black })
                     .AddText("Cyan text w/ pink background.",
                         style => style with { ForegroundColor = SKColors.Cyan, BackgroundColor = SKColors.Pink }))
+                .AddSpacing()
                 .AddText("Default black text on no background")
                 .AddText("White text w/ black background.",
                     style => style with { ForegroundColor = SKColors.White, BackgroundColor = SKColors.Black })
