@@ -1,6 +1,5 @@
 namespace InvoiceKit.Pdf.Layouts;
 
-using Drawables;
 using SkiaSharp;
 
 internal class HStackLayout(List<ILayout> columns) : ILayout
@@ -10,38 +9,7 @@ internal class HStackLayout(List<ILayout> columns) : ILayout
     /// </summary>
     public LayoutResult Layout(LayoutContext context)
     {
-        if (columns.Count == 0)
-        {
-            return new LayoutResult([], LayoutStatus.IsFullyDrawn);
-        }
-
-        var results = new List<ColumnResult>();
-        var columnSize = new SKSize(context.Available.Width / columns.Count, context.Available.Height);
-
-        // Loops for the number of columns once. Children that need a new page are added back to the stack.
-        foreach (var index in Enumerable.Range(0, columns.Count))
-        {
-            var point = context.Available.Location;
-            point.Offset(columnSize.Width * index, 0);
-            var childContext = context.GetChildContext(SKRect.Create(point, columnSize));
-            var result = columns[index].Layout(childContext);
-            results.Add(
-                new ColumnResult(
-                    [new DebugDrawable(childContext.Allocated), ..result.Drawables,],
-                    result.Status,
-                    childContext));
-        }
-
-        var maxHeight = results.MaxBy(result => result.Context.Allocated.Height);
-        context.CommitChildContext(maxHeight!.Context);
-
-        var drawables = results.SelectMany(result => result.Drawables).ToList();
-        if (results.Any(result => result.Status == LayoutStatus.NeedsNewPage))
-        {
-            return new LayoutResult(drawables, LayoutStatus.NeedsNewPage);
-        }
-
-        return new LayoutResult(drawables, LayoutStatus.IsFullyDrawn);
+        return new LayoutResult(LayoutStatus.Deferred, GetChildLayouts(context));
     }
 
     public SKSize Measure(SKSize available)
@@ -50,9 +18,33 @@ internal class HStackLayout(List<ILayout> columns) : ILayout
         {
             return SKSize.Empty;
         }
+
         var maxHeight = columns.Max(column => column.Measure(available).Height);
         return new SKSize(available.Width, maxHeight);
     }
 
-    private record ColumnResult(IReadOnlyCollection<IDrawable> Drawables, LayoutStatus Status, LayoutContext Context);
+    private List<ChildLayout> GetChildLayouts(LayoutContext context)
+    {
+        var result = new List<ChildLayout>();
+        foreach (var i in Enumerable.Range(0, columns.Count))
+        {
+            var nthColumn = columns[i];
+            result.Add(new ChildLayout(nthColumn, GetRectForNthColumn(i, context)));
+        }
+
+        return result;
+    }
+
+    private SKRect GetRectForNthColumn(int nthColumn, LayoutContext context)
+    {
+        var columnSize = GetColumnSize(context);
+        var point = context.Available.Location;
+        point.Offset(columnSize.Width * nthColumn, 0);
+        return SKRect.Create(point, columnSize);
+    }
+
+    private SKSize GetColumnSize(LayoutContext context)
+    {
+        return new SKSize(context.Available.Width / columns.Count, context.Available.Height);
+    }
 }

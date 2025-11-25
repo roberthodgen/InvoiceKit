@@ -12,6 +12,8 @@ internal class LayoutEngine(IViewBuilder root) : IDisposable
 
     private readonly List<Page> _pages = [];
 
+    private readonly HashSet<ILayout> _laidOut = [];
+
     public IReadOnlyCollection<Page> Pages => _pages.AsReadOnly();
 
     /// <summary>
@@ -23,13 +25,36 @@ internal class LayoutEngine(IViewBuilder root) : IDisposable
     /// </returns>
     private PageLayoutResult LayoutPage(LayoutContext context)
     {
-        var layoutResult = _root.Layout(context);
+        var stack = new Stack<ChildLayout>();
+        stack.Push(new ChildLayout(_root, context.Available));
         var page = new Page();
-        page.AddDrawables(layoutResult.Drawables);
 
-        if (layoutResult.Status == LayoutStatus.NeedsNewPage)
+        while (stack.Count > 0)
         {
-            return new PageLayoutResult(page, LayoutStatus.NeedsNewPage);
+            var layout = stack.Peek();
+            if (_laidOut.Contains(layout.Layout))
+            {
+                continue;
+            }
+
+            var childContext = context.GetChildContext(layout.Rect);
+            var layoutResult = layout.Layout.Layout(childContext);
+            page.AddDrawables(layoutResult.Drawables);
+
+            if (layoutResult.Status == LayoutStatus.NeedsNewPage)
+            {
+                return new PageLayoutResult(page, LayoutStatus.NeedsNewPage);
+            }
+
+            // TODO add LayoutStatus.Deferred check for children
+            childContext.CommitChildContext(childContext);
+            foreach (var child in layoutResult.Children)
+            {
+                stack.Push(child);
+            }
+
+            _laidOut.Add(layout.Layout);
+            stack.Pop();
         }
 
         return new PageLayoutResult(page, LayoutStatus.IsFullyDrawn);

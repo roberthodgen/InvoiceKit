@@ -1,6 +1,5 @@
 namespace InvoiceKit.Pdf.Layouts;
 
-using Drawables;
 using SkiaSharp;
 
 internal class VStackRepeatingLayout(List<ILayout> children) : ILayout
@@ -17,22 +16,18 @@ internal class VStackRepeatingLayout(List<ILayout> children) : ILayout
 
     public LayoutResult Layout(LayoutContext context)
     {
-        var drawables = new List<IDrawable>();
+        return new LayoutResult(LayoutStatus.Deferred, GetChildLayouts(context));
+    }
 
+    private List<ChildLayout> GetChildLayouts(LayoutContext context)
+    {
+        var results = new List<ChildLayout>();
         foreach (var child in children)
         {
             var childContext = context.GetChildContext();
-            var result = child.Layout(childContext);
-            drawables.AddRange(result.Drawables);
-            drawables.Add(new DebugDrawable(childContext.Allocated));
-            context.CommitChildContext(childContext);
-
-            if (result.Status == LayoutStatus.NeedsNewPage)
-            {
-                return new LayoutResult([], LayoutStatus.NeedsNewPage);
-            }
+            results.Add(new ChildLayout(child, childContext.Allocated));
         }
 
-        return new LayoutResult(drawables, LayoutStatus.IsFullyDrawn);
+        return results;
     }
 }

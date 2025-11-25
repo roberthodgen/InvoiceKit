@@ -15,21 +15,20 @@ internal class ZStack(List<ILayout> children) : ILayout
     public LayoutResult Layout(LayoutContext context)
     {
         // var size = Measure(context.Available.Size);
-        if (context.TryAllocate(this))
-        {
-            var rendered = new List<IDrawable>();
-            foreach (var child in children)
-            {
-                var childContext = context.GetChildContext();
-                var result = child.Layout(childContext);
-                context.CommitChildContext(childContext);
-                rendered.AddRange(result.Drawables);
-            }
-
-            return new LayoutResult(rendered, LayoutStatus.IsFullyDrawn);
-        }
-
-        return new LayoutResult([], LayoutStatus.NeedsNewPage);
+        // if (context.TryAllocate(this))
+        // {
+        //     var rendered = new List<IDrawable>();
+        //     foreach (var child in children)
+        //     {
+        //         var childContext = context.GetChildContext();
+        //         var result = child.Layout(childContext);
+        //         context.CommitChildContext(childContext);
+        //         rendered.AddRange(result.Drawables);
+        //     }
+        //
+        //     return new LayoutResult(rendered, LayoutStatus.IsFullyDrawn);
+        // }
+        return new LayoutResult(LayoutStatus.IsFullyDrawn, []);
     }
 
     /// <summary>

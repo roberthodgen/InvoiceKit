@@ -22,7 +22,7 @@ internal class VStackLayout : ILayout
     {
         if (_children.Count == 0)
         {
-            return new LayoutResult([], LayoutStatus.IsFullyDrawn);
+            return new LayoutResult(LayoutStatus.IsFullyDrawn);
         }
 
         var drawables = new List<IDrawable>();
@@ -51,7 +51,7 @@ internal class VStackLayout : ILayout
                 // Lay out the footer
                 drawables.AddRange(LayoutFooter(context).Drawables);
 
-                return new LayoutResult(drawables, LayoutStatus.NeedsNewPage);
+                return new LayoutResult(drawables, LayoutStatus.NeedsNewPage); // TODO
             }
 
             _children.Dequeue();
@@ -60,7 +60,7 @@ internal class VStackLayout : ILayout
         // Lay out the footer
         drawables.AddRange(LayoutFooter(context).Drawables);
 
-        return new LayoutResult(drawables, LayoutStatus.IsFullyDrawn);
+        return new LayoutResult(drawables, LayoutStatus.IsFullyDrawn); // TODO
     }
 
     public SKSize Measure(SKSize available)
@@ -84,12 +84,12 @@ internal class VStackLayout : ILayout
             var headerResult = _header.Layout(context);
             if (headerResult.Status == LayoutStatus.NeedsNewPage)
             {
-                return new LayoutResult([], LayoutStatus.NeedsNewPage);
+                return new LayoutResult(LayoutStatus.NeedsNewPage);
             }
 
             return headerResult;
         }
-        return new LayoutResult([], LayoutStatus.IsFullyDrawn);
+        return new LayoutResult(LayoutStatus.IsFullyDrawn);
     }
 
     private LayoutResult LayoutFooter(LayoutContext context)
@@ -99,11 +99,11 @@ internal class VStackLayout : ILayout
             var footerResult = _footer.Layout(context);
             if (footerResult.Status == LayoutStatus.NeedsNewPage)
             {
-                return new LayoutResult([], LayoutStatus.NeedsNewPage);
+                return new LayoutResult(LayoutStatus.NeedsNewPage);
             }
 
             return footerResult;
         }
-        return new LayoutResult([], LayoutStatus.IsFullyDrawn);
+        return new LayoutResult(LayoutStatus.IsFullyDrawn);
     }
 }
