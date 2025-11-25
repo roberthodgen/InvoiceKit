@@ -62,18 +62,18 @@ internal class ImageLayout : ILayout
         {
             if (Svg is not null)
             {
-                drawables.Add(new BackgroundDrawable(rect, Style.BackgroundToPaint()));
                 drawables.Add(new DebugDrawable(rect, DebugDrawable.ContentDebug));
                 drawables.Add(new SvgImageDrawable(Svg, rect, Style));
             }
             else if (Bitmap is not null)
             {
-                drawables.Add(new BackgroundDrawable(rect, Style.BackgroundToPaint()));
                 drawables.Add(new DebugDrawable(rect, DebugDrawable.ContentDebug));
                 drawables.Add(new BitmapImageDrawable(Bitmap, rect, Style));
             }
 
             // Add and border drawable.
+            // Background needs to come before text.
+            drawables.Insert(0, new BackgroundDrawable(Style.GetBackgroundRect(imageContext.Allocated), Style.BackgroundToPaint()));
             drawables.Add(new BorderDrawable(Style.GetBorderRect(imageContext.Allocated), Style.Border));
 
             // Add margin and padding debug drawables.

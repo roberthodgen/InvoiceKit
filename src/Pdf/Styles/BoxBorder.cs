@@ -12,22 +12,31 @@ public readonly record struct BoxBorder(BorderStyle Top, BorderStyle Bottom, Bor
         Right = style,
     };
 
-    public SKRect GetContentRect(SKRect rect)
+    /// <summary>
+    /// Adjusts available space by removing the border size from each side.
+    /// </summary>
+    /// <param name="available">The available space in the context.</param>
+    public SKRect GetContentRect(SKRect available)
     {
         return new SKRect(
-            rect.Left + Left.Width,
-            rect.Top + Top.Width,
-            rect.Right - Right.Width,
-            rect.Bottom - Bottom.Width);
+            available.Left + Left.Width,
+            available.Top + Top.Width,
+            available.Right - Right.Width,
+            available.Bottom - Bottom.Width);
     }
 
-    public SKRect GetDrawableRect(SKRect rect)
+    /// <summary>
+    /// Gets the starting location for the border.
+    /// </summary>
+    /// <param name="content">SKRect of the drawable content.</param>
+    /// <returns>SKRect for the border</returns>
+    public SKRect GetDrawableRect(SKRect content)
     {
         return new SKRect(
-            rect.Left - Left.Width,
-            rect.Top - Top.Width,
-            rect.Right + Right.Width,
-            rect.Bottom + Bottom.Width);
+            content.Left - Left.Width,
+            content.Top - Top.Width,
+            content.Right + Right.Width,
+            content.Bottom + Bottom.Width);
     }
 
 

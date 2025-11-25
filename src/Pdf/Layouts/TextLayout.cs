@@ -119,14 +119,15 @@ internal class TextLayout : ILayout
         {
             if (textContext.TryAllocate(MeasureFullLineSize(textContext.Available.Size), out var rect))
             {
-                drawables.Add(new BackgroundDrawable(rect, Style.BackgroundToPaint()));
                 drawables.Add(new DebugDrawable(rect, DebugDrawable.ContentDebug));
                 drawables.Add(new TextDrawable(_wrappedLines[_currentIndex], rect, Style));
                 _currentIndex++;
                 continue;   // Skip to the next line.
             }
 
-            // Add border drawable.
+            // Add background and border drawables.
+            // Background needs to come before text.
+            drawables.Insert(0, new BackgroundDrawable(Style.GetBackgroundRect(textContext.Allocated), Style.BackgroundToPaint()));
             drawables.Add(new BorderDrawable(Style.GetBorderRect(textContext.Allocated), Style.Border));
 
             // Add margin and padding debug drawables.
@@ -140,7 +141,9 @@ internal class TextLayout : ILayout
         // Reset index for repeating layouts.
         _currentIndex = 0;
 
-        // Add border drawable.
+        // Add and border drawables.
+        // Background needs to come before text.
+        drawables.Insert(0, new BackgroundDrawable(Style.GetBackgroundRect(textContext.Allocated), Style.BackgroundToPaint()));
         drawables.Add(new BorderDrawable(Style.GetBorderRect(textContext.Allocated), Style.Border));
 
         // Add margin and padding debug drawables.

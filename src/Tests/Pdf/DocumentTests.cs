@@ -227,8 +227,14 @@ public class DocumentTests(ITestOutputHelper testOutputHelper)
                     .AddText("Left Column", style => style with { Margin = new Margin(5f), Padding = new Padding(5f) })
                     .AddImage(image =>
                             image.WithSvgImage(Path.Combine(Directory.GetCurrentDirectory(), "Images/circle.svg")),
-                        style => style with { BackgroundColor = SKColors.BlanchedAlmond })
-                    .AddText("Right Column",style => style with { Margin = new Margin(5f), Padding = new Padding(5f) }))
+                        style => style with
+                        {
+                            BackgroundColor = SKColors.BlanchedAlmond,
+                            Margin = new Margin(5f),
+                            Padding = new Padding(5f)
+                        })
+                    .AddText("Right Column",
+                        style => style with { Margin = new Margin(5f), Padding = new Padding(5f) }))
                 .AddText("Outside HStack", style => style with { Margin = new Margin(5f), Padding = new Padding(5f) })
             ).Build();
 

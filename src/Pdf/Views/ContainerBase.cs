@@ -15,14 +15,7 @@ public abstract class ContainerBase(BlockStyle defaultStyle) : IContainer
 
     public IContainer AddText(string text)
     {
-        var child = new TextViewBuilder(text, ChildStyle with
-        {
-            Padding = new Padding()
-            {
-                Top = ChildStyle.FontSize,
-                Bottom = ChildStyle.FontSize,
-            }
-        });
+        var child = new TextViewBuilder(text, ChildStyle with { Padding = new Padding(1f)});
         _children.Add(child);
         return this;
     }

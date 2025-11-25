@@ -60,16 +60,31 @@ public class TextLayoutTests(ITestOutputHelper testOutputHelper)
                 .AddText("Text_ForegroundAndBackground_Test.pdf")
                 .AddHorizontalRule()
                 .AddHStack(hStack => hStack
-                    .AddText("Default Styling")
+                    .AddText("Black text w/ white background.")
                     .AddText("White text w/ black background.",
-                        style => style with { ForegroundColor = SKColors.White, BackgroundColor = SKColors.Black })
+                        style => style with
+                        {
+                            ForegroundColor = SKColors.White, BackgroundColor = SKColors.Black,
+                            Padding = new Padding(5f)
+                        })
                     .AddText("Cyan text w/ pink background.",
-                        style => style with { ForegroundColor = SKColors.Cyan, BackgroundColor = SKColors.Pink }))
-                .AddText("Default Styling")
+                        style => style with
+                        {
+                            ForegroundColor = SKColors.Cyan, BackgroundColor = SKColors.Pink,
+                            Padding = new Padding(5f)
+                        }))
+                .AddText("Black text w/ white background.")
                 .AddText("White text w/ black background.",
-                    style => style with { ForegroundColor = SKColors.White, BackgroundColor = SKColors.Black })
+                    style => style with
+                    {
+                        ForegroundColor = SKColors.White, BackgroundColor = SKColors.Black,
+                        Padding = new Padding(5f)
+                    })
                 .AddText("Cyan text w/ pink background.",
-                    style => style with { ForegroundColor = SKColors.Cyan, BackgroundColor = SKColors.Pink })
+                    style => style with
+                    {
+                        ForegroundColor = SKColors.Cyan, BackgroundColor = SKColors.Pink, Padding = new Padding(5f)
+                    })
                 .AddSpacing()
                 .AddHorizontalRule(style => style with { ForegroundColor = SKColors.Red })
             ).Build();

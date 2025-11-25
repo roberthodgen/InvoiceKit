@@ -29,12 +29,24 @@ public readonly record struct BlockStyle()
     /// </summary>
     public float FontSize { get; init; } = 12f;
 
+    /// <summary>
+    /// Stores border styles for all sides.
+    /// </summary>
     public BoxBorder Border { get; init; } = new ();
 
+    /// <summary>
+    /// Stores margin styles for all sides.
+    /// </summary>
     public Margin Margin { get; init; } = new ();
 
+    /// <summary>
+    /// Stores padding styles for all sides.
+    /// </summary>
     public Padding Padding { get; init; } = new ();
 
+    /// <summary>
+    /// Converts the foreground to a <see cref="SKPaint"/> for drawing on the canvas.
+    /// </summary>
     public SKPaint ForegroundToPaint()
     {
         return new SKPaint
@@ -44,6 +56,9 @@ public readonly record struct BlockStyle()
         };
     }
 
+    /// <summary>
+    /// Converts the background color to a <see cref="SKPaint"/> for drawing on the canvas.
+    /// </summary>
     public SKPaint BackgroundToPaint()
     {
         return new SKPaint
@@ -53,6 +68,9 @@ public readonly record struct BlockStyle()
         };
     }
 
+    /// <summary>
+    /// Converts font size and font into a <see cref="SKFont"/> for drawing on the canvas.
+    /// </summary>
     public SKFont ToFont()
     {
         var font = new SKFont
@@ -121,7 +139,7 @@ public readonly record struct BlockStyle()
     }
 
     /// <summary>
-    /// Creates a rect to outline where the margin starts.
+    /// Creates a rect to outline where the margin starts in debug mode.
     /// </summary>
     /// <param name="contentRect">The allocated element rect.</param>
     public SKRect GetMarginDebugRect(SKRect contentRect)
@@ -129,6 +147,11 @@ public readonly record struct BlockStyle()
         return Margin.GetDrawableRect(Border.GetDrawableRect(Padding.GetDrawableRect(contentRect)));
     }
 
+    /// <summary>
+    /// Creates a rect to outline where the padding starts in debug mode.
+    /// </summary>
+    /// <param name="contentRect">The allocated element rect.</param>
+    /// <returns></returns>
     public SKRect GetPaddingDebugRect(SKRect contentRect)
     {
         return Padding.GetDrawableRect(contentRect);

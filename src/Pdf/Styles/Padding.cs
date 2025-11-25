@@ -28,21 +28,30 @@ public readonly record struct Padding
         Bottom = padding;
     }
 
-    public SKRect GetDrawableRect(SKRect rect)
+    /// <summary>
+    /// Gets the starting location for the padding.
+    /// </summary>
+    /// <param name="content">SKRect of the drawable content.</param>
+    /// <returns>SKRect for the padding</returns>
+    public SKRect GetDrawableRect(SKRect content)
     {
         return new SKRect(
-            rect.Left - Left,
-            rect.Top - Top,
-            rect.Right + Right,
-            rect.Bottom + Bottom);
+            content.Left - Left,
+            content.Top - Top,
+            content.Right + Right,
+            content.Bottom + Bottom);
     }
 
-    public SKRect GetContentRect(SKRect rect)
+    /// <summary>
+    /// Adjusts available space by removing the padding size from each side.
+    /// </summary>
+    /// <param name="available">The available space in the context.</param>
+    public SKRect GetContentRect(SKRect available)
     {
         return new SKRect(
-            rect.Left + Left,
-            rect.Top + Top,
-            rect.Right - Right,
-            rect.Bottom - Bottom);
+            available.Left + Left,
+            available.Top + Top,
+            available.Right - Right,
+            available.Bottom - Bottom);
     }
 }
