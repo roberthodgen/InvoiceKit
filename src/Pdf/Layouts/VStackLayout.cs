@@ -2,7 +2,6 @@ namespace InvoiceKit.Pdf.Layouts;
 
 using Drawables;
 using SkiaSharp;
-using Styles;
 
 internal class VStackLayout : ILayout
 {
@@ -31,45 +30,28 @@ internal class VStackLayout : ILayout
 
         var drawables = new List<IDrawable>();
 
-        var stackContext = context.GetChildContext(Style.GetContentRect(context.Available));
-
-        var footerHeight = _footer?.Measure(stackContext.Available.Size).Height ?? 0f;
-
-        if (context.TryAllocate(Style.GetStyleSize()) == false)
-        {
-            return new LayoutResult(drawables, LayoutStatus.NeedsNewPage);
-        }
+        var footerHeight = _footer?.Measure(context.Available.Size).Height ?? 0f;
 
         // Lay out the header
-        drawables.AddRange(LayoutHeader(stackContext).Drawables);
+        drawables.AddRange(LayoutHeader(context).Drawables);
 
         // Lay out the children
         while (_children.Count > 0)
         {
-            var childContext = stackContext.GetChildContext(new SKRect(
-                stackContext.Available.Left,
-                stackContext.Available.Top,
-                stackContext.Available.Right,
-                stackContext.Available.Bottom - footerHeight));
+            var childContext = context.GetChildContext(new SKRect(
+                context.Available.Left,
+                context.Available.Top,
+                context.Available.Right,
+                context.Available.Bottom - footerHeight));
             var layoutResult = _children.Peek().Layout(childContext);
             drawables.Add(new DebugDrawable(childContext.Allocated, DebugDrawable.AllocatedColor));
             drawables.AddRange(layoutResult.Drawables);
-            stackContext.CommitChildContext(childContext);
+            context.CommitChildContext(childContext);
 
             if (layoutResult.Status == LayoutStatus.NeedsNewPage)
             {
                 // Lay out the footer
-                drawables.AddRange(LayoutFooter(stackContext).Drawables);
-
-                // Add background and border drawables
-                drawables.Add(new BorderDrawable(Style.GetBorderRect(stackContext.Allocated), Style.Border));
-                drawables.Insert(0, new BackgroundDrawable(Style.GetBackgroundRect(stackContext.Allocated), Style.BackgroundToPaint()));
-
-                // Add debug drawables for margin and padding
-                drawables.Add(new DebugDrawable(Style.GetMarginDebugRect(stackContext.Allocated), DebugDrawable.MarginColor));
-                drawables.Add(new DebugDrawable(Style.GetBackgroundRect(stackContext.Allocated), DebugDrawable.PaddingColor));
-
-                context.CommitChildContext(stackContext);
+                drawables.AddRange(LayoutFooter(context).Drawables);
 
                 return new LayoutResult(drawables, LayoutStatus.NeedsNewPage);
             }
@@ -78,17 +60,7 @@ internal class VStackLayout : ILayout
         }
 
         // Lay out the footer
-        drawables.AddRange(LayoutFooter(stackContext).Drawables);
-
-        // Add background and border drawables
-        drawables.Add(new BorderDrawable(Style.GetBorderRect(stackContext.Allocated), Style.Border));
-        drawables.Insert(0, new BackgroundDrawable(Style.GetBackgroundRect(stackContext.Allocated), Style.BackgroundToPaint()));
-
-        // Add debug drawables for margin and padding
-        drawables.Add(new DebugDrawable(Style.GetMarginDebugRect(stackContext.Allocated), DebugDrawable.MarginColor));
-        drawables.Add(new DebugDrawable(Style.GetBackgroundRect(stackContext.Allocated), DebugDrawable.PaddingColor));
-
-        context.CommitChildContext(stackContext);
+        drawables.AddRange(LayoutFooter(context).Drawables);
 
         return new LayoutResult(drawables, LayoutStatus.IsFullyDrawn);
     }

@@ -1,7 +1,6 @@
 namespace InvoiceKit.Pdf.Drawables;
 
 using SkiaSharp;
-using Styles;
 
 internal class TextDrawable(string text, SKRect rect, BlockStyle style) : IDrawable
 {

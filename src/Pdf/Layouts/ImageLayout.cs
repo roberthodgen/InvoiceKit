@@ -2,7 +2,6 @@ namespace InvoiceKit.Pdf.Layouts;
 
 using Drawables;
 using SkiaSharp;
-using Styles;
 using Svg.Skia;
 
 internal class ImageLayout : ILayout
@@ -51,14 +50,14 @@ internal class ImageLayout : ILayout
     public LayoutResult Layout(LayoutContext context)
     {
         var drawables = new List<IDrawable>();
-        var imageContext = context.GetChildContext(Style.GetContentRect(context.Available));
+        var childContext = context.GetChildContext(Style.GetContentRect(context.Available));
 
         if (context.TryAllocate(Style.GetStyleSize()) == false)
         {
             return new LayoutResult(drawables, LayoutStatus.NeedsNewPage);
         }
 
-        if (imageContext.TryAllocate(this, out var rect))
+        if (childContext.TryAllocate(this, out var rect))
         {
             if (Svg is not null)
             {
@@ -76,10 +75,10 @@ internal class ImageLayout : ILayout
             }
 
             // Add margin and padding debug drawables.
-            drawables.Add(new DebugDrawable(Style.GetMarginDebugRect(imageContext.Allocated), DebugDrawable.MarginColor));
-            drawables.Add(new DebugDrawable(Style.GetBackgroundRect(imageContext.Allocated), DebugDrawable.PaddingColor));
+            drawables.Add(new DebugDrawable(Style.GetMarginDebugRect(childContext.Allocated), DebugDrawable.MarginColor));
+            drawables.Add(new DebugDrawable(Style.GetBackgroundRect(childContext.Allocated), DebugDrawable.PaddingColor));
 
-            context.CommitChildContext(imageContext);
+            context.CommitChildContext(childContext);
             return new LayoutResult(drawables, LayoutStatus.IsFullyDrawn);
         }
 

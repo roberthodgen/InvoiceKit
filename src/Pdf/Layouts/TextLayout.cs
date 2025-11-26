@@ -2,7 +2,6 @@ namespace InvoiceKit.Pdf.Layouts;
 
 using Drawables;
 using SkiaSharp;
-using Styles;
 
 /// <summary>
 /// A text block represents a single paragraph's text. Line breaks may be added to prevent paragraph spacing. Automatic
@@ -102,10 +101,10 @@ internal class TextLayout : ILayout
 
     public LayoutResult Layout(LayoutContext context)
     {
-        var textContext = context.GetChildContext(Style.GetContentRect(context.Available));
+        var childContext = context.GetChildContext(Style.GetContentRect(context.Available));
         if (_wrappedLines.Count == 0)
         {
-            _wrappedLines = _lines.SelectMany(line => WrapText(line, Style, textContext.Available.Width)).ToList();
+            _wrappedLines = _lines.SelectMany(line => WrapText(line, Style, childContext.Available.Width)).ToList();
         }
 
         var drawables = new List<IDrawable>();
@@ -118,7 +117,7 @@ internal class TextLayout : ILayout
 
         while (_currentIndex < _wrappedLines.Count)
         {
-            if (textContext.TryAllocate(MeasureFullLineSize(textContext.Available.Size), out var rect))
+            if (childContext.TryAllocate(MeasureFullLineSize(childContext.Available.Size), out var rect))
             {
                 drawables.Add(new DebugDrawable(rect, DebugDrawable.ContentColor));
                 drawables.Add(new TextDrawable(_wrappedLines[_currentIndex], rect, Style));
@@ -128,14 +127,14 @@ internal class TextLayout : ILayout
 
             // Add background and border drawables.
             // Background needs to come before text.
-            drawables.Insert(0, new BackgroundDrawable(Style.GetBackgroundRect(textContext.Allocated), Style.BackgroundToPaint()));
-            drawables.Add(new BorderDrawable(Style.GetBorderRect(textContext.Allocated), Style.Border));
+            drawables.Insert(0, new BackgroundDrawable(Style.GetBackgroundRect(childContext.Allocated), Style.BackgroundToPaint()));
+            drawables.Add(new BorderDrawable(Style.GetBorderRect(childContext.Allocated), Style.Border));
 
             // Add margin and padding debug drawables.
-            drawables.Add(new DebugDrawable(Style.GetMarginDebugRect(textContext.Allocated), DebugDrawable.MarginColor));
-            drawables.Add(new DebugDrawable(Style.GetBackgroundRect(textContext.Allocated), DebugDrawable.PaddingColor));
+            drawables.Add(new DebugDrawable(Style.GetMarginDebugRect(childContext.Allocated), DebugDrawable.MarginColor));
+            drawables.Add(new DebugDrawable(Style.GetBackgroundRect(childContext.Allocated), DebugDrawable.PaddingColor));
 
-            context.CommitChildContext(textContext);
+            context.CommitChildContext(childContext);
             return new LayoutResult(drawables, LayoutStatus.NeedsNewPage);
         }
 
@@ -144,14 +143,14 @@ internal class TextLayout : ILayout
 
         // Add and border drawables.
         // Background needs to come before text.
-        drawables.Insert(0, new BackgroundDrawable(Style.GetBackgroundRect(textContext.Allocated), Style.BackgroundToPaint()));
-        drawables.Add(new BorderDrawable(Style.GetBorderRect(textContext.Allocated), Style.Border));
+        drawables.Insert(0, new BackgroundDrawable(Style.GetBackgroundRect(childContext.Allocated), Style.BackgroundToPaint()));
+        drawables.Add(new BorderDrawable(Style.GetBorderRect(childContext.Allocated), Style.Border));
 
         // Add margin and padding debug drawables.
-        drawables.Add(new DebugDrawable(Style.GetMarginDebugRect(textContext.Allocated), DebugDrawable.MarginColor));
-        drawables.Add(new DebugDrawable(Style.GetBackgroundRect(textContext.Allocated), DebugDrawable.PaddingColor));
+        drawables.Add(new DebugDrawable(Style.GetMarginDebugRect(childContext.Allocated), DebugDrawable.MarginColor));
+        drawables.Add(new DebugDrawable(Style.GetBackgroundRect(childContext.Allocated), DebugDrawable.PaddingColor));
 
-        context.CommitChildContext(textContext);
+        context.CommitChildContext(childContext);
         return new LayoutResult(drawables, LayoutStatus.IsFullyDrawn);
     }
 }

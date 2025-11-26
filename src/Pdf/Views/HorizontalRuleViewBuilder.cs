@@ -1,7 +1,6 @@
 namespace InvoiceKit.Pdf.Views;
 
 using Layouts;
-using Styles;
 
 /// <summary>
 /// Adds a horizontal line to the document.

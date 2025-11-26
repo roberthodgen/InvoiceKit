@@ -1,7 +1,6 @@
 namespace InvoiceKit.Pdf.Containers.Tables;
 
 using SkiaSharp;
-using Styles;
 
 public sealed class TableRowViewBuilder : IViewBuilder
 {

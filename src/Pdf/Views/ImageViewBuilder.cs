@@ -1,7 +1,6 @@
 namespace InvoiceKit.Pdf.Views;
 
 using Layouts;
-using Styles;
 
 /// <summary>
 /// Adds an image to the document.

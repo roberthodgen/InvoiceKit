@@ -1,7 +1,6 @@
 namespace InvoiceKit.Pdf.Views;
 
 using Layouts;
-using Styles;
 
 /// <summary>
 /// Renders content horizontally. Each column is rendered side-by-side.

@@ -1,6 +1,6 @@
 namespace InvoiceKit.Tests.Pdf;
 
-using InvoiceKit.Pdf.Styles;
+using InvoiceKit.Pdf;
 using SkiaSharp;
 
 public sealed class StyleTests

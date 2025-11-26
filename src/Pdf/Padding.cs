@@ -1,4 +1,4 @@
-namespace InvoiceKit.Pdf.Styles;
+namespace InvoiceKit.Pdf;
 
 using SkiaSharp;
 

@@ -2,7 +2,6 @@ namespace InvoiceKit.Pdf;
 
 using SkiaSharp;
 using Views;
-using Styles;
 
 /// <summary>
 /// The PDF document renderer takes inspiration from SwiftUI's flexible layout structure: HStack and VStack are used to
@@ -33,7 +32,7 @@ public sealed class PdfDocument : IPdfDocument
         Margin = new Margin(1f * PointsPerInch)
     };
 
-    private SKRect DrawableArea => SKRect.Create(_pageSize);
+    private SKRect DrawableArea => DocumentStyle.GetContentRect(SKRect.Create(_pageSize));
 
     private PdfDocument(float width, float height)
     {
