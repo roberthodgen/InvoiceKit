@@ -14,8 +14,7 @@ internal class VStackRepeatingLayout(List<ILayout> children, BlockStyle style) :
             return SKSize.Empty;
         }
 
-        var sumChildHeight = children.Sum(child => child.Measure(available).Height);
-        return new SKSize(available.Width, sumChildHeight);
+        return new SKSize(available.Width, children.Sum(child => child.Measure(available).Height));
     }
 
     public LayoutResult Layout(LayoutContext context)
