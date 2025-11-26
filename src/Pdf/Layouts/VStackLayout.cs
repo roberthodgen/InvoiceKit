@@ -30,17 +30,10 @@ internal class VStackLayout : ILayout
         }
 
         var drawables = new List<IDrawable>();
-        var contentRect = Style.GetContentRect(context.Available);
 
-        var footerHeight = _footer?.Measure(contentRect.Size).Height ?? 0f;
+        var stackContext = context.GetChildContext(Style.GetContentRect(context.Available));
 
-        var rectWithoutFooter = new SKRect(
-            contentRect.Left,
-            contentRect.Top,
-            contentRect.Right,
-            contentRect.Bottom - footerHeight);
-
-        var stackContext = context.GetChildContext(contentRect);
+        var footerHeight = _footer?.Measure(stackContext.Available.Size).Height ?? 0f;
 
         if (context.TryAllocate(Style.GetStyleSize()) == false)
         {
@@ -53,7 +46,11 @@ internal class VStackLayout : ILayout
         // Lay out the children
         while (_children.Count > 0)
         {
-            var childContext = stackContext.GetChildContext(rectWithoutFooter);
+            var childContext = stackContext.GetChildContext(new SKRect(
+                stackContext.Available.Left,
+                stackContext.Available.Top,
+                stackContext.Available.Right,
+                stackContext.Available.Bottom - footerHeight));
             var layoutResult = _children.Peek().Layout(childContext);
             drawables.Add(new DebugDrawable(childContext.Allocated, DebugDrawable.AllocatedDebug));
             drawables.AddRange(layoutResult.Drawables);

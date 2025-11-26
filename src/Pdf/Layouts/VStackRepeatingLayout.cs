@@ -16,8 +16,7 @@ internal class VStackRepeatingLayout(List<ILayout> children, BlockStyle style) :
         }
 
         var styleSize = Style.GetStyleSize();
-        var sizeAfterStyle = Style.GetSizeAfterStyle(available);
-        var sumChildHeight = children.Sum(child => child.Measure(sizeAfterStyle).Height);
+        var sumChildHeight = children.Sum(child => child.Measure(Style.GetSizeAfterStyle(available)).Height);
         return new SKSize(available.Width, sumChildHeight + styleSize.Height);
     }
 
