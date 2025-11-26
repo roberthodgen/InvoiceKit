@@ -1,7 +1,6 @@
 namespace InvoiceKit.Pdf.Layouts;
 
 using SkiaSharp;
-using Styles;
 
 internal class PageBreakLayout : ILayout
 {

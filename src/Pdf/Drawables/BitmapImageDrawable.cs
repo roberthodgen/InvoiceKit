@@ -1,9 +1,8 @@
 namespace InvoiceKit.Pdf.Drawables;
 
 using SkiaSharp;
-using Styles;
 
-internal class BitmapImageDrawable(SKBitmap bitmap, SKRect rect, BlockStyle style) : IDrawable
+internal class BitmapImageDrawable(SKBitmap bitmap, SKRect rect) : IDrawable
 {
     public void Draw(IDrawableContext context)
     {

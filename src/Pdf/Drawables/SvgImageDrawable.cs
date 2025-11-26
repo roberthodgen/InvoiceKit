@@ -1,10 +1,9 @@
 namespace InvoiceKit.Pdf.Drawables;
 
 using SkiaSharp;
-using Styles;
 using Svg.Skia;
 
-internal class SvgImageDrawable(SKSvg svg, SKRect rect, BlockStyle style) : IDrawable
+internal class SvgImageDrawable(SKSvg svg, SKRect rect) : IDrawable
 {
     public void Draw(IDrawableContext context)
     {

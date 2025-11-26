@@ -39,12 +39,13 @@ internal class TextLayout : ILayout
     public SKSize Measure(SKSize available)
     {
         var stylingSize = Style.GetStyleSize();
+        var sizeAfterStyle = Style.GetSizeAfterStyle(available);
         if (_wrappedLines.Count == 0)
         {
-            _wrappedLines = _lines.SelectMany(line => WrapText(line, Style, available.Width - stylingSize.Width)).ToList();
+            _wrappedLines = _lines.SelectMany(line => WrapText(line, Style, sizeAfterStyle.Width)).ToList();
         }
 
-        var height = _wrappedLines.Select(_ => MeasureFullLineSize(available).Height).Sum() + stylingSize.Height;
+        var height = _wrappedLines.Select(_ => MeasureFullLineSize(sizeAfterStyle).Height).Sum() + stylingSize.Height;
         return new SKSize(available.Width, height);
     }
 

@@ -3,14 +3,14 @@ namespace InvoiceKit.Pdf.Drawables;
 using SkiaSharp;
 using Styles;
 
-internal class HorizontalRuleDrawable(SKRect rect, BlockStyle style) : IDrawable
+internal class HorizontalRuleDrawable(SKRect rect, SKPaint paint) : IDrawable
 {
     public void Draw(IDrawableContext context)
     {
         context.Canvas.DrawLine(
             rect.Location,
             SKPoint.Add(rect.Location, new SKSize(rect.Width, 0)),
-            style.ForegroundToPaint());
+            paint);
     }
 
     public void Dispose()

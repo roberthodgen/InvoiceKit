@@ -63,12 +63,12 @@ internal class ImageLayout : ILayout
             if (Svg is not null)
             {
                 drawables.Add(new DebugDrawable(rect, DebugDrawable.ContentDebug));
-                drawables.Add(new SvgImageDrawable(Svg, rect, Style));
+                drawables.Add(new SvgImageDrawable(Svg, rect));
             }
             else if (Bitmap is not null)
             {
                 drawables.Add(new DebugDrawable(rect, DebugDrawable.ContentDebug));
-                drawables.Add(new BitmapImageDrawable(Bitmap, rect, Style));
+                drawables.Add(new BitmapImageDrawable(Bitmap, rect));
             }
 
             // Add and border drawable.

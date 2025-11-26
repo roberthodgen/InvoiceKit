@@ -1,7 +1,6 @@
 namespace InvoiceKit.Pdf.Drawables;
 
 using SkiaSharp;
-using Styles;
 
 public class BackgroundDrawable(SKRect rect, SKPaint paint) : IDrawable
 {

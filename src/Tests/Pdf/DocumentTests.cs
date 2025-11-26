@@ -122,8 +122,8 @@ public class DocumentTests(ITestOutputHelper testOutputHelper)
         var pdfBytes = builder
             .DisplayLayoutGuidelines()
             .WithVStack(vStack => vStack
-                .WithHeader(header => header.AddText("This is the header."), style => style with { Margin = new Margin(10f) })
-                .WithFooter(footer => footer.AddText("This is the footer."), style => style with { Margin = new Margin(10f) })
+                .WithHeader(header => header.AddText("This is the header."), style => style with { Margin = new Margin(5f) })
+                .WithFooter(footer => footer.AddText("This is the footer."), style => style with { Margin = new Margin(5f) })
                 .AddText("This is inside the first page's body.")
                 .AddText("This is inside the first page's body.")
                 .AddText("This is inside the first page's body.")

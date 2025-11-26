@@ -104,12 +104,22 @@ public readonly record struct BlockStyle()
     /// <summary>
     /// Returns the total size the styling would take.
     /// </summary>
-    /// <remarks>Used for allocating space in a context and for measuring.</remarks>
+    /// <remarks>Used for allocating space in a context.</remarks>
     public SKSize GetStyleSize()
     {
         var width = Padding.Left + Padding.Right + Margin.Left + Margin.Right + Border.Left.Width + Border.Right.Width;
         var height = Padding.Top + Padding.Bottom + Margin.Top + Margin.Bottom + Border.Top.Width + Border.Bottom.Width;
         return new SKSize(width, height);
+    }
+
+    /// <summary>
+    /// Returns the available size after taking out the styling size.
+    /// </summary>
+    /// <param name="available">SKSize of the available space</param>
+    public SKSize GetSizeAfterStyle(SKSize available)
+    {
+        var styleSize = GetStyleSize();
+        return new SKSize(available.Width - styleSize.Width, available.Height - styleSize.Height);
     }
 
     /// <summary>

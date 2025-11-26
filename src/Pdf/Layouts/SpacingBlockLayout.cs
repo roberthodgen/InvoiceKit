@@ -2,7 +2,6 @@ namespace InvoiceKit.Pdf.Layouts;
 
 using SkiaSharp;
 
-// Todo: should probably be removed with the addition of margin and padding.
 internal class SpacingBlockLayout(float height) : ILayout
 {
     public SKSize Measure(SKSize available)

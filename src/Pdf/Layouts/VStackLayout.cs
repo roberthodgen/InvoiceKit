@@ -104,10 +104,10 @@ internal class VStackLayout : ILayout
         }
 
         var styleSize = Style.GetStyleSize();
-        var sizeAfterStyling = new SKSize(available.Width - styleSize.Width, available.Height - styleSize.Height);
-        var headerHeight = _header?.Measure(sizeAfterStyling).Height ?? 0f;
-        var footerHeight = _footer?.Measure(sizeAfterStyling).Height ?? 0f;
-        var sumChildHeight = _children.Sum(child => child.Measure(sizeAfterStyling).Height);
+        var sizeAfterStyle = Style.GetSizeAfterStyle(available);
+        var headerHeight = _header?.Measure(sizeAfterStyle).Height ?? 0f;
+        var footerHeight = _footer?.Measure(sizeAfterStyle).Height ?? 0f;
+        var sumChildHeight = _children.Sum(child => child.Measure(sizeAfterStyle).Height);
         var totalHeight = headerHeight + footerHeight + sumChildHeight + styleSize.Height;
         return new SKSize(available.Width, totalHeight);
     }

@@ -16,12 +16,21 @@ internal class HorizontalRuleLayout(BlockStyle style) : ILayout
     public LayoutResult Layout(LayoutContext context)
     {
         var drawables = new List<IDrawable>();
-        if (context.TryAllocate(this, out var rect))
+        var ruleContext = context.GetChildContext(Style.GetContentRect(context.Available));
+
+        if (context.TryAllocate(Style.GetStyleSize()) == false)
         {
-            drawables.Add(new HorizontalRuleDrawable(rect, Style));
+            return new LayoutResult(drawables, LayoutStatus.NeedsNewPage);
+        }
+
+        if (ruleContext.TryAllocate(this, out var rect))
+        {
+            drawables.Add(new HorizontalRuleDrawable(rect, Style.ForegroundToPaint()));
+            context.CommitChildContext(ruleContext);
             return new LayoutResult(drawables, LayoutStatus.IsFullyDrawn);
         }
 
+        context.CommitChildContext(ruleContext);
         return new LayoutResult(drawables, LayoutStatus.NeedsNewPage);
     }
 }
