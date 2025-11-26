@@ -66,18 +66,18 @@ internal class ImageLayout : ILayout
                 // Background needs to come before text.
                 drawables.Insert(0, new BackgroundDrawable(Style.GetBackgroundRect(rect), Style.BackgroundToPaint()));
                 drawables.Add(new BorderDrawable(Style.GetBorderRect(rect), Style.Border));
-                drawables.Add(new DebugDrawable(rect, DebugDrawable.ContentDebug));
+                drawables.Add(new DebugDrawable(rect, DebugDrawable.ContentColor));
                 drawables.Add(new SvgImageDrawable(Svg, rect));
             }
             else if (Bitmap is not null)
             {
-                drawables.Add(new DebugDrawable(rect, DebugDrawable.ContentDebug));
+                drawables.Add(new DebugDrawable(rect, DebugDrawable.ContentColor));
                 drawables.Add(new BitmapImageDrawable(Bitmap, rect));
             }
 
             // Add margin and padding debug drawables.
-            drawables.Add(new DebugDrawable(Style.GetMarginDebugRect(imageContext.Allocated), DebugDrawable.MarginDebug));
-            drawables.Add(new DebugDrawable(Style.GetBackgroundRect(imageContext.Allocated), DebugDrawable.PaddingDebug));
+            drawables.Add(new DebugDrawable(Style.GetMarginDebugRect(imageContext.Allocated), DebugDrawable.MarginColor));
+            drawables.Add(new DebugDrawable(Style.GetBackgroundRect(imageContext.Allocated), DebugDrawable.PaddingColor));
 
             context.CommitChildContext(imageContext);
             return new LayoutResult(drawables, LayoutStatus.IsFullyDrawn);

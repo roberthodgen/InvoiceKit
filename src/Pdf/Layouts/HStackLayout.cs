@@ -39,7 +39,7 @@ internal class HStackLayout(List<ILayout> columns, BlockStyle style) : ILayout
             var childContext = stackContext.GetChildContext(SKRect.Create(point, columnSize));
             var result = columns[index].Layout(childContext);
             results.Add(new ColumnResult(result.Drawables, result.Status, childContext));
-            drawables.Add(new DebugDrawable(childContext.Allocated, DebugDrawable.AllocatedDebug));
+            drawables.Add(new DebugDrawable(childContext.Allocated, DebugDrawable.AllocatedColor));
         }
 
         var maxHeight = results.MaxBy(result => result.Context.Allocated.Height);
@@ -51,8 +51,8 @@ internal class HStackLayout(List<ILayout> columns, BlockStyle style) : ILayout
         drawables.Insert(0, new BackgroundDrawable(Style.GetBackgroundRect(stackContext.Allocated), Style.BackgroundToPaint()));
 
         // Add margin and padding debug drawables.
-        drawables.Add(new DebugDrawable(Style.GetMarginDebugRect(stackContext.Allocated), DebugDrawable.MarginDebug));
-        drawables.Add(new DebugDrawable(Style.GetBackgroundRect(stackContext.Allocated), DebugDrawable.PaddingDebug));
+        drawables.Add(new DebugDrawable(Style.GetMarginDebugRect(stackContext.Allocated), DebugDrawable.MarginColor));
+        drawables.Add(new DebugDrawable(Style.GetBackgroundRect(stackContext.Allocated), DebugDrawable.PaddingColor));
 
         drawables.AddRange(results.SelectMany(result => result.Drawables).ToList());
         if (results.Any(result => result.Status == LayoutStatus.NeedsNewPage))

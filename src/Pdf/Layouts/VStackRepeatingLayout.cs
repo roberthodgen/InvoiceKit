@@ -36,7 +36,7 @@ internal class VStackRepeatingLayout(List<ILayout> children, BlockStyle style) :
             var childContext = stackContext.GetChildContext();
             var result = child.Layout(childContext);
             drawables.AddRange(result.Drawables);
-            drawables.Add(new DebugDrawable(childContext.Allocated,  DebugDrawable.AllocatedDebug));
+            drawables.Add(new DebugDrawable(childContext.Allocated,  DebugDrawable.AllocatedColor));
             stackContext.CommitChildContext(childContext);
 
             if (result.Status == LayoutStatus.NeedsNewPage)
@@ -46,8 +46,8 @@ internal class VStackRepeatingLayout(List<ILayout> children, BlockStyle style) :
                 drawables.Insert(0, new BackgroundDrawable(Style.GetBackgroundRect(stackContext.Allocated), Style.BackgroundToPaint()));
 
                 // Add debug drawables for margin and padding
-                drawables.Add(new DebugDrawable(Style.GetMarginDebugRect(stackContext.Allocated), DebugDrawable.MarginDebug));
-                drawables.Add(new DebugDrawable(Style.GetBackgroundRect(stackContext.Allocated), DebugDrawable.PaddingDebug));
+                drawables.Add(new DebugDrawable(Style.GetMarginDebugRect(stackContext.Allocated), DebugDrawable.MarginColor));
+                drawables.Add(new DebugDrawable(Style.GetBackgroundRect(stackContext.Allocated), DebugDrawable.PaddingColor));
 
                 context.CommitChildContext(stackContext);
                 return new LayoutResult([], LayoutStatus.NeedsNewPage);
@@ -59,8 +59,8 @@ internal class VStackRepeatingLayout(List<ILayout> children, BlockStyle style) :
         drawables.Insert(0, new BackgroundDrawable(Style.GetBackgroundRect(stackContext.Allocated), Style.BackgroundToPaint()));
 
         // Add debug drawables for margin and padding
-        drawables.Add(new DebugDrawable(Style.GetMarginDebugRect(stackContext.Allocated), DebugDrawable.MarginDebug));
-        drawables.Add(new DebugDrawable(Style.GetBackgroundRect(stackContext.Allocated), DebugDrawable.PaddingDebug));
+        drawables.Add(new DebugDrawable(Style.GetMarginDebugRect(stackContext.Allocated), DebugDrawable.MarginColor));
+        drawables.Add(new DebugDrawable(Style.GetBackgroundRect(stackContext.Allocated), DebugDrawable.PaddingColor));
 
         context.CommitChildContext(stackContext);
         return new LayoutResult(drawables, LayoutStatus.IsFullyDrawn);

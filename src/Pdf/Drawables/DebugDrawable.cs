@@ -4,15 +4,15 @@ using SkiaSharp;
 
 internal class DebugDrawable(SKRect rect, SKColor color) : IDrawable
 {
-    public static SKColor DrawableAreaDebug => SKColors.Magenta;
+    public static SKColor DrawableAreaColor => SKColors.DarkRed;
 
-    public static SKColor AllocatedDebug => SKColors.Cyan;
+    public static SKColor AllocatedColor => SKColors.DarkBlue;
 
-    public static SKColor MarginDebug => SKColors.Cyan;
+    public static SKColor MarginColor => SKColors.Cyan;
 
-    public static SKColor PaddingDebug => SKColors.Magenta;
+    public static SKColor PaddingColor => SKColors.Magenta;
 
-    public static SKColor ContentDebug => SKColors.Yellow;
+    public static SKColor ContentColor => SKColors.Yellow;
 
     public void Draw(IDrawableContext context)
     {

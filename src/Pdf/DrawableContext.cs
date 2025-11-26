@@ -21,7 +21,7 @@ internal class DrawableContext : IDrawableContext
                 new SKPaint
                 {
                     Style = SKPaintStyle.Stroke,
-                    Color = DebugDrawable.DrawableAreaDebug,
+                    Color = DebugDrawable.DrawableAreaColor,
                     StrokeWidth = 1f,
                 });
         }

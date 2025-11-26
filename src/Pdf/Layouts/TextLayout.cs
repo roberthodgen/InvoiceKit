@@ -120,7 +120,7 @@ internal class TextLayout : ILayout
         {
             if (textContext.TryAllocate(MeasureFullLineSize(textContext.Available.Size), out var rect))
             {
-                drawables.Add(new DebugDrawable(rect, DebugDrawable.ContentDebug));
+                drawables.Add(new DebugDrawable(rect, DebugDrawable.ContentColor));
                 drawables.Add(new TextDrawable(_wrappedLines[_currentIndex], rect, Style));
                 _currentIndex++;
                 continue;   // Skip to the next line.
@@ -132,8 +132,8 @@ internal class TextLayout : ILayout
             drawables.Add(new BorderDrawable(Style.GetBorderRect(textContext.Allocated), Style.Border));
 
             // Add margin and padding debug drawables.
-            drawables.Add(new DebugDrawable(Style.GetMarginDebugRect(textContext.Allocated), DebugDrawable.MarginDebug));
-            drawables.Add(new DebugDrawable(Style.GetBackgroundRect(textContext.Allocated), DebugDrawable.PaddingDebug));
+            drawables.Add(new DebugDrawable(Style.GetMarginDebugRect(textContext.Allocated), DebugDrawable.MarginColor));
+            drawables.Add(new DebugDrawable(Style.GetBackgroundRect(textContext.Allocated), DebugDrawable.PaddingColor));
 
             context.CommitChildContext(textContext);
             return new LayoutResult(drawables, LayoutStatus.NeedsNewPage);
@@ -148,8 +148,8 @@ internal class TextLayout : ILayout
         drawables.Add(new BorderDrawable(Style.GetBorderRect(textContext.Allocated), Style.Border));
 
         // Add margin and padding debug drawables.
-        drawables.Add(new DebugDrawable(Style.GetMarginDebugRect(textContext.Allocated), DebugDrawable.MarginDebug));
-        drawables.Add(new DebugDrawable(Style.GetBackgroundRect(textContext.Allocated), DebugDrawable.PaddingDebug));
+        drawables.Add(new DebugDrawable(Style.GetMarginDebugRect(textContext.Allocated), DebugDrawable.MarginColor));
+        drawables.Add(new DebugDrawable(Style.GetBackgroundRect(textContext.Allocated), DebugDrawable.PaddingColor));
 
         context.CommitChildContext(textContext);
         return new LayoutResult(drawables, LayoutStatus.IsFullyDrawn);

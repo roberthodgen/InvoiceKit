@@ -52,7 +52,7 @@ internal class VStackLayout : ILayout
                 stackContext.Available.Right,
                 stackContext.Available.Bottom - footerHeight));
             var layoutResult = _children.Peek().Layout(childContext);
-            drawables.Add(new DebugDrawable(childContext.Allocated, DebugDrawable.AllocatedDebug));
+            drawables.Add(new DebugDrawable(childContext.Allocated, DebugDrawable.AllocatedColor));
             drawables.AddRange(layoutResult.Drawables);
             stackContext.CommitChildContext(childContext);
 
@@ -66,8 +66,8 @@ internal class VStackLayout : ILayout
                 drawables.Insert(0, new BackgroundDrawable(Style.GetBackgroundRect(stackContext.Allocated), Style.BackgroundToPaint()));
 
                 // Add debug drawables for margin and padding
-                drawables.Add(new DebugDrawable(Style.GetMarginDebugRect(stackContext.Allocated), DebugDrawable.MarginDebug));
-                drawables.Add(new DebugDrawable(Style.GetBackgroundRect(stackContext.Allocated), DebugDrawable.PaddingDebug));
+                drawables.Add(new DebugDrawable(Style.GetMarginDebugRect(stackContext.Allocated), DebugDrawable.MarginColor));
+                drawables.Add(new DebugDrawable(Style.GetBackgroundRect(stackContext.Allocated), DebugDrawable.PaddingColor));
 
                 context.CommitChildContext(stackContext);
 
@@ -85,8 +85,8 @@ internal class VStackLayout : ILayout
         drawables.Insert(0, new BackgroundDrawable(Style.GetBackgroundRect(stackContext.Allocated), Style.BackgroundToPaint()));
 
         // Add debug drawables for margin and padding
-        drawables.Add(new DebugDrawable(Style.GetMarginDebugRect(stackContext.Allocated), DebugDrawable.MarginDebug));
-        drawables.Add(new DebugDrawable(Style.GetBackgroundRect(stackContext.Allocated), DebugDrawable.PaddingDebug));
+        drawables.Add(new DebugDrawable(Style.GetMarginDebugRect(stackContext.Allocated), DebugDrawable.MarginColor));
+        drawables.Add(new DebugDrawable(Style.GetBackgroundRect(stackContext.Allocated), DebugDrawable.PaddingColor));
 
         context.CommitChildContext(stackContext);
 
