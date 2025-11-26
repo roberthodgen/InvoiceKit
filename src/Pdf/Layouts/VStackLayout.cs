@@ -52,7 +52,6 @@ internal class VStackLayout : ILayout
             {
                 // Lay out the footer
                 drawables.AddRange(LayoutFooter(context).Drawables);
-
                 return new LayoutResult(drawables, LayoutStatus.NeedsNewPage);
             }
 
@@ -61,7 +60,6 @@ internal class VStackLayout : ILayout
 
         // Lay out the footer
         drawables.AddRange(LayoutFooter(context).Drawables);
-
         return new LayoutResult(drawables, LayoutStatus.IsFullyDrawn);
     }
 
@@ -72,12 +70,10 @@ internal class VStackLayout : ILayout
             return SKSize.Empty;
         }
 
-        var styleSize = Style.GetStyleSize();
-        var sizeAfterStyle = Style.GetSizeAfterStyle(available);
-        var headerHeight = _header?.Measure(sizeAfterStyle).Height ?? 0f;
-        var footerHeight = _footer?.Measure(sizeAfterStyle).Height ?? 0f;
-        var sumChildHeight = _children.Sum(child => child.Measure(sizeAfterStyle).Height);
-        var totalHeight = headerHeight + footerHeight + sumChildHeight + styleSize.Height;
+        var headerHeight = _header?.Measure(available).Height ?? 0f;
+        var footerHeight = _footer?.Measure(available).Height ?? 0f;
+        var sumChildHeight = _children.Sum(child => child.Measure(available).Height);
+        var totalHeight = headerHeight + footerHeight + sumChildHeight;
         return new SKSize(available.Width, totalHeight);
     }
 

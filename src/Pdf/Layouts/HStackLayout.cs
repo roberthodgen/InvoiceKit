@@ -18,12 +18,6 @@ internal class HStackLayout(List<ILayout> columns, BlockStyle style) : ILayout
         }
 
         var drawables = new List<IDrawable>();
-
-        if (context.TryAllocate(Style.GetStyleSize()) == false)
-        {
-            return new LayoutResult(drawables, LayoutStatus.IsFullyDrawn);
-        }
-
         var results = new List<ColumnResult>();
 
         var columnSize = new SKSize(context.Available.Width / columns.Count, context.Available.Height);
@@ -43,6 +37,7 @@ internal class HStackLayout(List<ILayout> columns, BlockStyle style) : ILayout
         context.CommitChildContext(maxHeight!.Context);
 
         drawables.AddRange(results.SelectMany(result => result.Drawables).ToList());
+
         if (results.Any(result => result.Status == LayoutStatus.NeedsNewPage))
         {
             return new LayoutResult(drawables, LayoutStatus.NeedsNewPage);
