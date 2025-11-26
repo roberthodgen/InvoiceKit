@@ -2,7 +2,7 @@ namespace InvoiceKit.Pdf.Drawables;
 
 using SkiaSharp;
 
-public class BackgroundDrawable(SKRect rect, SKPaint paint) : IDrawable
+internal class BackgroundDrawable(SKRect rect, SKPaint paint) : IDrawable
 {
     public void Draw(IDrawableContext context)
     {

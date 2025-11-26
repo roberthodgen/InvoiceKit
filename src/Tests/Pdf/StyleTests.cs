@@ -29,9 +29,9 @@ public sealed class StyleTests
         // Assert
         childStyle.ForegroundColor.ShouldBe(style.ForegroundColor);
         childStyle.BackgroundColor.ShouldBe(style.BackgroundColor);
-        childStyle.Margin.Left.ShouldBe(0);
-        childStyle.Padding.Left.ShouldBe(0);
-        childStyle.Border.Left.Width.ShouldBe(0);
+        childStyle.Margin.ShouldBe(new Margin());
+        childStyle.Padding.ShouldBe(new Padding());
+        childStyle.Border.ShouldBe(new BoxBorder());
     }
 
     [Fact]
@@ -74,10 +74,12 @@ public sealed class StyleTests
         style.Padding.Left.ShouldBe(10f);
         style.Border.Left.Width.ShouldBe(1f);
 
-        //Act
+        // Act
         var startingRect = new SKRect(10, 10, 100, 100);
         var contentRect = style.GetContentRect(startingRect);
         var borderRect = style.GetBorderRect(contentRect);
+
+        // Assert
         borderRect.Left.ShouldBe(20f);
         borderRect.Top.ShouldBe(20f);
         borderRect.Right.ShouldBe(90f);
@@ -100,10 +102,12 @@ public sealed class StyleTests
         style.Padding.Left.ShouldBe(10f);
         style.Border.Left.Width.ShouldBe(1f);
 
-        //Act
+        // Act
         var startingRect = new SKRect(10, 10, 100, 100);
         var contentRect = style.GetContentRect(startingRect);
         var backgroundRect = style.GetBackgroundRect(contentRect);
+
+        // Assert
         backgroundRect.Left.ShouldBe(21f);
         backgroundRect.Top.ShouldBe(21f);
         backgroundRect.Right.ShouldBe(89f);
@@ -126,9 +130,11 @@ public sealed class StyleTests
         style.Padding.Left.ShouldBe(10f);
         style.Border.Left.Width.ShouldBe(1f);
 
-        //Act
+        // Act
         var startingRect = new SKRect(10, 10, 100, 100);
         var contentRect = style.GetContentRect(startingRect);
+
+        // Assert
         contentRect.Left.ShouldBe(31f);
         contentRect.Top.ShouldBe(31f);
         contentRect.Right.ShouldBe(79f);
@@ -151,10 +157,12 @@ public sealed class StyleTests
         style.Padding.Left.ShouldBe(10f);
         style.Border.Left.Width.ShouldBe(1f);
 
-        //Act
+        // Act
         var startingRect = new SKRect(10, 10, 100, 100);
         var contentRect = style.GetContentRect(startingRect);
         var marginRect = style.GetMarginDebugRect(contentRect);
+
+        // Assert
         marginRect.Left.ShouldBe(startingRect.Left);
         marginRect.Top.ShouldBe(startingRect.Top);
         marginRect.Right.ShouldBe(startingRect.Right);
