@@ -219,7 +219,6 @@ public class DocumentTests(ITestOutputHelper testOutputHelper)
         var pdfBytes = builder
             .DisplayLayoutGuidelines()
             .WithVStack(vStack => vStack
-                .WithDefaultStyle(style => style with { Margin = new Margin(5f), Padding = new Padding(5f) })
                 .AddText("Margin and Padding Test",
                     style => style with { Margin = new Margin(5f), Padding = new Padding(5f) })
                 .AddHStack(hStack => hStack

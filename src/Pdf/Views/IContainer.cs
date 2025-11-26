@@ -72,5 +72,9 @@ public interface IContainer : IViewBuilder
     /// </summary>
     /// <param name="configureStyle">The base/parent style which may be modified as needed.</param>
     /// <returns>The style to be applied to this view.</returns>
+    /// <remarks>
+    /// Will override document style if it is the first stack on the document.<br />
+    /// Margin, padding, and border will be reset for all children.
+    /// </remarks>
     IContainer WithDefaultStyle(Func<BlockStyle, BlockStyle> configureStyle);
 }

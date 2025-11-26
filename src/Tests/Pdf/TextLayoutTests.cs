@@ -105,7 +105,7 @@ public class TextLayoutTests(ITestOutputHelper testOutputHelper)
             // .DisplayLayoutGuidelines()
             .WithVStack(vStack => vStack
                 .AddText(
-                    "Text_WithBoarders_Text.pdf",
+                    "Text_WithBorders_Text.pdf",
                     style => style with { FontPath = "Open Sans/SemiBold", FontSize = 24f, })
                 .AddText(
                     """
