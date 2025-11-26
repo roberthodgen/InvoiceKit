@@ -30,10 +30,11 @@ internal class VStackLayout : ILayout
 
         var drawables = new List<IDrawable>();
 
-        var footerHeight = _footer?.Measure(context.Available.Size).Height ?? 0f;
-
         // Lay out the header
         drawables.AddRange(LayoutHeader(context).Drawables);
+
+        // Get footer size for child content
+        var footerHeight = _footer?.Measure(context.Available.Size).Height ?? 0f;
 
         // Lay out the children
         while (_children.Count > 0)

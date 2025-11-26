@@ -19,7 +19,6 @@ internal class HStackLayout(List<ILayout> columns, BlockStyle style) : ILayout
 
         var drawables = new List<IDrawable>();
         var results = new List<ColumnResult>();
-
         var columnSize = new SKSize(context.Available.Width / columns.Count, context.Available.Height);
 
         // Loops for the number of columns once. Children that need a new page are added back to the stack.

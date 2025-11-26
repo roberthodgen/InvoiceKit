@@ -221,7 +221,6 @@ public class DocumentTests(ITestOutputHelper testOutputHelper)
                 .AddText("Margin and Padding Test",
                     style => style with { Margin = new Margin(5f), Padding = new Padding(5f) })
                 .AddHStack(hStack => hStack
-                    .WithDefaultStyle(style => style with { Margin = new Margin(5f), Padding = new Padding(5f) })
                     .AddText("Left Column", style => style with { Margin = new Margin(5f), Padding = new Padding(5f) })
                     .AddImage(image =>
                             image.WithSvgImage(Path.Combine(Directory.GetCurrentDirectory(), "Images/circle.svg")),
