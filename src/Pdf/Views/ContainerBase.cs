@@ -87,6 +87,14 @@ public abstract class ContainerBase(BlockStyle defaultStyle) : IContainer
         return this;
     }
 
+    public IContainer AddTable(Action<TableViewBuilder> configure, Func<BlockStyle, BlockStyle> configureStyle)
+    {
+        var child = new TableViewBuilder(configureStyle(ChildStyle));
+        configure(child);
+        _children.Add(child);
+        return this;
+    }
+
     public IContainer AddPageBreak()
     {
         var child = new PageBreakViewBuilder();

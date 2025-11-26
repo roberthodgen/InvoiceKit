@@ -8,7 +8,7 @@ public sealed class TableViewBuilder : IViewBuilder
 
     private readonly List<TableRowViewBuilder> _rows = [];
 
-    private BlockStyle _defaultStyle;
+    private readonly BlockStyle _defaultStyle;
 
     /// <summary>
     /// Specifies how column sizes will be computed.
@@ -30,12 +30,6 @@ public sealed class TableViewBuilder : IViewBuilder
         {
             FontPath = "Open Sans/Bold",
         };
-    }
-
-    public TableViewBuilder WithDefaultStyle(Func<BlockStyle, BlockStyle> configureStyle)
-    {
-        _defaultStyle = configureStyle(_defaultStyle);
-        return this;
     }
 
     public TableViewBuilder AddHeader(Action<TableRowViewBuilder> config)

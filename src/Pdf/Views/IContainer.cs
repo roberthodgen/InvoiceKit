@@ -58,9 +58,14 @@ public interface IContainer : IViewBuilder
     IContainer AddSpacing(float height = 5f);
 
     /// <summary>
-    /// Adds a new table block.
+    /// Adds a new table.
     /// </summary>
     IContainer AddTable(Action<TableViewBuilder> configureTableBlock);
+
+    /// <summary>
+    /// Adds a new table with custom styling.
+    /// </summary>
+    IContainer AddTable(Action<TableViewBuilder> configureTableBlock, Func<BlockStyle, BlockStyle> configureStyle);
 
     /// <summary>
     /// Fills the rest of the page with blank space and starts a new page.
