@@ -16,6 +16,6 @@ public sealed class HStack : ContainerBase
     public override ILayout ToLayout()
     {
         var childrenLayouts = Children.Select(child => child.ToLayout()).ToList();
-        return new HStackLayout(childrenLayouts, DefaultStyle);
+        return new HStackLayout(childrenLayouts);
     }
 }

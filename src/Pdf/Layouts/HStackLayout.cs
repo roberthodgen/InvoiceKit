@@ -3,10 +3,8 @@ namespace InvoiceKit.Pdf.Layouts;
 using Drawables;
 using SkiaSharp;
 
-internal class HStackLayout(List<ILayout> columns, BlockStyle style) : ILayout
+internal class HStackLayout(List<ILayout> columns) : ILayout
 {
-    private BlockStyle Style { get; } = style;
-
     /// <summary>
     /// Horizontal stack layout that will split into columns based on the number of children.
     /// </summary>

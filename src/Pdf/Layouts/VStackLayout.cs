@@ -5,17 +5,14 @@ using SkiaSharp;
 
 internal class VStackLayout : ILayout
 {
-    private BlockStyle Style { get; }
-
     private readonly Queue<ILayout> _children;
 
     private readonly ILayout? _header;
 
     private readonly ILayout? _footer;
 
-    internal VStackLayout(List<ILayout> children, ILayout? header, ILayout? footer, BlockStyle style)
+    internal VStackLayout(List<ILayout> children, ILayout? header, ILayout? footer)
     {
-        Style = style;
         _footer = footer;
         _header = header;
         _children = new Queue<ILayout>(children);
@@ -34,7 +31,7 @@ internal class VStackLayout : ILayout
         drawables.AddRange(LayoutHeader(context).Drawables);
 
         // Get footer size for child content
-        var footerHeight = _footer?.Measure(context.Available.Size).Height ?? 0f;
+        var footerSize = _footer?.Measure(context.Available.Size).Height ?? 0f;
 
         // Lay out the children
         while (_children.Count > 0)
@@ -43,7 +40,7 @@ internal class VStackLayout : ILayout
                 context.Available.Left,
                 context.Available.Top,
                 context.Available.Right,
-                context.Available.Bottom - footerHeight));
+                context.Available.Bottom - footerSize));
             var layoutResult = _children.Peek().Layout(childContext);
             drawables.Add(new DebugDrawable(childContext.Allocated, DebugDrawable.AllocatedColor));
             drawables.AddRange(layoutResult.Drawables);

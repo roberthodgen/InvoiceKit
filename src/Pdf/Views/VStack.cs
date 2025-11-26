@@ -32,7 +32,7 @@ public sealed class VStack : ContainerBase
             return new VStackRepeatingLayout(childrenLayouts, DefaultStyle);
         }
 
-        return new VStackLayout(childrenLayouts, _header?.ToLayout(), _footer?.ToLayout(), DefaultStyle);
+        return new VStackLayout(childrenLayouts, _header?.ToLayout(), _footer?.ToLayout());
     }
 
     public VStack WithHeader(Action<VStack> configure)
