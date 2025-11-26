@@ -29,7 +29,7 @@ public sealed class VStack : ContainerBase
         var childrenLayouts = Children.Select(child => child.ToLayout()).ToList();
         if (_repeating)
         {
-            return new VStackRepeatingLayout(childrenLayouts, DefaultStyle);
+            return new VStackRepeatingLayout(childrenLayouts);
         }
 
         return new VStackLayout(childrenLayouts, _header?.ToLayout(), _footer?.ToLayout());

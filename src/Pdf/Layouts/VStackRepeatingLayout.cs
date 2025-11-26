@@ -3,10 +3,8 @@ namespace InvoiceKit.Pdf.Layouts;
 using Drawables;
 using SkiaSharp;
 
-internal class VStackRepeatingLayout(List<ILayout> children, BlockStyle style) : ILayout
+internal class VStackRepeatingLayout(List<ILayout> children) : ILayout
 {
-    private BlockStyle Style { get; } = style;
-
     public SKSize Measure(SKSize available)
     {
         if (children.Count == 0)
