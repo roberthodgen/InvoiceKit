@@ -18,7 +18,7 @@ internal class PageBreakLayout : ILayout
             return new LayoutResult([], LayoutStatus.IsFullyDrawn);
         }
 
-        // Takes up the rest of the page space, putting the footer at the bottom of the page.
+        // Takes up the rest of available space, putting the footer at the bottom of the page.
         context.TryAllocate(this);
         _isDrawn = true;
 
