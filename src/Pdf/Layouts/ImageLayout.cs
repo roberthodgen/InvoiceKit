@@ -78,7 +78,7 @@ internal class ImageLayout : ILayout
 
             // Add margin and padding debug drawables.
             drawables.Add(new DebugDrawable(Style.GetMarginDebugRect(imageContext.Allocated), DebugDrawable.MarginDebug));
-            drawables.Add(new DebugDrawable(Style.GetPaddingDebugRect(imageContext.Allocated), DebugDrawable.PaddingDebug));
+            drawables.Add(new DebugDrawable(Style.GetBackgroundRect(imageContext.Allocated), DebugDrawable.PaddingDebug));
 
             context.CommitChildContext(imageContext);
             return new LayoutResult(drawables, LayoutStatus.IsFullyDrawn);

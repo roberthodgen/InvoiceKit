@@ -42,7 +42,7 @@ public class TextLayoutTests(ITestOutputHelper testOutputHelper)
             .Build();
 
         stream.Write(pdfBytes);
-        testOutputHelper.WriteLine($"PDF created: {Path.GetFullPath(fileName)}");
+        testOutputHelper.WriteLine($"PDF created: file://{Path.GetFullPath(fileName)}");
         File.Exists(fileName).ShouldBeTrue();
     }
 
@@ -89,7 +89,7 @@ public class TextLayoutTests(ITestOutputHelper testOutputHelper)
                 .AddHorizontalRule(style => style with { ForegroundColor = SKColors.Red })
             ).Build();
         stream.Write(pdfBytes);
-        testOutputHelper.WriteLine($"PDF created: {Path.GetFullPath(fileName)}");
+        testOutputHelper.WriteLine($"PDF created: file://{Path.GetFullPath(fileName)}");
         File.Exists(fileName).ShouldBeTrue();
     }
 
@@ -184,7 +184,7 @@ public class TextLayoutTests(ITestOutputHelper testOutputHelper)
             .Build();
 
         stream.Write(pdfBytes);
-        testOutputHelper.WriteLine($"PDF created: {Path.GetFullPath(fileName)}");
+        testOutputHelper.WriteLine($"PDF created: file://{Path.GetFullPath(fileName)}");
         File.Exists(fileName).ShouldBeTrue();
     }
 
@@ -254,7 +254,7 @@ public class TextLayoutTests(ITestOutputHelper testOutputHelper)
             .Build();
 
         stream.Write(pdfBytes);
-        testOutputHelper.WriteLine($"PDF created: {Path.GetFullPath(fileName)}");
+        testOutputHelper.WriteLine($"PDF created: file://{Path.GetFullPath(fileName)}");
         File.Exists(fileName).ShouldBeTrue();
     }
 }

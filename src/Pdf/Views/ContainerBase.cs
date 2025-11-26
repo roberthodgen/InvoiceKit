@@ -20,9 +20,9 @@ public abstract class ContainerBase(BlockStyle defaultStyle) : IContainer
         return this;
     }
 
-    public IContainer AddText(string text, Func<BlockStyle, BlockStyle> configureTextStyle)
+    public IContainer AddText(string text, Func<BlockStyle, BlockStyle> configureStyle)
     {
-        var child = new TextViewBuilder(text, configureTextStyle(ChildStyle));
+        var child = new TextViewBuilder(text, configureStyle(ChildStyle));
         _children.Add(child);
         return this;
     }
@@ -49,9 +49,9 @@ public abstract class ContainerBase(BlockStyle defaultStyle) : IContainer
         return this;
     }
 
-    public IContainer AddHorizontalRule(Func<BlockStyle, BlockStyle> configureTextStyle)
+    public IContainer AddHorizontalRule(Func<BlockStyle, BlockStyle> configureStyle)
     {
-        var child = new HorizontalRuleViewBuilder(configureTextStyle(ChildStyle));
+        var child = new HorizontalRuleViewBuilder(configureStyle(ChildStyle));
         _children.Add(child);
         return this;
     }

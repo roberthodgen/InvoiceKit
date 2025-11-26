@@ -60,7 +60,7 @@ public class DocumentTests(ITestOutputHelper testOutputHelper)
             .Build();
 
         stream.Write(pdfBytes);
-        testOutputHelper.WriteLine($"PDF created: {Path.GetFullPath(fileName)}");
+        testOutputHelper.WriteLine($"PDF created: file://{Path.GetFullPath(fileName)}");
         File.Exists(fileName).ShouldBeTrue();
     }
 
@@ -84,7 +84,7 @@ public class DocumentTests(ITestOutputHelper testOutputHelper)
             .Build();
 
         stream.Write(pdfBytes);
-        testOutputHelper.WriteLine($"PDF created: {Path.GetFullPath(fileName)}");
+        testOutputHelper.WriteLine($"PDF created: file://{Path.GetFullPath(fileName)}");
         File.Exists(fileName).ShouldBeTrue();
     }
 
@@ -107,7 +107,7 @@ public class DocumentTests(ITestOutputHelper testOutputHelper)
             .Build();
 
         stream.Write(pdfBytes);
-        testOutputHelper.WriteLine($"PDF created: {Path.GetFullPath(fileName)}");
+        testOutputHelper.WriteLine($"PDF created: file://{Path.GetFullPath(fileName)}");
         File.Exists(fileName).ShouldBeTrue();
     }
 
@@ -122,8 +122,8 @@ public class DocumentTests(ITestOutputHelper testOutputHelper)
         var pdfBytes = builder
             .DisplayLayoutGuidelines()
             .WithVStack(vStack => vStack
-                .WithHeader(header => header.AddText("This is the header."))
-                .WithFooter(footer => footer.AddText("This is the footer."))
+                .WithHeader(header => header.AddText("This is the header."), style => style with { Margin = new Margin(10f) })
+                .WithFooter(footer => footer.AddText("This is the footer."), style => style with { Margin = new Margin(10f) })
                 .AddText("This is inside the first page's body.")
                 .AddText("This is inside the first page's body.")
                 .AddText("This is inside the first page's body.")
@@ -163,7 +163,7 @@ public class DocumentTests(ITestOutputHelper testOutputHelper)
             .Build();
 
         stream.Write(pdfBytes);
-        testOutputHelper.WriteLine($"PDF created: {Path.GetFullPath(fileName)}");
+        testOutputHelper.WriteLine($"PDF created: file://{Path.GetFullPath(fileName)}");
         File.Exists(fileName).ShouldBeTrue();
     }
 
@@ -204,7 +204,7 @@ public class DocumentTests(ITestOutputHelper testOutputHelper)
             .Build();
 
         stream.Write(pdfBytes);
-        testOutputHelper.WriteLine($"PDF created: {Path.GetFullPath(fileName)}");
+        testOutputHelper.WriteLine($"PDF created: file://{Path.GetFullPath(fileName)}");
         File.Exists(fileName).ShouldBeTrue();
     }
 
@@ -239,7 +239,7 @@ public class DocumentTests(ITestOutputHelper testOutputHelper)
             ).Build();
 
         stream.Write(pdfBytes);
-        testOutputHelper.WriteLine($"PDF created: {Path.GetFullPath(fileName)}");
+        testOutputHelper.WriteLine($"PDF created: file://{Path.GetFullPath(fileName)}");
         File.Exists(fileName).ShouldBeTrue();
     }
 }

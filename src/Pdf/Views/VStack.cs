@@ -43,7 +43,19 @@ public sealed class VStack : ContainerBase
             throw new Exception("Cannot add a repeating stack to another repeating stack.");
         }
 
-        _header = new VStack(DefaultStyle, true);
+        _header = new VStack(DefaultStyle.CopyForChild(), true);
+        configure(_header);
+        return this;
+    }
+
+    public VStack WithHeader(Action<VStack> configure, Func<BlockStyle, BlockStyle> configureStyle)
+    {
+        if (_repeating)
+        {
+            throw new Exception("Cannot add a repeating stack to another repeating stack.");
+        }
+
+        _header = new VStack(configureStyle(DefaultStyle.CopyForChild()), true);
         configure(_header);
         return this;
     }
@@ -55,7 +67,19 @@ public sealed class VStack : ContainerBase
             throw new Exception("Cannot add a repeating stack to another repeating stack.");
         }
 
-        _footer = new VStack(DefaultStyle, true);
+        _footer = new VStack(DefaultStyle.CopyForChild(), true);
+        configure(_footer);
+        return this;
+    }
+
+    public VStack WithFooter(Action<VStack> configure, Func<BlockStyle, BlockStyle> configureStyle)
+    {
+        if (_repeating)
+        {
+            throw new Exception("Cannot add a repeating stack to another repeating stack.");
+        }
+
+        _footer = new VStack(configureStyle(DefaultStyle.CopyForChild()), true);
         configure(_footer);
         return this;
     }

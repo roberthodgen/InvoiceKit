@@ -102,8 +102,9 @@ public readonly record struct BlockStyle()
     }
 
     /// <summary>
-    /// Returns a new SKSize for the available size after styling adjustments.
+    /// Returns the total size the styling would take.
     /// </summary>
+    /// <remarks>Used for allocating space in a context and for measuring.</remarks>
     public SKSize GetStyleSize()
     {
         var width = Padding.Left + Padding.Right + Margin.Left + Margin.Right + Border.Left.Width + Border.Right.Width;
@@ -145,15 +146,5 @@ public readonly record struct BlockStyle()
     public SKRect GetMarginDebugRect(SKRect contentRect)
     {
         return Margin.GetDrawableRect(Border.GetDrawableRect(Padding.GetDrawableRect(contentRect)));
-    }
-
-    /// <summary>
-    /// Creates a rect to outline where the padding starts in debug mode.
-    /// </summary>
-    /// <param name="contentRect">The allocated element rect.</param>
-    /// <returns></returns>
-    public SKRect GetPaddingDebugRect(SKRect contentRect)
-    {
-        return Padding.GetDrawableRect(contentRect);
     }
 }

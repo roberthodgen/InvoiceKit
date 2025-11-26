@@ -132,7 +132,7 @@ internal class TextLayout : ILayout
 
             // Add margin and padding debug drawables.
             drawables.Add(new DebugDrawable(Style.GetMarginDebugRect(textContext.Allocated), DebugDrawable.MarginDebug));
-            drawables.Add(new DebugDrawable(Style.GetPaddingDebugRect(textContext.Allocated), DebugDrawable.PaddingDebug));
+            drawables.Add(new DebugDrawable(Style.GetBackgroundRect(textContext.Allocated), DebugDrawable.PaddingDebug));
 
             context.CommitChildContext(textContext);
             return new LayoutResult(drawables, LayoutStatus.NeedsNewPage);
@@ -148,7 +148,7 @@ internal class TextLayout : ILayout
 
         // Add margin and padding debug drawables.
         drawables.Add(new DebugDrawable(Style.GetMarginDebugRect(textContext.Allocated), DebugDrawable.MarginDebug));
-        drawables.Add(new DebugDrawable(Style.GetPaddingDebugRect(textContext.Allocated), DebugDrawable.PaddingDebug));
+        drawables.Add(new DebugDrawable(Style.GetBackgroundRect(textContext.Allocated), DebugDrawable.PaddingDebug));
 
         context.CommitChildContext(textContext);
         return new LayoutResult(drawables, LayoutStatus.IsFullyDrawn);

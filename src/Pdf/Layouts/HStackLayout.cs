@@ -48,11 +48,11 @@ internal class HStackLayout(List<ILayout> columns, BlockStyle style) : ILayout
 
         // Add background and border drawables.
         drawables.Add(new BorderDrawable(Style.GetBorderRect(stackContext.Allocated), Style.Border));
-        drawables.Add(new BackgroundDrawable(Style.GetBackgroundRect(stackContext.Allocated), Style.BackgroundToPaint()));
+        drawables.Insert(0, new BackgroundDrawable(Style.GetBackgroundRect(stackContext.Allocated), Style.BackgroundToPaint()));
 
         // Add margin and padding debug drawables.
         drawables.Add(new DebugDrawable(Style.GetMarginDebugRect(stackContext.Allocated), DebugDrawable.MarginDebug));
-        drawables.Add(new DebugDrawable(Style.GetPaddingDebugRect(stackContext.Allocated), DebugDrawable.PaddingDebug));
+        drawables.Add(new DebugDrawable(Style.GetBackgroundRect(stackContext.Allocated), DebugDrawable.PaddingDebug));
 
         drawables.AddRange(results.SelectMany(result => result.Drawables).ToList());
         if (results.Any(result => result.Status == LayoutStatus.NeedsNewPage))

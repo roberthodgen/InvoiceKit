@@ -14,21 +14,23 @@ internal class VStackRepeatingLayout(List<ILayout> children, BlockStyle style) :
         {
             return SKSize.Empty;
         }
-        var stylingSize = Style.GetStyleSize();
-        var sizeAfterStyling = new SKSize(available.Width - stylingSize.Width, available.Height - stylingSize.Height);
-        return new SKSize(sizeAfterStyling.Width, children.Sum(child => child.Measure(sizeAfterStyling).Height));
+
+        var styleSize = Style.GetStyleSize();
+        var sizeAfterStyling = new SKSize(available.Width - styleSize.Width, available.Height - styleSize.Height);
+        var sumChildHeight = children.Sum(child => child.Measure(sizeAfterStyling).Height);
+        return new SKSize(available.Width, sumChildHeight + styleSize.Height);
     }
 
     public LayoutResult Layout(LayoutContext context)
     {
         var drawables = new List<IDrawable>();
 
+        var stackContext = context.GetChildContext(Style.GetContentRect(context.Available));
+
         if (context.TryAllocate(Style.GetStyleSize()) == false)
         {
             return new LayoutResult(drawables, LayoutStatus.NeedsNewPage);
         }
-
-        var stackContext = context.GetChildContext(Style.GetContentRect(context.Available));
 
         foreach (var child in children)
         {
@@ -40,10 +42,26 @@ internal class VStackRepeatingLayout(List<ILayout> children, BlockStyle style) :
 
             if (result.Status == LayoutStatus.NeedsNewPage)
             {
+                // Add background and border drawables
+                drawables.Add(new BorderDrawable(Style.GetBorderRect(stackContext.Allocated), Style.Border));
+                drawables.Insert(0, new BackgroundDrawable(Style.GetBackgroundRect(stackContext.Allocated), Style.BackgroundToPaint()));
+
+                // Add debug drawables for margin and padding
+                drawables.Add(new DebugDrawable(Style.GetMarginDebugRect(stackContext.Allocated), DebugDrawable.MarginDebug));
+                drawables.Add(new DebugDrawable(Style.GetBackgroundRect(stackContext.Allocated), DebugDrawable.PaddingDebug));
+
                 context.CommitChildContext(stackContext);
                 return new LayoutResult([], LayoutStatus.NeedsNewPage);
             }
         }
+
+        // Add background and border drawables
+        drawables.Add(new BorderDrawable(Style.GetBorderRect(stackContext.Allocated), Style.Border));
+        drawables.Insert(0, new BackgroundDrawable(Style.GetBackgroundRect(stackContext.Allocated), Style.BackgroundToPaint()));
+
+        // Add debug drawables for margin and padding
+        drawables.Add(new DebugDrawable(Style.GetMarginDebugRect(stackContext.Allocated), DebugDrawable.MarginDebug));
+        drawables.Add(new DebugDrawable(Style.GetBackgroundRect(stackContext.Allocated), DebugDrawable.PaddingDebug));
 
         context.CommitChildContext(stackContext);
         return new LayoutResult(drawables, LayoutStatus.IsFullyDrawn);

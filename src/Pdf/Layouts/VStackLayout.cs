@@ -40,7 +40,7 @@ internal class VStackLayout : ILayout
             contentRect.Right,
             contentRect.Bottom - footerHeight);
 
-        var stackContext = context.GetChildContext(rectWithoutFooter);
+        var stackContext = context.GetChildContext(contentRect);
 
         if (context.TryAllocate(Style.GetStyleSize()) == false)
         {
@@ -53,7 +53,7 @@ internal class VStackLayout : ILayout
         // Lay out the children
         while (_children.Count > 0)
         {
-            var childContext = stackContext.GetChildContext();
+            var childContext = stackContext.GetChildContext(rectWithoutFooter);
             var layoutResult = _children.Peek().Layout(childContext);
             drawables.Add(new DebugDrawable(childContext.Allocated, DebugDrawable.AllocatedDebug));
             drawables.AddRange(layoutResult.Drawables);
@@ -66,11 +66,11 @@ internal class VStackLayout : ILayout
 
                 // Add background and border drawables
                 drawables.Add(new BorderDrawable(Style.GetBorderRect(stackContext.Allocated), Style.Border));
-                drawables.Add(new BackgroundDrawable(Style.GetBackgroundRect(stackContext.Allocated), Style.BackgroundToPaint()));
+                drawables.Insert(0, new BackgroundDrawable(Style.GetBackgroundRect(stackContext.Allocated), Style.BackgroundToPaint()));
 
                 // Add debug drawables for margin and padding
                 drawables.Add(new DebugDrawable(Style.GetMarginDebugRect(stackContext.Allocated), DebugDrawable.MarginDebug));
-                drawables.Add(new DebugDrawable(Style.GetPaddingDebugRect(stackContext.Allocated), DebugDrawable.PaddingDebug));
+                drawables.Add(new DebugDrawable(Style.GetBackgroundRect(stackContext.Allocated), DebugDrawable.PaddingDebug));
 
                 context.CommitChildContext(stackContext);
 
@@ -85,11 +85,11 @@ internal class VStackLayout : ILayout
 
         // Add background and border drawables
         drawables.Add(new BorderDrawable(Style.GetBorderRect(stackContext.Allocated), Style.Border));
-        drawables.Add(new BackgroundDrawable(Style.GetBackgroundRect(stackContext.Allocated), Style.BackgroundToPaint()));
+        drawables.Insert(0, new BackgroundDrawable(Style.GetBackgroundRect(stackContext.Allocated), Style.BackgroundToPaint()));
 
         // Add debug drawables for margin and padding
         drawables.Add(new DebugDrawable(Style.GetMarginDebugRect(stackContext.Allocated), DebugDrawable.MarginDebug));
-        drawables.Add(new DebugDrawable(Style.GetPaddingDebugRect(stackContext.Allocated), DebugDrawable.PaddingDebug));
+        drawables.Add(new DebugDrawable(Style.GetBackgroundRect(stackContext.Allocated), DebugDrawable.PaddingDebug));
 
         context.CommitChildContext(stackContext);
 
@@ -107,9 +107,9 @@ internal class VStackLayout : ILayout
         var sizeAfterStyling = new SKSize(available.Width - styleSize.Width, available.Height - styleSize.Height);
         var headerHeight = _header?.Measure(sizeAfterStyling).Height ?? 0f;
         var footerHeight = _footer?.Measure(sizeAfterStyling).Height ?? 0f;
-        var maxChildHeight = _children.Sum(child => child.Measure(sizeAfterStyling).Height);
-        var totalHeight = headerHeight + footerHeight + maxChildHeight;
-        return new SKSize(available.Width - styleSize.Width, totalHeight);
+        var sumChildHeight = _children.Sum(child => child.Measure(sizeAfterStyling).Height);
+        var totalHeight = headerHeight + footerHeight + sumChildHeight + styleSize.Height;
+        return new SKSize(available.Width, totalHeight);
     }
 
     private LayoutResult LayoutHeader(LayoutContext context)
