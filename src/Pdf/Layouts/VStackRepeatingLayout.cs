@@ -24,7 +24,7 @@ internal class VStackRepeatingLayout(List<ILayout> children) : ILayout
             var childContext = context.GetChildContext();
             var result = child.Layout(childContext);
             drawables.AddRange(result.Drawables);
-            drawables.Add(new DebugDrawable(childContext.Allocated));
+            drawables.Add(new DebugDrawable(childContext.Allocated,  DebugDrawable.AllocatedColor));
             context.CommitChildContext(childContext);
 
             if (result.Status == LayoutStatus.NeedsNewPage)

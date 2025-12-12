@@ -14,7 +14,6 @@ internal class ZStack(List<ILayout> children) : ILayout
 
     public LayoutResult Layout(LayoutContext context)
     {
-        // var size = Measure(context.Available.Size);
         if (context.TryAllocate(this))
         {
             var rendered = new List<IDrawable>();

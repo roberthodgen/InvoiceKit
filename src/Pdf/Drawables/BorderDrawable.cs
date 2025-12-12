@@ -2,7 +2,7 @@ namespace InvoiceKit.Pdf.Drawables;
 
 using SkiaSharp;
 
-internal class BorderDrawable(SKRect rect, BlockStyle style) : IDrawable
+internal class BorderDrawable(SKRect rect, BoxBorder border) : IDrawable
 {
     /// <summary>
     /// Draws a border within the specified rectangle.
@@ -12,28 +12,28 @@ internal class BorderDrawable(SKRect rect, BlockStyle style) : IDrawable
     /// </remarks>
     public void Draw(IDrawableContext context)
     {
-        if (style.Border.Top.IsDrawable())
+        if (border.Top.IsDrawable())
         {
-            var (a, b) = style.Border.GetTopPoints(rect);
-            context.Canvas.DrawLine(a, b, style.Border.Top.ToPaint());
+            var (a, b) = border.GetTopPoints(rect);
+            context.Canvas.DrawLine(a, b, border.Top.ToPaint());
         }
 
-        if (style.Border.Bottom.IsDrawable())
+        if (border.Bottom.IsDrawable())
         {
-            var (a, b) = style.Border.GetBottomPoints(rect);
-            context.Canvas.DrawLine(a, b, style.Border.Bottom.ToPaint());
+            var (a, b) = border.GetBottomPoints(rect);
+            context.Canvas.DrawLine(a, b, border.Bottom.ToPaint());
         }
 
-        if (style.Border.Left.IsDrawable())
+        if (border.Left.IsDrawable())
         {
-            var (a, b) = style.Border.GetLeftPoints(rect);
-            context.Canvas.DrawLine(a, b, style.Border.Left.ToPaint());
+            var (a, b) = border.GetLeftPoints(rect);
+            context.Canvas.DrawLine(a, b, border.Left.ToPaint());
         }
 
-        if (style.Border.Right.IsDrawable())
+        if (border.Right.IsDrawable())
         {
-            var (a, b) = style.Border.GetRightPoints(rect);
-            context.Canvas.DrawLine(a, b, style.Border.Right.ToPaint());
+            var (a, b) = border.GetRightPoints(rect);
+            context.Canvas.DrawLine(a, b, border.Right.ToPaint());
         }
     }
 

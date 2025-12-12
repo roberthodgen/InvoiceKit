@@ -4,14 +4,21 @@ using SkiaSharp;
 
 internal class TableLayout : ILayout
 {
+    public BlockStyle Style { get; }
+
     private List<TableRowViewBuilder> Headers { get; }
 
     private List<TableRowViewBuilder> Rows { get; }
 
     private bool ShowRowSeparators { get; }
 
-    internal TableLayout(List<TableRowViewBuilder> headers, List<TableRowViewBuilder> rows, bool showRowSeparators)
+    internal TableLayout(
+        List<TableRowViewBuilder> headers,
+        List<TableRowViewBuilder> rows,
+        bool showRowSeparators,
+        BlockStyle style)
     {
+        Style = style;
         Headers = headers;
         Rows = rows;
         ShowRowSeparators = showRowSeparators;

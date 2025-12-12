@@ -4,6 +4,8 @@ using SkiaSharp;
 
 internal class PageBreakLayout : ILayout
 {
+    private bool _isDrawn;
+
     public SKSize Measure(SKSize available)
     {
         return new SKSize(available.Width, available.Height);
@@ -11,8 +13,16 @@ internal class PageBreakLayout : ILayout
 
     public LayoutResult Layout(LayoutContext context)
     {
-        // Allocates the rest of the available space and does not return drawables.
+        if (_isDrawn)
+        {
+            return new LayoutResult([], LayoutStatus.IsFullyDrawn);
+        }
+
+        // Takes up the rest of available space, putting the footer at the bottom of the page.
         context.TryAllocate(this);
-        return new LayoutResult([], LayoutStatus.IsFullyDrawn);
+        _isDrawn = true;
+
+        // Calls for a new page with no drawables.
+        return new LayoutResult([], LayoutStatus.NeedsNewPage);
     }
 }

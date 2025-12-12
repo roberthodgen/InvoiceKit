@@ -15,7 +15,7 @@ internal class VStackLayout : ILayout
     {
         _footer = footer;
         _header = header;
-        _children = new (children);
+        _children = new Queue<ILayout>(children);
     }
 
     public LayoutResult Layout(LayoutContext context)
@@ -31,7 +31,7 @@ internal class VStackLayout : ILayout
         drawables.AddRange(LayoutHeader(context).Drawables);
 
         // Get footer size for child context
-        var footerSize = _footer?.Measure(context.Available.Size) ?? SKSize.Empty;
+        var footerSize = _footer?.Measure(context.Available.Size).Height ?? 0f;
 
         // Lay out the children
         while (_children.Count > 0)
@@ -40,9 +40,9 @@ internal class VStackLayout : ILayout
                 context.Available.Left,
                 context.Available.Top,
                 context.Available.Right,
-                context.Available.Bottom - footerSize.Height));
+                context.Available.Bottom - footerSize));
             var layoutResult = _children.Peek().Layout(childContext);
-            drawables.Add(new DebugDrawable(childContext.Allocated));
+            drawables.Add(new DebugDrawable(childContext.Allocated, DebugDrawable.AllocatedColor));
             drawables.AddRange(layoutResult.Drawables);
             context.CommitChildContext(childContext);
 
@@ -50,7 +50,6 @@ internal class VStackLayout : ILayout
             {
                 // Lay out the footer
                 drawables.AddRange(LayoutFooter(context).Drawables);
-
                 return new LayoutResult(drawables, LayoutStatus.NeedsNewPage);
             }
 
@@ -59,7 +58,6 @@ internal class VStackLayout : ILayout
 
         // Lay out the footer
         drawables.AddRange(LayoutFooter(context).Drawables);
-
         return new LayoutResult(drawables, LayoutStatus.IsFullyDrawn);
     }
 
@@ -72,8 +70,8 @@ internal class VStackLayout : ILayout
 
         var headerHeight = _header?.Measure(available).Height ?? 0f;
         var footerHeight = _footer?.Measure(available).Height ?? 0f;
-        var maxChildHeight = _children.Sum(child => child.Measure(available).Height);
-        var totalHeight = headerHeight + footerHeight + maxChildHeight;
+        var sumChildHeight = _children.Sum(child => child.Measure(available).Height);
+        var totalHeight = headerHeight + footerHeight + sumChildHeight;
         return new SKSize(available.Width, totalHeight);
     }
 
@@ -89,6 +87,7 @@ internal class VStackLayout : ILayout
 
             return headerResult;
         }
+
         return new LayoutResult([], LayoutStatus.IsFullyDrawn);
     }
 
@@ -104,6 +103,7 @@ internal class VStackLayout : ILayout
 
             return footerResult;
         }
+
         return new LayoutResult([], LayoutStatus.IsFullyDrawn);
     }
 }

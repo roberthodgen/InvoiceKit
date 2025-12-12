@@ -15,6 +15,7 @@ internal class HStackLayout(List<ILayout> columns) : ILayout
             return new LayoutResult([], LayoutStatus.IsFullyDrawn);
         }
 
+        var drawables = new List<IDrawable>();
         var results = new List<ColumnResult>();
         var columnSize = new SKSize(context.Available.Width / columns.Count, context.Available.Height);
 
@@ -25,17 +26,15 @@ internal class HStackLayout(List<ILayout> columns) : ILayout
             point.Offset(columnSize.Width * index, 0);
             var childContext = context.GetChildContext(SKRect.Create(point, columnSize));
             var result = columns[index].Layout(childContext);
-            results.Add(
-                new ColumnResult(
-                    [new DebugDrawable(childContext.Allocated), ..result.Drawables,],
-                    result.Status,
-                    childContext));
+            results.Add(new ColumnResult(result.Drawables, result.Status, childContext));
+            drawables.Add(new DebugDrawable(childContext.Allocated, DebugDrawable.AllocatedColor));
         }
 
         var maxHeight = results.MaxBy(result => result.Context.Allocated.Height);
         context.CommitChildContext(maxHeight!.Context);
 
-        var drawables = results.SelectMany(result => result.Drawables).ToList();
+        drawables.AddRange(results.SelectMany(result => result.Drawables).ToList());
+
         if (results.Any(result => result.Status == LayoutStatus.NeedsNewPage))
         {
             return new LayoutResult(drawables, LayoutStatus.NeedsNewPage);

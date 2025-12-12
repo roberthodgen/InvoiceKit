@@ -6,7 +6,7 @@ public sealed class TableViewBuilder : IViewBuilder
 
     private readonly List<TableRowViewBuilder> _rows = [];
 
-    private readonly BlockStyle _defaultStyle; // TODO make this editable for the table
+    private readonly BlockStyle _defaultStyle;
 
     /// <summary>
     /// Specifies how column sizes will be computed.
@@ -80,7 +80,7 @@ public sealed class TableViewBuilder : IViewBuilder
 
     public ILayout ToLayout()
     {
-        return new TableLayout(_headers, _rows, ShowRowSeparators);
+        return new TableLayout(_headers, _rows, ShowRowSeparators, _defaultStyle);
     }
 
     public void Dispose()
