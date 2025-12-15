@@ -6,12 +6,15 @@ using Svg.Skia;
 
 internal class ImageLayout : ILayout
 {
+    private BlockStyle Style { get; }
+
     private SKSvg? Svg { get; }
 
     private SKBitmap? Bitmap { get; }
 
-    internal ImageLayout(string path, ImageType type)
+    internal ImageLayout(string path, ImageType type, BlockStyle style)
     {
+        Style = style;
         if (type == ImageType.Svg)
         {
             Svg = new SKSvg();
@@ -46,21 +49,39 @@ internal class ImageLayout : ILayout
 
     public LayoutResult Layout(LayoutContext context)
     {
-        var listDrawables = new List<IDrawable>();
-        if (context.TryAllocate(this, out var rect))
+        var drawables = new List<IDrawable>();
+        var childContext = context.GetChildContext(Style.GetContentRect(context.Available));
+
+        if (context.TryAllocate(Style.GetStyleSize()) == false)
+        {
+            return LayoutResult.NeedsNewPage([]);
+        }
+
+        if (childContext.TryAllocate(this, out var rect))
         {
             if (Svg is not null)
             {
-                listDrawables.Add(new SvgImageDrawable(Svg, rect));
+                // Add border drawable.
+                // Background needs to come before text.
+                drawables.Insert(0, new BackgroundDrawable(Style.GetBackgroundRect(rect), Style.BackgroundToPaint()));
+                drawables.Add(new BorderDrawable(Style.GetBorderRect(rect), Style.Border));
+                drawables.Add(new DebugDrawable(rect, DebugDrawable.ContentColor));
+                drawables.Add(new SvgImageDrawable(Svg, rect));
             }
             else if (Bitmap is not null)
             {
-                listDrawables.Add(new BitmapImageDrawable(Bitmap, rect));
+                drawables.Add(new DebugDrawable(rect, DebugDrawable.ContentColor));
+                drawables.Add(new BitmapImageDrawable(Bitmap, rect));
             }
 
-            return LayoutResult.FullyDrawn(listDrawables);
+
+            // Add margin and padding debug drawables.
+            drawables.Add(new DebugDrawable(Style.GetMarginDebugRect(childContext.Allocated), DebugDrawable.MarginColor));
+            drawables.Add(new DebugDrawable(Style.GetBackgroundRect(childContext.Allocated), DebugDrawable.PaddingColor));
+
+            return LayoutResult.FullyDrawn(drawables);
         }
 
-        return LayoutResult.NeedsNewPage(listDrawables);
+        return LayoutResult.NeedsNewPage(drawables);
     }
 }

@@ -2,8 +2,18 @@ namespace InvoiceKit.Pdf.Drawables;
 
 using SkiaSharp;
 
-internal class DebugDrawable(SKRect rect) : IDrawable
+internal class DebugDrawable(SKRect rect, SKColor color) : IDrawable
 {
+    public static SKColor DrawableAreaColor => SKColors.DarkRed;
+
+    public static SKColor AllocatedColor => SKColors.DarkBlue;
+
+    public static SKColor MarginColor => SKColors.Cyan;
+
+    public static SKColor PaddingColor => SKColors.Magenta;
+
+    public static SKColor ContentColor => SKColors.Yellow;
+
     public void Draw(IDrawableContext context)
     {
         if (context.Debug)
@@ -13,7 +23,7 @@ internal class DebugDrawable(SKRect rect) : IDrawable
                 new SKPaint
                 {
                     Style = SKPaintStyle.Stroke,
-                    Color = SKColors.Cyan,
+                    Color = color,
                     StrokeWidth = 1f,
                 });
         }

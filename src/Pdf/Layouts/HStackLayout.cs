@@ -9,6 +9,7 @@ internal class HStackLayout(List<ILayout> columns) : ILayout
     /// </summary>
     public LayoutResult Layout(LayoutContext context)
     {
+        // TODO drawables.Add(new DebugDrawable(childContext.Allocated, DebugDrawable.AllocatedColor));
         return LayoutResult.Deferred(GetChildLayouts(context));
     }
 

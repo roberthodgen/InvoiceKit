@@ -5,10 +5,10 @@ using Layouts;
 /// <summary>
 /// Adds a horizontal line to the document.
 /// </summary>
-public sealed class HorizontalRuleViewBuilder : IViewBuilder
+public sealed class HorizontalRuleViewBuilder(BlockStyle style) : IViewBuilder
 {
     public ILayout ToLayout()
     {
-        return new HorizontalRuleLayout();
+        return new HorizontalRuleLayout(style);
     }
 }

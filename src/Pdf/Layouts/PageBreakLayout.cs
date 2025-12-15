@@ -11,7 +11,7 @@ internal class PageBreakLayout : ILayout
 
     public LayoutResult Layout(LayoutContext context)
     {
-        // Allocates the rest of the available space and does not return drawables.
+        // Takes up the rest of available space, putting the footer at the bottom of the page.
         context.TryAllocate(this);
         return LayoutResult.FullyDrawn([]);
     }

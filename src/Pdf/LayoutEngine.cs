@@ -17,7 +17,7 @@ internal class LayoutEngine(IViewBuilder root) : IDisposable
     public IReadOnlyCollection<Page> Pages => _pages.AsReadOnly();
 
     /// <summary>
-    /// Lays out a page.
+    /// Lays out a page, starts with the root layout and traverses its children.
     /// </summary>
     /// <param name="context">The page's layout context to track drawn space on.</param>
     /// <returns>

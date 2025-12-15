@@ -2,50 +2,62 @@ namespace InvoiceKit.Pdf.Views;
 
 using Containers.Tables;
 
-public abstract class ContainerBase : IContainer
+public abstract class ContainerBase(BlockStyle defaultStyle) : IContainer
 {
     private readonly List<IViewBuilder> _children = [];
 
-    public BlockStyle DefaultStyle { get; protected set; }
+    public BlockStyle DefaultStyle { get; private set; } = defaultStyle;
 
     protected IReadOnlyCollection<IViewBuilder> Children => _children.AsReadOnly();
 
-    protected ContainerBase(BlockStyle defaultStyle)
-    {
-        DefaultStyle = defaultStyle;
-    }
+    private BlockStyle ChildStyle => DefaultStyle.CopyForChild();
 
     public IContainer AddText(string text)
     {
-        var child = new TextViewBuilder(text, DefaultStyle);
+        var child = new TextViewBuilder(text, ChildStyle with { Padding = new Padding(1f)});
         _children.Add(child);
         return this;
     }
 
-    public IContainer AddText(string text, Func<BlockStyle, BlockStyle> configureTextStyle)
+    public IContainer AddText(string text, Func<BlockStyle, BlockStyle> configureStyle)
     {
-        var child = new TextViewBuilder(text, configureTextStyle(DefaultStyle));
+        var child = new TextViewBuilder(text, configureStyle(ChildStyle));
         _children.Add(child);
         return this;
     }
 
     public IContainer AddImage(Func<ImageViewBuilder, IViewBuilder> builder)
     {
-        var child = builder(new ImageViewBuilder());
+        var child = builder(new ImageViewBuilder(ChildStyle));
+        _children.Add(child);
+        return this;
+    }
+
+    public IContainer AddImage(Func<ImageViewBuilder, IViewBuilder> builder,
+        Func<BlockStyle, BlockStyle> configureStyle)
+    {
+        var child = builder(new ImageViewBuilder(configureStyle(ChildStyle)));
         _children.Add(child);
         return this;
     }
 
     public IContainer AddHorizontalRule()
     {
-        var child = new HorizontalRuleViewBuilder();
+        var child = new HorizontalRuleViewBuilder(ChildStyle);
+        _children.Add(child);
+        return this;
+    }
+
+    public IContainer AddHorizontalRule(Func<BlockStyle, BlockStyle> configureStyle)
+    {
+        var child = new HorizontalRuleViewBuilder(configureStyle(ChildStyle));
         _children.Add(child);
         return this;
     }
 
     public IContainer AddHStack(Action<HStack> configure)
     {
-        var child = new HStack(DefaultStyle);
+        var child = new HStack(ChildStyle);
         configure(child);
         _children.Add(child);
         return this;
@@ -53,7 +65,7 @@ public abstract class ContainerBase : IContainer
 
     public IContainer AddVStack(Action<VStack> configure)
     {
-        var child = new VStack(DefaultStyle);
+        var child = new VStack(ChildStyle);
         configure(child);
         _children.Add(child);
         return this;
@@ -68,7 +80,15 @@ public abstract class ContainerBase : IContainer
 
     public IContainer AddTable(Action<TableViewBuilder> configure)
     {
-        var child = new TableViewBuilder(DefaultStyle);
+        var child = new TableViewBuilder(ChildStyle);
+        configure(child);
+        _children.Add(child);
+        return this;
+    }
+
+    public IContainer AddTable(Action<TableViewBuilder> configure, Func<BlockStyle, BlockStyle> configureStyle)
+    {
+        var child = new TableViewBuilder(configureStyle(ChildStyle));
         configure(child);
         _children.Add(child);
         return this;
