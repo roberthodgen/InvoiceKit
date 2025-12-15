@@ -58,9 +58,9 @@ internal class ImageLayout : ILayout
                 listDrawables.Add(new BitmapImageDrawable(Bitmap, rect));
             }
 
-            return new LayoutResult(listDrawables, LayoutStatus.IsFullyDrawn);
+            return LayoutResult.FullyDrawn(listDrawables);
         }
 
-        return new LayoutResult(listDrawables, LayoutStatus.NeedsNewPage);
+        return LayoutResult.NeedsNewPage(listDrawables);
     }
 }

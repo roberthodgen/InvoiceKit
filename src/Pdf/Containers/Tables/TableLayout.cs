@@ -44,7 +44,7 @@ internal class TableLayout : ILayout
                     totalSize += rowHeight;
                     break;
                 }
-                return new LayoutResult(listDrawables, LayoutStatus.NeedsNewPage);
+                return LayoutResult.NeedsNewPage(listDrawables);
             }
         }
 
@@ -61,9 +61,10 @@ internal class TableLayout : ILayout
                     totalSize += rowHeight;
                     break;
                 }
-                return new LayoutResult(listDrawables, LayoutStatus.NeedsNewPage);
+                return LayoutResult.NeedsNewPage(listDrawables);
             }
         }
-        return new LayoutResult(listDrawables, LayoutStatus.IsFullyDrawn);
+
+        return LayoutResult.FullyDrawn(listDrawables);
     }
 }

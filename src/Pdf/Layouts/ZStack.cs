@@ -28,7 +28,7 @@ internal class ZStack(List<ILayout> children) : ILayout
         //
         //     return new LayoutResult(rendered, LayoutStatus.IsFullyDrawn);
         // }
-        return new LayoutResult(LayoutStatus.IsFullyDrawn, []);
+        return LayoutResult.FullyDrawn([]);
     }
 
     /// <summary>

@@ -16,7 +16,7 @@ internal class VStackRepeatingLayout(List<ILayout> children) : ILayout
 
     public LayoutResult Layout(LayoutContext context)
     {
-        return new LayoutResult(LayoutStatus.Deferred, GetChildLayouts(context));
+        return LayoutResult.Deferred(GetChildLayouts(context));
     }
 
     private List<ChildLayout> GetChildLayouts(LayoutContext context)

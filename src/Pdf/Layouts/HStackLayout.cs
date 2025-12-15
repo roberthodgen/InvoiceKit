@@ -9,7 +9,7 @@ internal class HStackLayout(List<ILayout> columns) : ILayout
     /// </summary>
     public LayoutResult Layout(LayoutContext context)
     {
-        return new LayoutResult(LayoutStatus.Deferred, GetChildLayouts(context));
+        return LayoutResult.Deferred(GetChildLayouts(context));
     }
 
     public SKSize Measure(SKSize available)

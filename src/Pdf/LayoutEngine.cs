@@ -53,6 +53,11 @@ internal class LayoutEngine(IViewBuilder root) : IDisposable
                 stack.Push(child);
             }
 
+            if (layoutResult.Status == LayoutStatus.Deferred)
+            {
+                continue;
+            }
+
             _laidOut.Add(layout.Layout);
             stack.Pop();
         }

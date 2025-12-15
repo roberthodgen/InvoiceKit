@@ -143,12 +143,12 @@ internal class TextLayout : ILayout
             else
             {
                 drawables.Add(new BorderDrawable(context.Allocated, Style));
-                return new LayoutResult(drawables, LayoutStatus.NeedsNewPage);
+                return LayoutResult.NeedsNewPage(drawables);
             }
         }
 
         _currentIndex = 0;
         drawables.Add(new BorderDrawable(context.Allocated, Style));
-        return new LayoutResult(drawables, LayoutStatus.IsFullyDrawn);
+        return LayoutResult.FullyDrawn(drawables);
     }
 }

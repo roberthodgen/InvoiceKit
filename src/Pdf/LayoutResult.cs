@@ -20,18 +20,33 @@ public sealed class LayoutResult
     /// </summary>
     public IReadOnlyCollection<ChildLayout> Children { get; }
 
-    public LayoutResult(List<IDrawable> drawables, LayoutStatus status)
+    private LayoutResult(List<IDrawable> drawables, LayoutStatus status)
     {
         Drawables = drawables.AsReadOnly();
         Status = status;
         Children = [];
     }
 
-    public LayoutResult(LayoutStatus status, List<ChildLayout> children)
+    private LayoutResult(LayoutStatus status, List<ChildLayout> children)
     {
         Drawables = [];
         Status = status;
         Children = children.AsReadOnly();
     }
 
+    /// <summary>
+    /// Returns a fully drawn layout result with laid-out drawables.
+    /// </summary>
+    public static LayoutResult FullyDrawn(List<IDrawable> drawables) => new (drawables, LayoutStatus.IsFullyDrawn);
+
+    /// <summary>
+    /// Returns a partial layout result with drawables assigned to the page. The layout status indicates the layout
+    /// has additional drawables to assign on the next page.
+    /// </summary>
+    public static LayoutResult NeedsNewPage(List<IDrawable> drawables) => new (drawables, LayoutStatus.NeedsNewPage);
+
+    /// <summary>
+    /// Returns a layout result with deferred children that need to be laid out.
+    /// </summary>
+    public static LayoutResult Deferred(List<ChildLayout> children) => new (LayoutStatus.Deferred, children);
 }

@@ -13,6 +13,6 @@ internal class SpacingBlockLayout(float height) : ILayout
     {
         // Allocates the space but does not draw anything.
         context.TryAllocate(this);
-        return new LayoutResult([], LayoutStatus.IsFullyDrawn);
+        return LayoutResult.FullyDrawn([]);
     }
 }

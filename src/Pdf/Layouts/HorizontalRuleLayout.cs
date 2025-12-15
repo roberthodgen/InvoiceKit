@@ -16,9 +16,9 @@ internal class HorizontalRuleLayout : ILayout
         if (context.TryAllocate(this, out var rect))
         {
             drawables.Add(new HorizontalRuleDrawable(rect));
-            return new LayoutResult(drawables, LayoutStatus.IsFullyDrawn);
+            return LayoutResult.FullyDrawn(drawables);
         }
 
-        return new LayoutResult(drawables, LayoutStatus.NeedsNewPage);
+        return LayoutResult.NeedsNewPage(drawables);
     }
 }
