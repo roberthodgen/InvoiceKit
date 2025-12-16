@@ -20,6 +20,11 @@ public sealed class LayoutResult
     /// </summary>
     public IReadOnlyCollection<ChildLayout> Children { get; }
 
+    /// <summary>
+    /// Constructor for <see cref="NeedsNewPage"/> and <see cref="FullyDrawn"/>.
+    /// </summary>
+    /// <param name="drawables"></param>
+    /// <param name="status"></param>
     private LayoutResult(List<IDrawable> drawables, LayoutStatus status)
     {
         Drawables = drawables.AsReadOnly();
@@ -27,6 +32,11 @@ public sealed class LayoutResult
         Children = [];
     }
 
+    /// <summary>
+    /// Constructor for <see cref="Deferred"/>.
+    /// </summary>
+    /// <param name="status"></param>
+    /// <param name="children"></param>
     private LayoutResult(LayoutStatus status, List<ChildLayout> children)
     {
         Drawables = [];

@@ -13,13 +13,13 @@ public sealed class ChildLayout
     public ILayout Layout { get; }
 
     /// <summary>
-    /// The position for the child to be laid in to.
+    /// The context for the child to be laid in to.
     /// </summary>
-    public SKRect Rect { get; }
+    public LayoutContext Context { get; }
 
-    public ChildLayout(ILayout layout, SKRect rect)
+    public ChildLayout(ILayout layout, LayoutContext context)
     {
         Layout = layout;
-        Rect = rect;
+        Context = context;
     }
 }

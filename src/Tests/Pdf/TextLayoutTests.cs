@@ -15,7 +15,7 @@ public class TextLayoutTests(ITestOutputHelper testOutputHelper)
         using var stream = File.OpenWrite(fileName);
         using var builder = PdfDocument.UsLetter;
         var pdfBytes = builder
-            // .DisplayLayoutGuidelines()
+            .DisplayLayoutGuidelines()
             .WithVStack(vStack => vStack
                 .AddText(
                     "Test Document",
@@ -45,7 +45,7 @@ public class TextLayoutTests(ITestOutputHelper testOutputHelper)
         File.Exists(fileName).ShouldBeTrue();
     }
 
-    [Fact(Skip = "TODO")]
+    [Fact]
     public void Text_ForegroundAndBackground_Test()
     {
         const string fileName = "Text_ForegroundAndBackground_Test.pdf";
@@ -187,7 +187,7 @@ public class TextLayoutTests(ITestOutputHelper testOutputHelper)
         File.Exists(fileName).ShouldBeTrue();
     }
 
-    [Fact(Skip = "TODO")]
+    [Fact]
     public void Text_MultiPage_Test()
     {
         const string fileName = "text-multi-page-test.pdf";

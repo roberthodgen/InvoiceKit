@@ -9,12 +9,12 @@ internal class HStackLayout(List<ILayout> columns) : ILayout
     /// </summary>
     public LayoutResult Layout(LayoutContext context)
     {
-        // TODO drawables.Add(new DebugDrawable(childContext.Allocated, DebugDrawable.AllocatedColor));
         return LayoutResult.Deferred(GetChildLayouts(context));
     }
 
     public SKSize Measure(SKSize available)
     {
+        return SKSize.Empty;
         if (columns.Count == 0)
         {
             return SKSize.Empty;
@@ -36,12 +36,12 @@ internal class HStackLayout(List<ILayout> columns) : ILayout
         return result;
     }
 
-    private SKRect GetRectForNthColumn(int nthColumn, LayoutContext context)
+    private LayoutContext GetRectForNthColumn(int nthColumn, LayoutContext context)
     {
         var columnSize = GetColumnSize(context);
         var point = context.Available.Location;
         point.Offset(columnSize.Width * nthColumn, 0);
-        return SKRect.Create(point, columnSize);
+        return context.GetChildContext(SKRect.Create(point, columnSize));
     }
 
     private SKSize GetColumnSize(LayoutContext context)

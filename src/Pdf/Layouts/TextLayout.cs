@@ -41,7 +41,7 @@ internal class TextLayout : ILayout
         var sizeAfterStyle = Style.GetSizeAfterStyle(available);
         if (_wrappedLines.Count == 0)
         {
-            _wrappedLines = _lines.SelectMany(line => WrapText(line, Style, sizeAfterStyle.Width)).ToList();
+            _wrappedLines = _lines.SelectMany(line => WrapText(line, Style, available)).ToList();
         }
 
         var height = _wrappedLines.Select(_ => MeasureFullLineSize(sizeAfterStyle).Height).Sum() + stylingSize.Height;
@@ -63,8 +63,9 @@ internal class TextLayout : ILayout
     /// <summary>
     /// Separates a single string into multiple lines based on the width of the available space.
     /// </summary>
-    private static List<string> WrapText(string text, BlockStyle style, float maxWidth)
+    private static List<string> WrapText(string text, BlockStyle style, SKSize available)
     {
+        var maxWidth = style.GetSizeAfterStyle(available).Width;
         var font = style.ToFont();
         var paint = style.ForegroundToPaint();
         var words = text.Split(' ');
@@ -101,29 +102,24 @@ internal class TextLayout : ILayout
 
     public LayoutResult Layout(LayoutContext context)
     {
-        var childContext = context.GetChildContext(Style.GetContentRect(context.Available));
         if (_wrappedLines.Count == 0)
         {
-            _wrappedLines = _lines.SelectMany(line => WrapText(line, Style, childContext.Available.Width)).ToList();
+            _wrappedLines = _lines.SelectMany(line => WrapText(line, Style, context.Available.Size)).ToList();
         }
 
-        var drawables = new List<IDrawable>();
+        if (_currentIndex >= _wrappedLines.Count)
+        {
+            return LayoutResult.FullyDrawn([]);
+        }
 
         // Allocate the style size
         if (context.TryAllocate(Style.GetStyleSize()) == false)
         {
-            // Tries to allocate the size within the current page or calls for a new page.
-            if (context.TryAllocate(MeasureFullLineSize(context.Available.Size), out var rect))
-            {
-                drawables.Add(new TextDrawable(_wrappedLines[_currentIndex], rect, Style));
-                _currentIndex++;
-            }
-            else
-            {
-                drawables.Add(new BorderDrawable(context.Allocated, Style.Border));
-                return LayoutResult.NeedsNewPage(drawables);
-            }
+            return LayoutResult.NeedsNewPage([]);
         }
+
+        var drawables = new List<IDrawable>();
+        var childContext = context.GetChildContext(Style.GetContentRect(context.Available));
 
         while (_currentIndex < _wrappedLines.Count)
         {
@@ -132,33 +128,36 @@ internal class TextLayout : ILayout
                 drawables.Add(new DebugDrawable(rect, DebugDrawable.ContentColor));
                 drawables.Add(new TextDrawable(_wrappedLines[_currentIndex], rect, Style));
                 _currentIndex++;
-                continue;   // Skip to the next line.
+                continue; // Skip to the next line.
             }
 
-            // Add background and border drawables.
-            // Background needs to come before text.
-            drawables.Insert(0, new BackgroundDrawable(Style.GetBackgroundRect(childContext.Allocated), Style.BackgroundToPaint()));
+            // Add background before the text drawable and add the border drawable.
+            drawables.Insert(0,
+                new BackgroundDrawable(Style.GetBackgroundRect(childContext.Allocated), Style.BackgroundToPaint()));
             drawables.Add(new BorderDrawable(Style.GetBorderRect(childContext.Allocated), Style.Border));
 
             // Add margin and padding debug drawables.
-            drawables.Add(new DebugDrawable(Style.GetMarginDebugRect(childContext.Allocated), DebugDrawable.MarginColor));
-            drawables.Add(new DebugDrawable(Style.GetBackgroundRect(childContext.Allocated), DebugDrawable.PaddingColor));
+            drawables.Add(
+                new DebugDrawable(Style.GetMarginDebugRect(childContext.Allocated), DebugDrawable.MarginColor));
+            drawables.Add(
+                new DebugDrawable(Style.GetBackgroundRect(childContext.Allocated), DebugDrawable.PaddingColor));
 
             context.CommitChildContext(childContext);
             return LayoutResult.NeedsNewPage(drawables);
         }
 
         // Reset index for repeating layouts.
-        _currentIndex = 0;
+        // _currentIndex = 0;
 
-        // Add and border drawables.
-        // Background needs to come before text.
-        drawables.Insert(0, new BackgroundDrawable(Style.GetBackgroundRect(childContext.Allocated), Style.BackgroundToPaint()));
+        // Add background before the text drawable and add the border drawable.
+        drawables.Insert(0,
+            new BackgroundDrawable(Style.GetBackgroundRect(childContext.Allocated), Style.BackgroundToPaint()));
         drawables.Add(new BorderDrawable(Style.GetBorderRect(childContext.Allocated), Style.Border));
 
         // Add margin and padding debug drawables.
         drawables.Add(new DebugDrawable(Style.GetMarginDebugRect(childContext.Allocated), DebugDrawable.MarginColor));
         drawables.Add(new DebugDrawable(Style.GetBackgroundRect(childContext.Allocated), DebugDrawable.PaddingColor));
+        context.CommitChildContext(childContext);
         return LayoutResult.FullyDrawn(drawables);
     }
 }

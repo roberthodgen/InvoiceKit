@@ -219,10 +219,8 @@ public sealed class InvoiceBuilderTests
     {
         //Arrange
         var documentBuilder = new TestDocumentBuilder();
-
         //Act
         new InvoiceBuilder().WithCompany("TestCompany").WithStandardTerms(10).WithDocumentBuilder(documentBuilder).Build();
-
         //Assert
         documentBuilder.Invoice.DueDate.Value.ShouldBe(DateTime.Today.AddDays(10));
     }

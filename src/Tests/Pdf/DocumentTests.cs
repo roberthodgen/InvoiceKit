@@ -7,7 +7,7 @@ using Xunit.Abstractions;
 public class DocumentTests(ITestOutputHelper testOutputHelper)
 {
     [Fact]
-    public void HStack_EndToEnd_Test()
+    public void HStack_Test()
     {
         const string fileName = "hstack-test.pdf";
         File.Delete(fileName);
@@ -27,30 +27,28 @@ public class DocumentTests(ITestOutputHelper testOutputHelper)
                     """
                 )
                 .AddHStack(stack => stack
-                    .AddHStack(column1 => column1
-                        .AddImage(image => image
-                            .WithSvgImage(Path.Combine(Directory.GetCurrentDirectory(), "Images/circle.svg")))
-                        .AddVStack(cols => cols
-                            .AddText(
-                                "My Co.",
-                                style => style with { FontPath = "Open Sans/Bold", })
-                            .AddText(
-                                """
-                                123 Main Street
-                                Anytown, XX 12345
-                                """
-                            )))
-                    .AddHStack(column2 => column2
-                        .AddVStack(_ => { })
-                        .AddVStack(lines => lines
-                            .AddText(
-                                "Customer Co.",
-                                style => style with { FontPath = "Open Sans/Bold", })
-                            .AddText(
-                                """
-                                999 Billto Lane
-                                Sometime, YY 98765
-                                """))))
+                    .AddImage(image => image
+                        .WithSvgImage(Path.Combine(Directory.GetCurrentDirectory(), "Images/circle.svg")))
+                    .AddVStack(cols => cols
+                        .AddText(
+                            "My Co.",
+                            style => style with { FontPath = "Open Sans/Bold", })
+                        .AddText(
+                            """
+                            123 Main Street
+                            Anytown, XX 12345
+                            """
+                        )))
+                .AddSpacing()
+                .AddVStack(lines => lines
+                    .AddText(
+                        "Customer Co.",
+                        style => style with { FontPath = "Open Sans/Bold", })
+                    .AddText(
+                        """
+                        999 BillTo Lane
+                        Sometime, YY 98765
+                        """))
                 .AddVStack(stack => stack
                     .AddText(
                         """
@@ -121,8 +119,10 @@ public class DocumentTests(ITestOutputHelper testOutputHelper)
         var pdfBytes = builder
             .DisplayLayoutGuidelines()
             .WithVStack(vStack => vStack
-                .WithHeader(header => header.AddText("This is the header."), style => style with { Margin = new Margin(5f) })
-                .WithFooter(footer => footer.AddText("This is the footer."), style => style with { Margin = new Margin(5f) })
+                .WithHeader(header => header.AddText("This is the header."),
+                    style => style with { Margin = new Margin(5f) })
+                .WithFooter(footer => footer.AddText("This is the footer."),
+                    style => style with { Margin = new Margin(5f) })
                 .AddText("This is inside the first page's body.")
                 .AddText("This is inside the first page's body.")
                 .AddText("This is inside the first page's body.")
@@ -166,7 +166,7 @@ public class DocumentTests(ITestOutputHelper testOutputHelper)
         File.Exists(fileName).ShouldBeTrue();
     }
 
-    [Fact(Skip = "TODO")]
+    [Fact]
     public void Example_Document_Test()
     {
         const string fileName = "Example-Document.pdf";
