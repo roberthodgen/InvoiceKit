@@ -4,7 +4,7 @@ using SkiaSharp;
 
 internal class ZStack(List<ILayout> children) : ILayout
 {
-    public LayoutResult Layout(LayoutContext context)
+    public LayoutResult Layout(ILayoutContext context)
     {
         // var size = Measure(context.Available.Size);
         // if (context.TryAllocate(this))

@@ -196,7 +196,7 @@ public class TextLayoutTests(ITestOutputHelper testOutputHelper)
         using var stream = File.OpenWrite(fileName);
         using var builder = PdfDocument.UsLetter;
         var pdfBytes = builder
-            .DisplayLayoutGuidelines()
+            // .DisplayLayoutGuidelines()
             .WithDocumentStyle(style => style with { LineHeight = 1.5f, })
             .WithVStack(vStack => vStack
                 .AddText(
@@ -221,36 +221,35 @@ public class TextLayoutTests(ITestOutputHelper testOutputHelper)
                     """
                     Nullam posuere sed ligula laoreet viverra. Suspendisse potenti. Sed vitae augue id libero tincidunt scelerisque. Curabitur vulputate metus sit amet lacus scelerisque, vel maximus sapien malesuada. Vestibulum sit amet turpis sem. Vivamus aliquam id metus ut condimentum. Donec eget faucibus lectus. Nam in sem sit amet lectus malesuada efficitur. Nunc pulvinar nec dolor non rhoncus. Aliquam odio sapien, pulvinar eu semper ut, imperdiet aliquam massa. Aliquam tincidunt non lorem et gravida. Vestibulum in orci libero. Phasellus finibus tempor pulvinar.
                     """)
-                // .AddText(
-                //     """
-                //     Mauris lacinia libero id libero sodales porttitor. Donec sagittis enim et felis scelerisque euismod. Praesent tortor quam, malesuada sed viverra nec, fringilla vel ipsum. Nunc sit amet luctus lectus. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras interdum lacus et ligula tempor, volutpat gravida massa fermentum. Suspendisse semper purus ac sem accumsan, et molestie magna elementum. Vivamus bibendum eros vel rutrum luctus. Integer quis est vel tellus accumsan venenatis nec vitae tellus. Nam elementum magna sapien, et pretium tellus posuere in. Sed tincidunt quam quis fermentum faucibus. Aenean mattis ullamcorper diam, id feugiat sapien auctor id. Etiam non massa sapien.
-                //     """)
-                // .AddText(
-                //     """
-                //     Suspendisse in tempus eros. Nam malesuada nunc id libero finibus semper. Nunc libero neque, facilisis id tincidunt in, tincidunt a purus. Donec eu commodo dui, vestibulum euismod elit. Sed ut ligula id dui mollis rhoncus nec ut dolor. Etiam euismod non nunc vitae consectetur. Nunc libero mauris, tincidunt ac tempus id, aliquet vel enim. Duis at leo aliquet, laoreet ex ac, aliquam dui. Nullam lectus nulla, scelerisque non erat non, bibendum accumsan metus. Ut placerat ex risus, id mattis purus ullamcorper nec. Nullam augue nibh, finibus vel suscipit ac, ultricies ut enim. Interdum et malesuada fames ac ante ipsum primis in faucibus. Aenean eleifend posuere hendrerit.
-                //     """)
-                // .AddText(
-                //     """
-                //     Vivamus pharetra elit leo, vitae bibendum quam tristique vel. Integer vestibulum dolor quis finibus iaculis. Integer velit dolor, feugiat sit amet erat vulputate, sollicitudin elementum neque. Curabitur mattis elementum interdum. Ut sit amet sem ut tellus fermentum suscipit eu nec nisl. Cras ultrices dictum lacinia. Nullam imperdiet leo imperdiet dui egestas fringilla. Curabitur nec odio risus. Quisque aliquam dictum pellentesque. Nullam tempor placerat ligula, et tincidunt dolor eleifend id. Curabitur mattis, tortor vel lacinia consectetur, libero diam suscipit nisi, vel luctus lacus erat quis nulla. Nam dignissim dolor quis odio molestie, a lacinia orci malesuada. Quisque dui tortor, placerat et tincidunt at, placerat eu justo. Ut posuere aliquet nibh nec ultrices. Aliquam consequat imperdiet rutrum. Proin tristique metus sit amet bibendum ornare.
-                //     """)
-                // .AddText(
-                //     """
-                //     Aliquam erat volutpat. Donec vel metus ex. Nam ac pretium odio. Donec aliquet tellus felis, non varius nisi tempor ut. Cras dictum sit amet nisl ac sodales. Vestibulum laoreet felis at velit vulputate, commodo cursus diam sagittis. Donec ut est vehicula nulla venenatis consequat. Sed eu ante mi. Praesent imperdiet purus et egestas placerat. Mauris vestibulum egestas dictum. Donec iaculis, neque non pretium blandit, velit lorem malesuada turpis, eu consequat orci turpis a urna. Maecenas in vulputate urna, vitae mattis lacus. Curabitur arcu quam, bibendum at metus sed, finibus facilisis nibh. Vestibulum eu augue congue, dictum risus sit amet, sollicitudin arcu.
-                //     """)
-                // .AddHorizontalRule()
-                // .AddSpacing(50f)
-                // .AddHorizontalRule()
-                // .AddHStack(stack => stack
-                //     .WithDefaultStyle(style => style with { LineHeight = 1f, })
-                //     .AddText(
-                //         """
-                //         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut euismod gravida ligula, ac interdum sapien viverra eget. Fusce pellentesque enim tristique interdum aliquet. Nulla quam ex, elementum at lorem ut, pellentesque luctus purus. Curabitur feugiat id tortor ut rutrum. Integer id velit suscipit, maximus nisi ac, sollicitudin odio. Maecenas imperdiet lacus velit, id aliquet sapien consectetur faucibus. Nunc lobortis gravida dui, cursus condimentum ex gravida id. Cras at erat quis mi tempor tempus. Nullam consequat velit non interdum vestibulum. Nulla quis magna ac augue molestie luctus sit amet at dolor. Integer aliquam quam quis lacinia scelerisque. Nunc ante velit, tempor quis luctus id, volutpat non enim. Suspendisse rhoncus imperdiet diam, at semper tellus congue at. In sit amet gravida est, nec viverra erat. Phasellus volutpat blandit ipsum, in condimentum nunc congue ut. Sed lacinia finibus elit eget molestie.
-                //         """)
-                //     .AddText(
-                //         """
-                //         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut euismod gravida ligula, ac interdum sapien viverra eget. Fusce pellentesque enim tristique interdum aliquet. Nulla quam ex, elementum at lorem ut, pellentesque luctus purus. Curabitur feugiat id tortor ut rutrum. Integer id velit suscipit, maximus nisi ac, sollicitudin odio. Maecenas imperdiet lacus velit, id aliquet sapien consectetur faucibus. Nunc lobortis gravida dui, cursus condimentum ex gravida id. Cras at erat quis mi tempor tempus. Nullam consequat velit non interdum vestibulum. Nulla quis magna ac augue molestie luctus sit amet at dolor. Integer aliquam quam quis lacinia scelerisque. Nunc ante velit, tempor quis luctus id, volutpat non enim. Suspendisse rhoncus imperdiet diam, at semper tellus congue at. In sit amet gravida est, nec viverra erat. Phasellus volutpat blandit ipsum, in condimentum nunc congue ut. Sed lacinia finibus elit eget molestie.
-                //         """)))
-                )
+                .AddText(
+                    """
+                    Mauris lacinia libero id libero sodales porttitor. Donec sagittis enim et felis scelerisque euismod. Praesent tortor quam, malesuada sed viverra nec, fringilla vel ipsum. Nunc sit amet luctus lectus. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras interdum lacus et ligula tempor, volutpat gravida massa fermentum. Suspendisse semper purus ac sem accumsan, et molestie magna elementum. Vivamus bibendum eros vel rutrum luctus. Integer quis est vel tellus accumsan venenatis nec vitae tellus. Nam elementum magna sapien, et pretium tellus posuere in. Sed tincidunt quam quis fermentum faucibus. Aenean mattis ullamcorper diam, id feugiat sapien auctor id. Etiam non massa sapien.
+                    """)
+                .AddText(
+                    """
+                    Suspendisse in tempus eros. Nam malesuada nunc id libero finibus semper. Nunc libero neque, facilisis id tincidunt in, tincidunt a purus. Donec eu commodo dui, vestibulum euismod elit. Sed ut ligula id dui mollis rhoncus nec ut dolor. Etiam euismod non nunc vitae consectetur. Nunc libero mauris, tincidunt ac tempus id, aliquet vel enim. Duis at leo aliquet, laoreet ex ac, aliquam dui. Nullam lectus nulla, scelerisque non erat non, bibendum accumsan metus. Ut placerat ex risus, id mattis purus ullamcorper nec. Nullam augue nibh, finibus vel suscipit ac, ultricies ut enim. Interdum et malesuada fames ac ante ipsum primis in faucibus. Aenean eleifend posuere hendrerit.
+                    """)
+                .AddText(
+                    """
+                    Vivamus pharetra elit leo, vitae bibendum quam tristique vel. Integer vestibulum dolor quis finibus iaculis. Integer velit dolor, feugiat sit amet erat vulputate, sollicitudin elementum neque. Curabitur mattis elementum interdum. Ut sit amet sem ut tellus fermentum suscipit eu nec nisl. Cras ultrices dictum lacinia. Nullam imperdiet leo imperdiet dui egestas fringilla. Curabitur nec odio risus. Quisque aliquam dictum pellentesque. Nullam tempor placerat ligula, et tincidunt dolor eleifend id. Curabitur mattis, tortor vel lacinia consectetur, libero diam suscipit nisi, vel luctus lacus erat quis nulla. Nam dignissim dolor quis odio molestie, a lacinia orci malesuada. Quisque dui tortor, placerat et tincidunt at, placerat eu justo. Ut posuere aliquet nibh nec ultrices. Aliquam consequat imperdiet rutrum. Proin tristique metus sit amet bibendum ornare.
+                    """)
+                .AddText(
+                    """
+                    Aliquam erat volutpat. Donec vel metus ex. Nam ac pretium odio. Donec aliquet tellus felis, non varius nisi tempor ut. Cras dictum sit amet nisl ac sodales. Vestibulum laoreet felis at velit vulputate, commodo cursus diam sagittis. Donec ut est vehicula nulla venenatis consequat. Sed eu ante mi. Praesent imperdiet purus et egestas placerat. Mauris vestibulum egestas dictum. Donec iaculis, neque non pretium blandit, velit lorem malesuada turpis, eu consequat orci turpis a urna. Maecenas in vulputate urna, vitae mattis lacus. Curabitur arcu quam, bibendum at metus sed, finibus facilisis nibh. Vestibulum eu augue congue, dictum risus sit amet, sollicitudin arcu.
+                    """)
+                .AddHorizontalRule()
+                .AddSpacing(50f)
+                .AddHorizontalRule()
+                .AddHStack(stack => stack
+                    .WithDefaultStyle(style => style with { LineHeight = 1f, })
+                    .AddText(
+                        """
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut euismod gravida ligula, ac interdum sapien viverra eget. Fusce pellentesque enim tristique interdum aliquet. Nulla quam ex, elementum at lorem ut, pellentesque luctus purus. Curabitur feugiat id tortor ut rutrum. Integer id velit suscipit, maximus nisi ac, sollicitudin odio. Maecenas imperdiet lacus velit, id aliquet sapien consectetur faucibus. Nunc lobortis gravida dui, cursus condimentum ex gravida id. Cras at erat quis mi tempor tempus. Nullam consequat velit non interdum vestibulum. Nulla quis magna ac augue molestie luctus sit amet at dolor. Integer aliquam quam quis lacinia scelerisque. Nunc ante velit, tempor quis luctus id, volutpat non enim. Suspendisse rhoncus imperdiet diam, at semper tellus congue at. In sit amet gravida est, nec viverra erat. Phasellus volutpat blandit ipsum, in condimentum nunc congue ut. Sed lacinia finibus elit eget molestie.
+                        """)
+                    .AddText(
+                        """
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut euismod gravida ligula, ac interdum sapien viverra eget. Fusce pellentesque enim tristique interdum aliquet. Nulla quam ex, elementum at lorem ut, pellentesque luctus purus. Curabitur feugiat id tortor ut rutrum. Integer id velit suscipit, maximus nisi ac, sollicitudin odio. Maecenas imperdiet lacus velit, id aliquet sapien consectetur faucibus. Nunc lobortis gravida dui, cursus condimentum ex gravida id. Cras at erat quis mi tempor tempus. Nullam consequat velit non interdum vestibulum. Nulla quis magna ac augue molestie luctus sit amet at dolor. Integer aliquam quam quis lacinia scelerisque. Nunc ante velit, tempor quis luctus id, volutpat non enim. Suspendisse rhoncus imperdiet diam, at semper tellus congue at. In sit amet gravida est, nec viverra erat. Phasellus volutpat blandit ipsum, in condimentum nunc congue ut. Sed lacinia finibus elit eget molestie.
+                        """)))
             .Build();
 
         stream.Write(pdfBytes);

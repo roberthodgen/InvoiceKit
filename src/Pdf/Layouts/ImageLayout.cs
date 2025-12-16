@@ -47,10 +47,10 @@ internal class ImageLayout : ILayout
         throw new Exception("Image not loaded.");
     }
 
-    public LayoutResult Layout(LayoutContext context)
+    public LayoutResult Layout(ILayoutContext context)
     {
         var drawables = new List<IDrawable>();
-        var childContext = context.GetChildContext(Style.GetContentRect(context.Available));
+        var childContext = context.GetVerticalChildContext(Style.GetContentRect(context.Available));
 
         if (context.TryAllocate(Style.GetStyleSize()) == false)
         {

@@ -15,9 +15,9 @@ public sealed class ChildLayout
     /// <summary>
     /// The context for the child to be laid in to.
     /// </summary>
-    public LayoutContext Context { get; }
+    public ILayoutContext Context { get; }
 
-    public ChildLayout(ILayout layout, LayoutContext context)
+    public ChildLayout(ILayout layout, ILayoutContext context)
     {
         Layout = layout;
         Context = context;

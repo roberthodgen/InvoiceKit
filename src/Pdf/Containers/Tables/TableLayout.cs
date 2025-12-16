@@ -32,7 +32,7 @@ internal class TableLayout : ILayout
     }
 
     // Todo: Fix tables
-    public LayoutResult Layout(LayoutContext context)
+    public LayoutResult Layout(ILayoutContext context)
     {
         var listDrawables = new List<IDrawable>();
         var totalSize = new SKSize();

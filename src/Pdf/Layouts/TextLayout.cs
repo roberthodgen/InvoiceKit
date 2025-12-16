@@ -87,7 +87,7 @@ internal class TextLayout : ILayout
         return lines;
     }
 
-    public LayoutResult Layout(LayoutContext context)
+    public LayoutResult Layout(ILayoutContext context)
     {
         if (_wrappedLines.Count == 0)
         {
@@ -106,7 +106,7 @@ internal class TextLayout : ILayout
         }
 
         var drawables = new List<IDrawable>();
-        var childContext = context.GetChildContext(Style.GetContentRect(context.Available));
+        var childContext = context.GetVerticalChildContext(Style.GetContentRect(context.Available));
 
         while (_currentIndex < _wrappedLines.Count)
         {

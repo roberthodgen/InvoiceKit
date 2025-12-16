@@ -6,7 +6,7 @@ internal class PageBreakLayout : ILayout
 {
     private bool IsDrawn;
 
-    public LayoutResult Layout(LayoutContext context)
+    public LayoutResult Layout(ILayoutContext context)
     {
         if (IsDrawn)
         {

@@ -4,7 +4,7 @@ using SkiaSharp;
 
 internal class SpacingBlockLayout(float height) : ILayout
 {
-    public LayoutResult Layout(LayoutContext context)
+    public LayoutResult Layout(ILayoutContext context)
     {
         // Allocates the space but does not draw anything.
         context.TryAllocate(new SKSize(0, height));

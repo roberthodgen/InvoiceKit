@@ -8,7 +8,7 @@ using SkiaSharp;
 /// <remarks>
 /// Uses a two-phase commit model where children contexts should be created then committed back to their parents.
 /// </remarks>
-public sealed class LayoutContext
+public sealed class VerticalLayoutContext : ILayoutContext
 {
     private readonly List<float> _allocated = [];
 
@@ -32,7 +32,7 @@ public sealed class LayoutContext
         _originalSpace.Right,
         _originalSpace.Bottom);
 
-    internal LayoutContext(SKRect available)
+    internal VerticalLayoutContext(SKRect available)
     {
         _originalSpace = available;
     }
@@ -71,25 +71,22 @@ public sealed class LayoutContext
     /// Commits the allocated space of a child layout context.
     /// </summary>
     /// <param name="child">Another layout to allocate on this layout.</param>
-    public void CommitChildContext(LayoutContext child)
+    public void CommitChildContext(ILayoutContext child)
     {
+        if (ReferenceEquals(child, this))
+        {
+            return;
+        }
         _allocated.Add(child.Allocated.Height);
     }
 
-    /// <summary>
-    /// Creates a new child context from the remaining available space.
-    /// </summary>
-    public LayoutContext GetChildContext()
+    public ILayoutContext GetVerticalChildContext(SKRect intersectingRect)
     {
-        return new LayoutContext(Available);
+        return new VerticalLayoutContext(SKRect.Intersect(Available, intersectingRect));
     }
 
-    /// <summary>
-    /// Creates a new child context from the remaining available space that intersects with the given rect.
-    /// </summary>
-    /// <param name="intersectingRect">A rect to limit the child context to.</param>
-    public LayoutContext GetChildContext(SKRect intersectingRect)
+    public ILayoutContext GetHorizontalChildContext(SKRect intersectingRect)
     {
-        return new LayoutContext(SKRect.Intersect(Available, intersectingRect));
+        throw new NotImplementedException();
     }
 }

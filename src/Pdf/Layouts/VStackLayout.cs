@@ -17,7 +17,7 @@ internal class VStackLayout : ILayout
         _children = children;
     }
 
-    public LayoutResult Layout(LayoutContext context)
+    public LayoutResult Layout(ILayoutContext context)
     {
         if (_children.Count == 0)
         {

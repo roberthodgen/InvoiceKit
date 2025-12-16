@@ -7,12 +7,12 @@ internal class HStackLayout(List<ILayout> columns) : ILayout
     /// <summary>
     /// Horizontal stack layout that will split into columns based on the number of children.
     /// </summary>
-    public LayoutResult Layout(LayoutContext context)
+    public LayoutResult Layout(ILayoutContext context)
     {
         return LayoutResult.Deferred(GetChildLayouts(context));
     }
 
-    private List<ChildLayout> GetChildLayouts(LayoutContext context)
+    private List<ChildLayout> GetChildLayouts(ILayoutContext context)
     {
         var result = new List<ChildLayout>();
         foreach (var i in Enumerable.Range(0, columns.Count))
@@ -24,15 +24,15 @@ internal class HStackLayout(List<ILayout> columns) : ILayout
         return result;
     }
 
-    private LayoutContext GetRectForNthColumn(int nthColumn, LayoutContext context)
+    private ILayoutContext GetRectForNthColumn(int nthColumn, ILayoutContext context)
     {
         var columnSize = GetColumnSize(context);
         var point = context.Available.Location;
         point.Offset(columnSize.Width * nthColumn, 0);
-        return context.GetChildContext(SKRect.Create(point, columnSize));
+        return context.GetHorizontalChildContext(SKRect.Create(point, columnSize));
     }
 
-    private SKSize GetColumnSize(LayoutContext context)
+    private SKSize GetColumnSize(ILayoutContext context)
     {
         return new SKSize(context.Available.Width / columns.Count, context.Available.Height);
     }
