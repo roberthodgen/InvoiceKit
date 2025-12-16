@@ -4,14 +4,6 @@ using SkiaSharp;
 
 internal class ZStack(List<ILayout> children) : ILayout
 {
-    /// <summary>
-    /// A ZStack's measured size is one that fits all children.
-    /// </summary>
-    public SKSize Measure(SKSize available)
-    {
-        return children.Aggregate(SKSize.Empty, (size, child) => Fit(size, child.Measure(available)));
-    }
-
     public LayoutResult Layout(LayoutContext context)
     {
         // var size = Measure(context.Available.Size);

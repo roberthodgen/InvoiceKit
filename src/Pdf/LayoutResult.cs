@@ -58,5 +58,10 @@ public sealed class LayoutResult
     /// <summary>
     /// Returns a layout result with deferred children that need to be laid out.
     /// </summary>
-    public static LayoutResult Deferred(List<ChildLayout> children) => new (LayoutStatus.Deferred, children);
+    public static LayoutResult Deferred(List<ChildLayout> children)
+    {
+        var reversed = new List<ChildLayout>(children);
+        reversed.Reverse();
+        return new LayoutResult(LayoutStatus.Deferred, reversed);
+    }
 }

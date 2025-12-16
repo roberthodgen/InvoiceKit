@@ -12,18 +12,6 @@ internal class HStackLayout(List<ILayout> columns) : ILayout
         return LayoutResult.Deferred(GetChildLayouts(context));
     }
 
-    public SKSize Measure(SKSize available)
-    {
-        return SKSize.Empty;
-        if (columns.Count == 0)
-        {
-            return SKSize.Empty;
-        }
-
-        var maxHeight = columns.Max(column => column.Measure(available).Height);
-        return new SKSize(available.Width, maxHeight);
-    }
-
     private List<ChildLayout> GetChildLayouts(LayoutContext context)
     {
         var result = new List<ChildLayout>();

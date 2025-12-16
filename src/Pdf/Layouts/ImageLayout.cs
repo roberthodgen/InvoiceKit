@@ -32,7 +32,7 @@ internal class ImageLayout : ILayout
         }
     }
 
-    public SKSize Measure(SKSize available)
+    private SKSize Measure()
     {
         if (Svg?.Drawable is not null)
         {
@@ -57,7 +57,7 @@ internal class ImageLayout : ILayout
             return LayoutResult.NeedsNewPage([]);
         }
 
-        if (childContext.TryAllocate(this, out var rect))
+        if (childContext.TryAllocate(Measure(), out var rect))
         {
             if (Svg is not null)
             {

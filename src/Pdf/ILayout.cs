@@ -5,7 +5,7 @@ namespace InvoiceKit.Pdf;
 /// may have its <see cref="Layout"/> method called multiple times. <see cref="ILayout"/> objects should track what
 /// remains to be laid out and ensure no <see cref="IDrawable"/> is laid out more than once unless desired.
 /// </summary>
-public interface ILayout : IMeasurable
+public interface ILayout
 {
     /// <summary>
     /// Used by VStack and HStack to lay out their children.

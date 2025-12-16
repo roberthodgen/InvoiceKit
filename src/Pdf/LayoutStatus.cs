@@ -29,4 +29,15 @@ public readonly record struct LayoutStatus
     {
         Value = value;
     }
+
+    public override string ToString()
+    {
+        return Value switch
+        {
+            1 => "Needs New Page",
+            2 => "Is Fully Drawn",
+            3 => "Deferred",
+            _ => "Unknown"
+        };
+    }
 }

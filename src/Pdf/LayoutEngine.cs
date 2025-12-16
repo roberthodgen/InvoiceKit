@@ -47,17 +47,24 @@ internal class LayoutEngine(IViewBuilder root) : IDisposable
 
             if (layoutResult.Status == LayoutStatus.Deferred)
             {
+                var childrenNeedingLayout = new List<ChildLayout>();
                 foreach (var child in layoutResult.Children)
                 {
+                    if (_laidOut.Contains(child.Layout))
+                    {
+                        continue;
+                    }
+                    childrenNeedingLayout.Add(child);
                     stack.Push(child);
+                }
+
+                if (childrenNeedingLayout.Count > 0)
+                {
+                    continue;
                 }
             }
 
-            if (layoutResult.Status == LayoutStatus.IsFullyDrawn)
-            {
-                _laidOut.Add(layout.Layout);
-            }
-
+            _laidOut.Add(layout.Layout);
             stack.Pop();
         }
 

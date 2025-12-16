@@ -35,19 +35,6 @@ internal class TextLayout : ILayout
         }
     }
 
-    public SKSize Measure(SKSize available)
-    {
-        var stylingSize = Style.GetStyleSize();
-        var sizeAfterStyle = Style.GetSizeAfterStyle(available);
-        if (_wrappedLines.Count == 0)
-        {
-            _wrappedLines = _lines.SelectMany(line => WrapText(line, Style, available)).ToList();
-        }
-
-        var height = _wrappedLines.Select(_ => MeasureFullLineSize(sizeAfterStyle).Height).Sum() + stylingSize.Height;
-        return new SKSize(available.Width, height);
-    }
-
     /// <summary>
     /// Measures how much space a line of text takes.
     /// </summary>

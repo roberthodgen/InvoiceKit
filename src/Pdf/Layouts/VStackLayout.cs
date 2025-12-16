@@ -4,7 +4,7 @@ using SkiaSharp;
 
 internal class VStackLayout : ILayout
 {
-    private readonly Queue<ILayout> _children;
+    private readonly List<ILayout> _children;
 
     private readonly ILayout? _header;
 
@@ -14,7 +14,7 @@ internal class VStackLayout : ILayout
     {
         _footer = footer;
         _header = header;
-        _children = new Queue<ILayout>(children);
+        _children = children;
     }
 
     public LayoutResult Layout(LayoutContext context)
@@ -35,22 +35,7 @@ internal class VStackLayout : ILayout
         //     childLayouts.Add(new ChildLayout(_header, context.Available));
         // }
 
-        while (_children.Count > 0)
-        {
-            var childContext = context.GetChildContext(); // Todo: Account for header and footer size
-            var child =  _children.Peek();
-            var childSize = child.Measure(context.Available.Size);
-            if (context.TryAllocate(childSize))
-            {
-                childLayouts.Add(new ChildLayout(child, childContext));
-                _children.Dequeue();
-                context.CommitChildContext(childContext);
-            }
-            else
-            {
-                return LayoutResult.NeedsNewPage([]);
-            }
-        }
+        childLayouts.AddRange(_children.Select(child => new ChildLayout(child, context)));
 
         // if (_footer is not null)
         // {
@@ -58,20 +43,5 @@ internal class VStackLayout : ILayout
         // }
 
         return LayoutResult.Deferred(childLayouts);
-    }
-
-    public SKSize Measure(SKSize available)
-    {
-        return SKSize.Empty; // Todo: update the return to be a MeasureResult
-        if (_children.Count == 0)
-        {
-            return SKSize.Empty;
-        }
-
-        var headerHeight = _header?.Measure(available).Height ?? 0f;
-        var footerHeight = _footer?.Measure(available).Height ?? 0f;
-        var sumChildHeight = _children.Sum(child => child.Measure(available).Height);
-        var totalHeight = headerHeight + footerHeight + sumChildHeight;
-        return new SKSize(available.Width, totalHeight);
     }
 }

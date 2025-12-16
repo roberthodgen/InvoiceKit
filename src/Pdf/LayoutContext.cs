@@ -59,26 +59,6 @@ public sealed class LayoutContext
     /// <summary>
     /// Determines if the measurable can fit onto the page and returns a rect.
     /// </summary>
-    /// <param name="measurable">Takes in a IMeasurable.</param>
-    public bool TryAllocate(IMeasurable measurable)
-    {
-        return TryAllocate(measurable, out _);
-    }
-
-    /// <summary>
-    /// Determines if the measurable can fit onto the page and returns a rect.
-    /// </summary>
-    /// <param name="measurable">Takes in a IMeasurable.</param>
-    /// <param name="rect">Outputs the allocated rect for the drawing.</param>
-    public bool TryAllocate(IMeasurable measurable, out SKRect rect)
-    {
-        var size = measurable.Measure(Available.Size);
-        return TryAllocate(size, out rect);
-    }
-
-    /// <summary>
-    /// Determines if the measurable can fit onto the page and returns a rect.
-    /// </summary>
     /// <param name="size">SKSize of the element being allocated.</param>
     /// <param name="rect">Outputs the allocated rect for the drawing.</param>
     public bool TryAllocate(SKSize size, out SKRect rect)
