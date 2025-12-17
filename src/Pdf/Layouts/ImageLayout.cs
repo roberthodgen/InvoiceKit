@@ -50,42 +50,36 @@ internal class ImageLayout : ILayout
     public LayoutResult Layout(ILayoutContext context)
     {
         var drawables = new List<IDrawable>();
+        var childContext = GetContext(context);
 
         if (context.TryAllocate(Style.GetStyleSize()) == false)
         {
             return LayoutResult.NeedsNewPage([]);
         }
 
-        if (context.TryAllocate(Measure(), out var rect))
+        if (childContext.TryAllocate(Measure(), out var rect))
         {
+            drawables.AddRange(Style.GetStyleDrawables(rect));
+
             if (Svg is not null)
             {
-                // Add border drawable.
-                // Background needs to come before text.
-                drawables.Insert(0, new BackgroundDrawable(Style.GetBackgroundRect(rect), Style.BackgroundToPaint()));
-                drawables.Add(new BorderDrawable(Style.GetBorderRect(rect), Style.Border));
-                drawables.Add(new DebugDrawable(rect, DebugDrawable.ContentColor));
                 drawables.Add(new SvgImageDrawable(Svg, rect));
             }
             else if (Bitmap is not null)
             {
-                drawables.Add(new DebugDrawable(rect, DebugDrawable.ContentColor));
                 drawables.Add(new BitmapImageDrawable(Bitmap, rect));
             }
 
-
-            // Add margin and padding debug drawables.
-            drawables.Add(new DebugDrawable(Style.GetMarginDebugRect(context.Allocated), DebugDrawable.MarginColor));
-            drawables.Add(new DebugDrawable(Style.GetBackgroundRect(context.Allocated), DebugDrawable.PaddingColor));
-
+            childContext.CommitChildContext();
             return LayoutResult.FullyDrawn(drawables);
         }
 
+        childContext.CommitChildContext();
         return LayoutResult.NeedsNewPage(drawables);
     }
 
     public ILayoutContext GetContext(ILayoutContext parentContext)
     {
-        return parentContext.GetVerticalChildContext(parentContext.Available);
+        return parentContext.GetVerticalChildContext(Style.GetContentRect(parentContext.Available));
     }
 }

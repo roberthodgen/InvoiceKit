@@ -5,14 +5,14 @@ using SkiaSharp;
 public sealed class HorizonalLayoutContext : LayoutContextBase
 {
     public override SKRect Allocated => new (
-        _originalSpace.Left,
-        _originalSpace.Top,
-        _originalSpace.Right,
-        _originalSpace.Top + _allocated.Max());
+        OriginalSpace.Left,
+        OriginalSpace.Top,
+        OriginalSpace.Right,
+        OriginalSpace.Top + AllocatedHeights.Max());
 
     internal HorizonalLayoutContext(SKRect available, LayoutContextBase? parent)
         : base(available, parent)
     {
-        _allocated.Add(0); // prevent error on .Max
+        AllocatedHeights.Add(0); // prevent error on .Max
     }
 }

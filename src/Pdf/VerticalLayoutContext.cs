@@ -5,10 +5,10 @@ using SkiaSharp;
 public sealed class VerticalLayoutContext : LayoutContextBase
 {
     public override SKRect Allocated => new (
-        _originalSpace.Left,
-        _originalSpace.Top,
-        _originalSpace.Right,
-        (Math.Max(_originalSpace.Top, _parent!.Available.Top)) + _allocated.Sum());
+        OriginalSpace.Left,
+        OriginalSpace.Top,
+        OriginalSpace.Right,
+        (Math.Max(OriginalSpace.Top, Parent!.Available.Top)) + AllocatedHeights.Sum());
 
     internal VerticalLayoutContext(SKRect available, LayoutContextBase? parent)
         : base(available, parent)

@@ -30,14 +30,14 @@ internal class VStackLayout : ILayout
 
         // if (_header is not null)
         // {
-        //     childLayouts.Add(new ChildLayout(_header, context.Available));
+        //     childLayouts.Add(ChildLayout.CreateVertical(_header, context));
         // }
 
         childLayouts.AddRange(_children.Select(child => ChildLayout.CreateVertical(child, context)));
 
         // if (_footer is not null)
         // {
-        //     childLayouts.Add(new ChildLayout(_footer, context.Available));
+        //     childLayouts.Add(ChildLayout.CreateVertical(_footer, context));
         // }
 
         return LayoutResult.Deferred(childLayouts);

@@ -1,6 +1,7 @@
 namespace InvoiceKit.Pdf.Layouts;
 
 using Drawables;
+using SkiaSharp;
 
 internal class HorizontalRuleLayout(BlockStyle style) : ILayout
 {
@@ -9,17 +10,28 @@ internal class HorizontalRuleLayout(BlockStyle style) : ILayout
     public LayoutResult Layout(ILayoutContext context)
     {
         var drawables = new List<IDrawable>();
-        if (context.TryAllocate(Style.GetStyleSize()))
+        var childContext = GetContext(context);
+
+        if (context.TryAllocate(Style.GetStyleSize()) == false)
         {
+            return LayoutResult.NeedsNewPage([]);
+        }
+
+        if (childContext.TryAllocate(new SKSize(context.Available.Width, Style.ForegroundToPaint().StrokeWidth)))
+        {
+            drawables.AddRange(Style.GetStyleDrawables(childContext.Allocated));
             drawables.Add(new HorizontalRuleDrawable(context.Available, Style.ForegroundToPaint()));
+
+            childContext.CommitChildContext();
             return LayoutResult.FullyDrawn(drawables);
         }
 
-        return LayoutResult.NeedsNewPage(drawables);
+        childContext.CommitChildContext();
+        return LayoutResult.NeedsNewPage([]);
     }
 
     public ILayoutContext GetContext(ILayoutContext parentContext)
     {
-        return parentContext.GetVerticalChildContext(parentContext.Available);
+        return parentContext.GetVerticalChildContext(Style.GetContentRect(parentContext.Available));
     }
 }

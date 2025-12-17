@@ -1,5 +1,6 @@
 namespace InvoiceKit.Pdf;
 
+using Drawables;
 using SkiaSharp;
 
 public readonly record struct BlockStyle()
@@ -47,6 +48,7 @@ public readonly record struct BlockStyle()
     /// <summary>
     /// Converts the foreground to a <see cref="SKPaint"/> for drawing on the canvas.
     /// </summary>
+    /// <remarks>Horizontal rule is using this for color, but is taking the default stroke width value.</remarks>
     public SKPaint ForegroundToPaint()
     {
         return new SKPaint
@@ -120,6 +122,24 @@ public readonly record struct BlockStyle()
     {
         var styleSize = GetStyleSize();
         return new SKSize(available.Width - styleSize.Width, available.Height - styleSize.Height);
+    }
+
+    /// <summary>
+    /// Creates a list of drawables for the border, background, and debugs.
+    /// </summary>
+    /// <param name="content"></param>
+    /// <returns></returns>
+    public List<IDrawable> GetStyleDrawables(SKRect content)
+    {
+        var drawables = new List<IDrawable>
+        {
+            new BackgroundDrawable(GetBackgroundRect(content), BackgroundToPaint()),
+            new BorderDrawable(GetBorderRect(content), Border),
+            new DebugDrawable(content, DebugDrawable.ContentColor),
+            new DebugDrawable(GetMarginDebugRect(content), DebugDrawable.MarginColor),
+            new DebugDrawable(GetBackgroundRect(content), DebugDrawable.PaddingColor),
+        };
+        return drawables;
     }
 
     /// <summary>

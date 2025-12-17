@@ -6,26 +6,26 @@ public abstract class LayoutContextBase : ILayoutContext
 {
     private bool _committed;
 
-    protected readonly LayoutContextBase? _parent;
+    protected readonly LayoutContextBase? Parent;
 
-    protected readonly List<float> _allocated = [];
+    protected readonly List<float> AllocatedHeights = [];
 
-    protected readonly SKRect _originalSpace;
+    protected readonly SKRect OriginalSpace;
 
     public abstract SKRect Allocated { get; }
 
     public virtual SKRect Available => SKRect.Intersect(
-        _parent!.Available,
+        Parent!.Available,
         new (
-            _originalSpace.Left,
+            OriginalSpace.Left,
             Allocated.Bottom,
-            _originalSpace.Right,
-            _originalSpace.Bottom));
+            OriginalSpace.Right,
+            OriginalSpace.Bottom));
 
     protected LayoutContextBase(SKRect available, LayoutContextBase? parent)
     {
-        _originalSpace = available;
-        _parent = parent;
+        OriginalSpace = available;
+        Parent = parent;
     }
 
     public virtual bool TryAllocate(SKSize size)
@@ -35,7 +35,7 @@ public abstract class LayoutContextBase : ILayoutContext
             return false;
         }
 
-        _allocated.Add(size.Height);
+        AllocatedHeights.Add(size.Height);
         return true;
     }
 
@@ -53,7 +53,7 @@ public abstract class LayoutContextBase : ILayoutContext
         }
 
         _committed = true;
-        _parent?._allocated.Add(Allocated.Height);
+        Parent?.AllocatedHeights.Add(Allocated.Height);
     }
 
     public ILayoutContext GetVerticalChildContext(SKRect intersectingRect)

@@ -1,5 +1,6 @@
 namespace InvoiceKit.Pdf;
 
+using Layouts;
 using SkiaSharp;
 
 /// <summary>
@@ -45,6 +46,13 @@ internal class LayoutEngine(IViewBuilder root) : IDisposable
                 return new PageLayoutResult(page, LayoutStatus.NeedsNewPage);
             }
 
+            // if (layout.Layout is VStackRepeatingLayout)
+            // {
+            //     layout.Context.CommitChildContext();
+            //     stack.Pop();
+            //     continue;
+            // }
+
             if (layoutResult.Status == LayoutStatus.Deferred)
             {
                 var childrenNeedingLayout = new List<ChildLayout>();
@@ -54,6 +62,7 @@ internal class LayoutEngine(IViewBuilder root) : IDisposable
                     {
                         continue;
                     }
+
                     childrenNeedingLayout.Add(child);
                     stack.Push(child);
                 }
