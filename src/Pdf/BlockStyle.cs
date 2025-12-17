@@ -127,7 +127,7 @@ public readonly record struct BlockStyle()
     /// <summary>
     /// Creates a list of drawables for the border, background, and debugs.
     /// </summary>
-    /// <param name="content"></param>
+    /// <param name="content">Content rect received from a TryAllocate method on <see cref="ILayoutContext"/>.</param>
     /// <returns></returns>
     public List<IDrawable> GetStyleDrawables(SKRect content)
     {
