@@ -40,8 +40,7 @@ public interface ILayoutContext
     /// <summary>
     /// Commits the allocated space of a child layout context.
     /// </summary>
-    /// <param name="child">Another layout to allocate on this layout.</param>
-    public void CommitChildContext(ILayoutContext child);
+    public void CommitChildContext();
 
     /// <summary>
     /// Creates a new vertical child context from the remaining available space that intersects with the given rect.

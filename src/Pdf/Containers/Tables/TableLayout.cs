@@ -74,4 +74,9 @@ internal class TableLayout : ILayout
 
         return LayoutResult.FullyDrawn(listDrawables);
     }
+
+    public ILayoutContext GetContext(ILayoutContext parentContext)
+    {
+        throw new NotImplementedException();
+    }
 }

@@ -50,14 +50,13 @@ internal class ImageLayout : ILayout
     public LayoutResult Layout(ILayoutContext context)
     {
         var drawables = new List<IDrawable>();
-        var childContext = context.GetVerticalChildContext(Style.GetContentRect(context.Available));
 
         if (context.TryAllocate(Style.GetStyleSize()) == false)
         {
             return LayoutResult.NeedsNewPage([]);
         }
 
-        if (childContext.TryAllocate(Measure(), out var rect))
+        if (context.TryAllocate(Measure(), out var rect))
         {
             if (Svg is not null)
             {
@@ -76,12 +75,17 @@ internal class ImageLayout : ILayout
 
 
             // Add margin and padding debug drawables.
-            drawables.Add(new DebugDrawable(Style.GetMarginDebugRect(childContext.Allocated), DebugDrawable.MarginColor));
-            drawables.Add(new DebugDrawable(Style.GetBackgroundRect(childContext.Allocated), DebugDrawable.PaddingColor));
+            drawables.Add(new DebugDrawable(Style.GetMarginDebugRect(context.Allocated), DebugDrawable.MarginColor));
+            drawables.Add(new DebugDrawable(Style.GetBackgroundRect(context.Allocated), DebugDrawable.PaddingColor));
 
             return LayoutResult.FullyDrawn(drawables);
         }
 
         return LayoutResult.NeedsNewPage(drawables);
+    }
+
+    public ILayoutContext GetContext(ILayoutContext parentContext)
+    {
+        return parentContext.GetVerticalChildContext(parentContext.Available);
     }
 }

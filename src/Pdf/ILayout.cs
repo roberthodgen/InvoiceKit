@@ -12,5 +12,12 @@ public interface ILayout
     /// Will be called multiple times. Every object is responsible for maintaining its own state and preventing
     /// duplication.
     /// </summary>
+    /// <param name="context">A context into which all layout and child layout actions should occur.</param>
     LayoutResult Layout(ILayoutContext context);
+
+    /// <summary>
+    /// Creates an appropriate <see cref="ILayoutContext"/> for the layout type.
+    /// </summary>
+    /// <param name="parentContext">A parent context from which to derive a child context.</param>
+    ILayoutContext GetContext(ILayoutContext parentContext);
 }

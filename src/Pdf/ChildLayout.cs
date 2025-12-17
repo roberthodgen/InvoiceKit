@@ -17,9 +17,24 @@ public sealed class ChildLayout
     /// </summary>
     public ILayoutContext Context { get; }
 
-    public ChildLayout(ILayout layout, ILayoutContext context)
+    internal ChildLayout(ILayout layout, ILayoutContext context)
     {
         Layout = layout;
         Context = context;
+    }
+
+    public static ChildLayout CreateVertical(ILayout layout, ILayoutContext parentContext)
+    {
+        return new ChildLayout(layout, parentContext.GetVerticalChildContext(parentContext.Available));
+    }
+
+    public static ChildLayout CreateHorizontal(ILayout layout, ILayoutContext parentContext)
+    {
+        return new ChildLayout(layout, parentContext.GetHorizontalChildContext(parentContext.Available));
+    }
+
+    internal static ChildLayout CreateRoot(ILayout layout, RootLayoutContext rootLayout)
+    {
+        return new ChildLayout(layout, rootLayout);
     }
 }

@@ -23,10 +23,10 @@ internal class LayoutEngine(IViewBuilder root) : IDisposable
     /// <returns>
     /// A <see cref="PageLayoutResult"/> which contains the page, its <see cref="IDrawable"/>s, and status.
     /// </returns>
-    private PageLayoutResult LayoutPage(ILayoutContext rootContext)
+    private PageLayoutResult LayoutPage(RootLayoutContext rootContext)
     {
         var stack = new Stack<ChildLayout>();
-        stack.Push(new ChildLayout(_root, rootContext));
+        stack.Push(ChildLayout.CreateRoot(_root, rootContext));
         var page = new Page();
 
         while (stack.Count > 0)
@@ -64,7 +64,7 @@ internal class LayoutEngine(IViewBuilder root) : IDisposable
                 }
             }
 
-            rootContext.CommitChildContext(layout.Context);
+            layout.Context.CommitChildContext();
             _laidOut.Add(layout.Layout);
             stack.Pop();
         }
@@ -77,7 +77,7 @@ internal class LayoutEngine(IViewBuilder root) : IDisposable
         var status = LayoutStatus.NeedsNewPage;
         while (status == LayoutStatus.NeedsNewPage)
         {
-            var result = LayoutPage(new VerticalLayoutContext(drawableArea));
+            var result = LayoutPage(new RootLayoutContext(drawableArea));
             _pages.Add(result.Page);
             status = result.Status;
         }

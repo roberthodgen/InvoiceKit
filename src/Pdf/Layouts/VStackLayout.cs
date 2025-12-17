@@ -1,7 +1,5 @@
 namespace InvoiceKit.Pdf.Layouts;
 
-using SkiaSharp;
-
 internal class VStackLayout : ILayout
 {
     private readonly List<ILayout> _children;
@@ -35,7 +33,7 @@ internal class VStackLayout : ILayout
         //     childLayouts.Add(new ChildLayout(_header, context.Available));
         // }
 
-        childLayouts.AddRange(_children.Select(child => new ChildLayout(child, context)));
+        childLayouts.AddRange(_children.Select(child => ChildLayout.CreateVertical(child, context)));
 
         // if (_footer is not null)
         // {
@@ -43,5 +41,10 @@ internal class VStackLayout : ILayout
         // }
 
         return LayoutResult.Deferred(childLayouts);
+    }
+
+    public ILayoutContext GetContext(ILayoutContext parentContext)
+    {
+        return parentContext.GetVerticalChildContext(parentContext.Available);
     }
 }

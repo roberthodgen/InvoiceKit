@@ -1,7 +1,5 @@
 namespace InvoiceKit.Pdf.Layouts;
 
-using SkiaSharp;
-
 internal class PageBreakLayout : ILayout
 {
     private bool IsDrawn;
@@ -12,7 +10,13 @@ internal class PageBreakLayout : ILayout
         {
             return LayoutResult.FullyDrawn([]);
         }
+
         IsDrawn = true;
         return LayoutResult.NeedsNewPage([]);
+    }
+
+    public ILayoutContext GetContext(ILayoutContext parentContext)
+    {
+        return parentContext.GetVerticalChildContext(parentContext.Available);
     }
 }

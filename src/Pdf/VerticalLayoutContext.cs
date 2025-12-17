@@ -8,16 +8,10 @@ public sealed class VerticalLayoutContext : LayoutContextBase
         _originalSpace.Left,
         _originalSpace.Top,
         _originalSpace.Right,
-        _originalSpace.Top + _allocated.Sum());
+        (Math.Max(_originalSpace.Top, _parent!.Available.Top)) + _allocated.Sum());
 
-    public override SKRect Available => new (
-        _originalSpace.Left,
-        Allocated.Bottom,
-        _originalSpace.Right,
-        _originalSpace.Bottom);
-
-    internal VerticalLayoutContext(SKRect available)
-        : base(available)
+    internal VerticalLayoutContext(SKRect available, LayoutContextBase? parent)
+        : base(available, parent)
     {
     }
 }

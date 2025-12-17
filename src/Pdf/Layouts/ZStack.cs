@@ -23,6 +23,11 @@ internal class ZStack(List<ILayout> children) : ILayout
         return LayoutResult.FullyDrawn([]);
     }
 
+    public ILayoutContext GetContext(ILayoutContext parentContext)
+    {
+        throw new NotImplementedException();
+    }
+
     /// <summary>
     /// Computes the SKSize needed to fit both SKSizes.
     /// </summary>

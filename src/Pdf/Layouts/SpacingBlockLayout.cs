@@ -10,4 +10,9 @@ internal class SpacingBlockLayout(float height) : ILayout
         context.TryAllocate(new SKSize(0, height));
         return LayoutResult.FullyDrawn([]);
     }
+
+    public ILayoutContext GetContext(ILayoutContext parentContext)
+    {
+        return parentContext.GetVerticalChildContext(parentContext.Available);
+    }
 }

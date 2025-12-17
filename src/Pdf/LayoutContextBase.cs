@@ -4,20 +4,31 @@ using SkiaSharp;
 
 public abstract class LayoutContextBase : ILayoutContext
 {
+    private bool _committed;
+
+    protected readonly LayoutContextBase? _parent;
+
     protected readonly List<float> _allocated = [];
 
     protected readonly SKRect _originalSpace;
 
     public abstract SKRect Allocated { get; }
 
-    public abstract SKRect Available { get; }
+    public virtual SKRect Available => SKRect.Intersect(
+        _parent!.Available,
+        new (
+            _originalSpace.Left,
+            Allocated.Bottom,
+            _originalSpace.Right,
+            _originalSpace.Bottom));
 
-    protected LayoutContextBase(SKRect available)
+    protected LayoutContextBase(SKRect available, LayoutContextBase? parent)
     {
         _originalSpace = available;
+        _parent = parent;
     }
 
-    public bool TryAllocate(SKSize size)
+    public virtual bool TryAllocate(SKSize size)
     {
         if (size.Height > Available.Height || size.Width > Available.Width)
         {
@@ -34,23 +45,24 @@ public abstract class LayoutContextBase : ILayoutContext
         return TryAllocate(size);
     }
 
-    public void CommitChildContext(ILayoutContext child)
+    public virtual void CommitChildContext()
     {
-        if (ReferenceEquals(child, this))
+        if (_committed)
         {
-            return;
+            throw new ApplicationException("Cannot commit child context twice.");
         }
 
-        _allocated.Add(child.Allocated.Height);
+        _committed = true;
+        _parent?._allocated.Add(Allocated.Height);
     }
 
     public ILayoutContext GetVerticalChildContext(SKRect intersectingRect)
     {
-        return new VerticalLayoutContext(SKRect.Intersect(Available, intersectingRect));
+        return new VerticalLayoutContext(SKRect.Intersect(Available, intersectingRect), this);
     }
 
     public ILayoutContext GetHorizontalChildContext(SKRect intersectingRect)
     {
-        return new HorizonalLayoutContext(SKRect.Intersect(Available, intersectingRect));
+        return new HorizonalLayoutContext(SKRect.Intersect(Available, intersectingRect), this);
     }
 }

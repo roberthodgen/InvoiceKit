@@ -106,11 +106,10 @@ internal class TextLayout : ILayout
         }
 
         var drawables = new List<IDrawable>();
-        var childContext = context.GetVerticalChildContext(Style.GetContentRect(context.Available));
 
         while (_currentIndex < _wrappedLines.Count)
         {
-            if (childContext.TryAllocate(MeasureFullLineSize(childContext.Available.Size), out var rect))
+            if (context.TryAllocate(MeasureFullLineSize(context.Available.Size), out var rect))
             {
                 drawables.Add(new DebugDrawable(rect, DebugDrawable.ContentColor));
                 drawables.Add(new TextDrawable(_wrappedLines[_currentIndex], rect, Style));
@@ -120,16 +119,15 @@ internal class TextLayout : ILayout
 
             // Add background before the text drawable and add the border drawable.
             drawables.Insert(0,
-                new BackgroundDrawable(Style.GetBackgroundRect(childContext.Allocated), Style.BackgroundToPaint()));
-            drawables.Add(new BorderDrawable(Style.GetBorderRect(childContext.Allocated), Style.Border));
+                new BackgroundDrawable(Style.GetBackgroundRect(context.Allocated), Style.BackgroundToPaint()));
+            drawables.Add(new BorderDrawable(Style.GetBorderRect(context.Allocated), Style.Border));
 
             // Add margin and padding debug drawables.
             drawables.Add(
-                new DebugDrawable(Style.GetMarginDebugRect(childContext.Allocated), DebugDrawable.MarginColor));
+                new DebugDrawable(Style.GetMarginDebugRect(context.Allocated), DebugDrawable.MarginColor));
             drawables.Add(
-                new DebugDrawable(Style.GetBackgroundRect(childContext.Allocated), DebugDrawable.PaddingColor));
+                new DebugDrawable(Style.GetBackgroundRect(context.Allocated), DebugDrawable.PaddingColor));
 
-            context.CommitChildContext(childContext);
             return LayoutResult.NeedsNewPage(drawables);
         }
 
@@ -138,13 +136,17 @@ internal class TextLayout : ILayout
 
         // Add background before the text drawable and add the border drawable.
         drawables.Insert(0,
-            new BackgroundDrawable(Style.GetBackgroundRect(childContext.Allocated), Style.BackgroundToPaint()));
-        drawables.Add(new BorderDrawable(Style.GetBorderRect(childContext.Allocated), Style.Border));
+            new BackgroundDrawable(Style.GetBackgroundRect(context.Allocated), Style.BackgroundToPaint()));
+        drawables.Add(new BorderDrawable(Style.GetBorderRect(context.Allocated), Style.Border));
 
         // Add margin and padding debug drawables.
-        drawables.Add(new DebugDrawable(Style.GetMarginDebugRect(childContext.Allocated), DebugDrawable.MarginColor));
-        drawables.Add(new DebugDrawable(Style.GetBackgroundRect(childContext.Allocated), DebugDrawable.PaddingColor));
-        context.CommitChildContext(childContext);
+        drawables.Add(new DebugDrawable(Style.GetMarginDebugRect(context.Allocated), DebugDrawable.MarginColor));
+        drawables.Add(new DebugDrawable(Style.GetBackgroundRect(context.Allocated), DebugDrawable.PaddingColor));
         return LayoutResult.FullyDrawn(drawables);
+    }
+
+    public ILayoutContext GetContext(ILayoutContext parentContext)
+    {
+        return parentContext.GetVerticalChildContext(Style.GetContentRect(parentContext.Available));
     }
 }
