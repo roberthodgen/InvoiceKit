@@ -1,7 +1,5 @@
 namespace InvoiceKit.Pdf;
 
-using SkiaSharp;
-
 /// <summary>
 /// A child layout that has been positioned by its parent.
 /// </summary>

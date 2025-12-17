@@ -92,7 +92,8 @@ internal class TextLayout : ILayout
 
         if (_wrappedLines.Count == 0)
         {
-            _wrappedLines = _lines.SelectMany(line => WrapText(line, Style, childContext.Available.Size.Width)).ToList();
+            _wrappedLines = _lines.SelectMany(line => WrapText(line, Style, childContext.Available.Size.Width))
+                .ToList();
         }
 
         if (_currentIndex >= _wrappedLines.Count)
@@ -118,10 +119,7 @@ internal class TextLayout : ILayout
                 continue; // Skip to the next line.
             }
 
-            foreach (var drawable in Style.GetStyleDrawables(childContext.Allocated))
-            {
-                drawables.Insert(0, drawable);
-            }
+            drawables.InsertRange(0, Style.GetStyleDrawables(childContext.Allocated));
 
             childContext.CommitChildContext();
             return LayoutResult.NeedsNewPage(drawables);
@@ -130,10 +128,7 @@ internal class TextLayout : ILayout
         // Reset index for repeating layouts.
         _currentIndex = 0;
 
-        foreach (var drawable in Style.GetStyleDrawables(childContext.Allocated))
-        {
-            drawables.Insert(0, drawable);
-        }
+        drawables.InsertRange(0, Style.GetStyleDrawables(childContext.Allocated));
 
         childContext.CommitChildContext();
         return LayoutResult.FullyDrawn(drawables);
