@@ -11,7 +11,7 @@ internal class TextLayout : ILayout
 {
     private BlockStyle Style { get; }
 
-    private readonly List<string> _lines = [];
+    private readonly string _text;
 
     private List<string> _wrappedLines = [];
 
@@ -22,17 +22,7 @@ internal class TextLayout : ILayout
     internal TextLayout(BlockStyle style, string text)
     {
         Style = style;
-        using var reader = new StringReader(text);
-        while (true)
-        {
-            var line = reader.ReadLine();
-            if (line is null)
-            {
-                break;
-            }
-
-            _lines.Add(line);
-        }
+        _text = text;
     }
 
     /// <summary>
@@ -48,7 +38,7 @@ internal class TextLayout : ILayout
     }
 
     /// <summary>
-    /// Separates a single string into multiple lines based on the width of the available space.
+    /// Separates a string into multiple lines based on the width of the available space.
     /// </summary>
     private static List<string> WrapText(string text, BlockStyle style, float maxWidth)
     {
@@ -92,8 +82,7 @@ internal class TextLayout : ILayout
 
         if (_wrappedLines.Count == 0)
         {
-            _wrappedLines = _lines.SelectMany(line => WrapText(line, Style, childContext.Available.Size.Width))
-                .ToList();
+            _wrappedLines = WrapText(_text, Style, childContext.Available.Size.Width).ToList();
         }
 
         if (_currentIndex >= _wrappedLines.Count)
