@@ -2,16 +2,16 @@ namespace InvoiceKit.Pdf.Layouts;
 
 internal class PageBreakLayout : ILayout
 {
-    private bool IsDrawn;
+    private bool _isDrawn;
 
     public LayoutResult Layout(ILayoutContext context)
     {
-        if (IsDrawn)
+        if (_isDrawn)
         {
             return LayoutResult.FullyDrawn([]);
         }
 
-        IsDrawn = true;
+        _isDrawn = true;
         return LayoutResult.NeedsNewPage([]);
     }
 
