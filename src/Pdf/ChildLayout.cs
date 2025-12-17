@@ -1,5 +1,7 @@
 namespace InvoiceKit.Pdf;
 
+using SkiaSharp;
+
 /// <summary>
 /// A child layout that has been positioned by its parent.
 /// </summary>
@@ -15,22 +17,31 @@ public sealed class ChildLayout
     /// </summary>
     public ILayoutContext Context { get; }
 
-    internal ChildLayout(ILayout layout, ILayoutContext context)
+    private ChildLayout(ILayout layout, ILayoutContext context)
     {
         Layout = layout;
         Context = context;
     }
 
-    public static ChildLayout CreateVertical(ILayout layout, ILayoutContext parentContext)
-    {
-        return new ChildLayout(layout, parentContext.GetVerticalChildContext(parentContext.Available));
-    }
+    /// <summary>
+    /// Factory method for a new child layout object. Creates and links a child layout context.
+    /// </summary>
+    public static ChildLayout CreateChild(ILayout layout, ILayoutContext parentContext) =>
+        new (layout, layout.GetContext(parentContext));
 
-    public static ChildLayout CreateHorizontal(ILayout layout, ILayoutContext parentContext)
-    {
-        return new ChildLayout(layout, parentContext.GetHorizontalChildContext(parentContext.Available));
-    }
+    /// <summary>
+    /// Factory method for a new child layout object. Creates and links a child layout context that intersects with a
+    /// given rect.
+    /// </summary>
+    public static ChildLayout CreateChildIntersecting(
+        ILayout layout,
+        ILayoutContext parentContext,
+        SKRect intersectingRect) =>
+        new (layout, layout.GetContext(parentContext, intersectingRect));
 
+    /// <summary>
+    /// Creates a root layout.
+    /// </summary>
     internal static ChildLayout CreateRoot(ILayout layout, RootLayoutContext rootLayout)
     {
         return new ChildLayout(layout, rootLayout);

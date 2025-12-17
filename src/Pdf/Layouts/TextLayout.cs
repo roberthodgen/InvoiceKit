@@ -78,11 +78,9 @@ internal class TextLayout : ILayout
 
     public LayoutResult Layout(ILayoutContext context)
     {
-        var childContext = GetContext(context);
-
         if (_wrappedLines.Count == 0)
         {
-            _wrappedLines = WrapText(_text, Style, childContext.Available.Size.Width).ToList();
+            _wrappedLines = WrapText(_text, Style, context.Available.Size.Width).ToList();
         }
 
         if (_currentIndex >= _wrappedLines.Count)
@@ -108,18 +106,16 @@ internal class TextLayout : ILayout
                 continue; // Skip to the next line.
             }
 
-            drawables.InsertRange(0, Style.GetStyleDrawables(childContext.Allocated));
+            drawables.InsertRange(0, Style.GetStyleDrawables(context.Allocated));
 
-            childContext.CommitChildContext();
             return LayoutResult.NeedsNewPage(drawables);
         }
 
         // Reset index for repeating layouts.
         _currentIndex = 0;
 
-        drawables.InsertRange(0, Style.GetStyleDrawables(childContext.Allocated));
+        drawables.InsertRange(0, Style.GetStyleDrawables(context.Allocated));
 
-        childContext.CommitChildContext();
         return LayoutResult.FullyDrawn(drawables);
     }
 

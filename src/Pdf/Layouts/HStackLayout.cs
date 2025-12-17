@@ -28,7 +28,7 @@ internal class HStackLayout(List<ILayout> columns) : ILayout
         foreach (var i in Enumerable.Range(0, columns.Count))
         {
             var nthColumn = columns[i];
-            result.Add(new ChildLayout(nthColumn, nthColumn.GetContext(context, GetContextForNthColumn(i, context))));
+            result.Add(ChildLayout.CreateChildIntersecting(nthColumn, context, GetContextForNthColumn(i, context)));
         }
 
         return result;
