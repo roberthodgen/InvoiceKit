@@ -80,6 +80,11 @@ internal class ImageLayout : ILayout
 
     public ILayoutContext GetContext(ILayoutContext parentContext)
     {
-        return parentContext.GetVerticalChildContext(Style.GetContentRect(parentContext.Available));
+        return parentContext.GetVerticalChildContext();
+    }
+
+    public ILayoutContext GetContext(ILayoutContext parentContext, SKRect intersectingRect)
+    {
+        return parentContext.GetVerticalChildContext(intersectingRect);
     }
 }

@@ -61,8 +61,18 @@ public abstract class LayoutContextBase : ILayoutContext
         return new VerticalLayoutContext(SKRect.Intersect(Available, intersectingRect), this);
     }
 
+    public ILayoutContext GetVerticalChildContext()
+    {
+        return new VerticalLayoutContext(Available, this);
+    }
+
     public ILayoutContext GetHorizontalChildContext(SKRect intersectingRect)
     {
         return new HorizonalLayoutContext(SKRect.Intersect(Available, intersectingRect), this);
+    }
+
+    public ILayoutContext GetHorizontalChildContext()
+    {
+        return new HorizonalLayoutContext(Available, this);
     }
 }

@@ -13,6 +13,11 @@ internal class SpacingBlockLayout(float height) : ILayout
 
     public ILayoutContext GetContext(ILayoutContext parentContext)
     {
-        return parentContext.GetVerticalChildContext(parentContext.Available);
+        return parentContext.GetVerticalChildContext();
+    }
+
+    public ILayoutContext GetContext(ILayoutContext parentContext, SKRect intersectingRect)
+    {
+        return parentContext.GetVerticalChildContext(intersectingRect);
     }
 }

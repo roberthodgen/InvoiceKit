@@ -1,5 +1,7 @@
 namespace InvoiceKit.Pdf;
 
+using SkiaSharp;
+
 /// <summary>
 /// A layout represents a stateful object that will attempt to split itself across multiple pages. While doing so, it
 /// may have its <see cref="Layout"/> method called multiple times. <see cref="ILayout"/> objects should track what
@@ -20,4 +22,11 @@ public interface ILayout
     /// </summary>
     /// <param name="parentContext">A parent context from which to derive a child context.</param>
     ILayoutContext GetContext(ILayoutContext parentContext);
+
+    /// <summary>
+    /// Creates an appropriate <see cref="ILayoutContext"/> for the layout within a given rect.
+    /// </summary>
+    /// <param name="parentContext">A parent context from which to derive a child context.</param>
+    /// <param name="intersectingRect">The required intersecting rect for the new context.</param>
+    ILayoutContext GetContext(ILayoutContext parentContext, SKRect intersectingRect);
 }

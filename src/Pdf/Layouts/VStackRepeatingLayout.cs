@@ -1,5 +1,7 @@
 namespace InvoiceKit.Pdf.Layouts;
 
+using SkiaSharp;
+
 internal class VStackRepeatingLayout(List<ILayout> children) : ILayout
 {
     public LayoutResult Layout(ILayoutContext context)
@@ -9,6 +11,11 @@ internal class VStackRepeatingLayout(List<ILayout> children) : ILayout
 
     public ILayoutContext GetContext(ILayoutContext parentContext)
     {
-        return parentContext.GetVerticalChildContext(parentContext.Available);
+        return parentContext.GetVerticalChildContext();
+    }
+
+    public ILayoutContext GetContext(ILayoutContext parentContext, SKRect intersectingRect)
+    {
+        return parentContext.GetVerticalChildContext(intersectingRect);
     }
 }

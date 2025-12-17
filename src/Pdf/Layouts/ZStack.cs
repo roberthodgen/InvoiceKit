@@ -28,6 +28,11 @@ internal class ZStack(List<ILayout> children) : ILayout
         throw new NotImplementedException();
     }
 
+    public ILayoutContext GetContext(ILayoutContext parentContext, SKRect intersectingRect)
+    {
+        throw new NotImplementedException();
+    }
+
     /// <summary>
     /// Computes the SKSize needed to fit both SKSizes.
     /// </summary>

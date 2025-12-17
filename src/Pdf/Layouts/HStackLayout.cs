@@ -14,7 +14,12 @@ internal class HStackLayout(List<ILayout> columns) : ILayout
 
     public ILayoutContext GetContext(ILayoutContext parentContext)
     {
-        return parentContext.GetHorizontalChildContext(parentContext.Available);
+        return parentContext.GetHorizontalChildContext();
+    }
+
+    public ILayoutContext GetContext(ILayoutContext parentContext, SKRect intersectingRect)
+    {
+        return parentContext.GetHorizontalChildContext(intersectingRect);
     }
 
     private List<ChildLayout> GetChildLayouts(ILayoutContext context)
@@ -23,18 +28,18 @@ internal class HStackLayout(List<ILayout> columns) : ILayout
         foreach (var i in Enumerable.Range(0, columns.Count))
         {
             var nthColumn = columns[i];
-            result.Add(new ChildLayout(nthColumn, GetContextForNthColumn(i, context)));
+            result.Add(new ChildLayout(nthColumn, nthColumn.GetContext(context, GetContextForNthColumn(i, context))));
         }
 
         return result;
     }
 
-    private ILayoutContext GetContextForNthColumn(int nthColumn, ILayoutContext context)
+    private SKRect GetContextForNthColumn(int nthColumn, ILayoutContext context)
     {
         var columnSize = GetColumnSize(context);
         var point = context.Available.Location;
         point.Offset(columnSize.Width * nthColumn, 0);
-        return context.GetVerticalChildContext(SKRect.Create(point, columnSize));
+        return SKRect.Create(point, columnSize);
     }
 
     private SKSize GetColumnSize(ILayoutContext context)

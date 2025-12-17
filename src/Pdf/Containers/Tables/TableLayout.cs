@@ -79,4 +79,9 @@ internal class TableLayout : ILayout
     {
         throw new NotImplementedException();
     }
+
+    public ILayoutContext GetContext(ILayoutContext parentContext, SKRect intersectingRect)
+    {
+        throw new NotImplementedException();
+    }
 }
