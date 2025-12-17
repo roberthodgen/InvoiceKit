@@ -23,13 +23,13 @@ internal class HStackLayout(List<ILayout> columns) : ILayout
         foreach (var i in Enumerable.Range(0, columns.Count))
         {
             var nthColumn = columns[i];
-            result.Add(new ChildLayout(nthColumn, GetRectForNthColumn(i, context)));
+            result.Add(new ChildLayout(nthColumn, GetContextForNthColumn(i, context)));
         }
 
         return result;
     }
 
-    private ILayoutContext GetRectForNthColumn(int nthColumn, ILayoutContext context)
+    private ILayoutContext GetContextForNthColumn(int nthColumn, ILayoutContext context)
     {
         var columnSize = GetColumnSize(context);
         var point = context.Available.Location;
