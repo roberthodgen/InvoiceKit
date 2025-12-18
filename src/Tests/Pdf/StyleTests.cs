@@ -126,7 +126,7 @@ public sealed class StyleTests
         var style = new BlockStyle { Margin = new Margin(10f, 10f, 10f, 10f), };
 
         // Act
-        var styledRect = style.Margin.ToBorderRect(rect);
+        var styledRect = style.Margin.GetBorderRect(rect);
 
         // Assert
         styledRect.Top.ShouldBe(20);
@@ -143,7 +143,7 @@ public sealed class StyleTests
         var style = new BlockStyle { Padding = new Padding(10f, 10f, 10f, 10f) };
 
         // Act
-        var styledRect = style.Padding.GetDrawableRect(rect);
+        var styledRect = style.Padding.GetPaddingRect(rect);
 
         // Assert
         styledRect.Top.ShouldBe(0);
@@ -177,7 +177,7 @@ public sealed class StyleTests
         var style = new BlockStyle { Border = BoxBorder.Create(new BorderStyle { Width = 2f }) };
 
         // Act
-        var styledRect = style.Border.GetDrawableRect(rect);
+        var styledRect = style.Border.GetBorderRect(rect);
 
         // Assert
         styledRect.Top.ShouldBe(8);
@@ -194,7 +194,7 @@ public sealed class StyleTests
         var style = new BlockStyle { Border = BoxBorder.Create(new BorderStyle { Width = 2f }) };
 
         // Act
-        var styledRect = style.Border.GetContentRect(rect);
+        var styledRect = style.Border.GetPaddingRect(rect);
 
         // Assert
         styledRect.Top.ShouldBe(12);

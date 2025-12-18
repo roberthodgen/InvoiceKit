@@ -13,7 +13,7 @@ public readonly record struct BoxBorder(BorderStyle Top, BorderStyle Bottom, Bor
         Right = style,
     };
 
-    public SKSize ToSize() => new SKSize(Left.Width + Right.Width, Top.Width + Bottom.Width);
+    public SKSize ToSize() => new (Left.Width + Right.Width, Top.Width + Bottom.Width);
 
     public BorderSize ToSize(PaddingSize paddingSize)
     {
@@ -24,9 +24,9 @@ public readonly record struct BoxBorder(BorderStyle Top, BorderStyle Bottom, Bor
     /// Adjusts available space by removing the border size from each side.
     /// </summary>
     /// <param name="available">The available space in the context.</param>
-    public PaddingRect GetContentRect(BorderRect available)
+    public PaddingRect GetPaddingRect(BorderRect available)
     {
-        return new (
+        return new PaddingRect(
             available.ToRect().Left + Left.Width,
             available.ToRect().Top + Top.Width,
             available.ToRect().Right - Right.Width,
@@ -38,9 +38,9 @@ public readonly record struct BoxBorder(BorderStyle Top, BorderStyle Bottom, Bor
     /// </summary>
     /// <param name="content">SKRect of the drawable content.</param>
     /// <returns>SKRect for the border</returns>
-    public BorderRect GetDrawableRect(PaddingRect content)
+    public BorderRect GetBorderRect(PaddingRect content)
     {
-        return new (
+        return new BorderRect(
             content.ToRect().Left - Left.Width,
             content.ToRect().Top - Top.Width,
             content.ToRect().Right + Right.Width,

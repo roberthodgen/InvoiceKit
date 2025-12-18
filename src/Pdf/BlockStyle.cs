@@ -104,33 +104,12 @@ public readonly record struct BlockStyle()
     }
 
     /// <summary>
-    /// Returns the total size the styling would take.
-    /// </summary>
-    /// <remarks>Used for allocating space in a context.</remarks>
-    public SKSize GetStyleSize()
-    {
-        var width = Padding.Left + Padding.Right + Margin.Left + Margin.Right + Border.Left.Width + Border.Right.Width;
-        var height = Padding.Top + Padding.Bottom + Margin.Top + Margin.Bottom + Border.Top.Width + Border.Bottom.Width;
-        return new SKSize(width, height);
-    }
-
-    /// <summary>
-    /// Returns the available size after taking out the styling size.
-    /// </summary>
-    /// <param name="available">SKSize of the available space</param>
-    public SKSize GetSizeAfterStyle(SKSize available)
-    {
-        var styleSize = GetStyleSize();
-        return new SKSize(available.Width - styleSize.Width, available.Height - styleSize.Height);
-    }
-
-    /// <summary>
     /// Creates a drawable area after removing styling sizes.
     /// </summary>
     /// <param name="available">Available drawing size.</param>
     public ContentRect GetContentRect(OuterRect available)
     {
-        return Padding.GetContentRect(Border.GetContentRect(Margin.ToBorderRect(available)));
+        return Padding.GetContentRect(Border.GetPaddingRect(Margin.GetBorderRect(available)));
     }
 
     /// <summary>
@@ -139,7 +118,7 @@ public readonly record struct BlockStyle()
     /// <param name="contentRect">The SKRect of the element that was allocated.</param>
     public PaddingRect GetBackgroundRect(ContentRect contentRect)
     {
-        return Padding.GetDrawableRect(contentRect);
+        return Padding.GetPaddingRect(contentRect);
     }
 
     /// <summary>
@@ -148,6 +127,6 @@ public readonly record struct BlockStyle()
     /// <param name="contentRect">The SKRect of the element that was allocated.</param>
     public BorderRect GetBorderRect(ContentRect contentRect)
     {
-        return Border.GetDrawableRect(Padding.GetDrawableRect(contentRect));
+        return Border.GetBorderRect(Padding.GetPaddingRect(contentRect));
     }
 }

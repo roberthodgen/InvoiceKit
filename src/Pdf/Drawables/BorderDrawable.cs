@@ -5,7 +5,7 @@ using SkiaSharp;
 
 internal class BorderDrawable(OuterRect rect, BlockStyle style) : IDrawable
 {
-    private readonly BorderRect _borderRect = style.Margin.ToBorderRect(rect);
+    private readonly BorderRect _borderRect = style.Margin.GetBorderRect(rect);
 
     /// <summary>
     /// Draws a border within the specified rectangle.

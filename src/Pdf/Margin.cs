@@ -43,12 +43,25 @@ public readonly record struct Margin
     /// Adjusts available space by removing the margin size from each side.
     /// </summary>
     /// <param name="outer">The available space in the context.</param>
-    public BorderRect ToBorderRect(OuterRect outer)
+    public BorderRect GetBorderRect(OuterRect outer)
     {
         return new (
             outer.ToRect().Left + Left,
             outer.ToRect().Top + Top,
             outer.ToRect().Right - Right,
             outer.ToRect().Bottom - Bottom);
+    }
+
+    /// <summary>
+    /// Adjusts a BorderRect back into an OuterRect
+    /// </summary>
+    /// <param name="border">The BorderRect within the OuterRect.</param>
+    public OuterRect GetMarginRect(BorderRect border)
+    {
+        return new OuterRect(
+            border.ToRect().Left - Left,
+            border.ToRect().Top - Top,
+            border.ToRect().Right + Right,
+            border.ToRect().Bottom + Bottom);
     }
 }

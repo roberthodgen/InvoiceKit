@@ -36,9 +36,9 @@ public readonly record struct Padding
     /// </summary>
     /// <param name="content">SKRect of the drawable content.</param>
     /// <returns>SKRect for the padding</returns>
-    public PaddingRect GetDrawableRect(ContentRect content)
+    public PaddingRect GetPaddingRect(ContentRect content)
     {
-        return new (
+        return new PaddingRect(
             content.ToRect().Left - Left,
             content.ToRect().Top - Top,
             content.ToRect().Right + Right,
@@ -51,14 +51,14 @@ public readonly record struct Padding
     /// <param name="available">The available space in the context.</param>
     public ContentRect GetContentRect(PaddingRect available)
     {
-        return new (
+        return new ContentRect(
             available.ToRect().Left + Left,
             available.ToRect().Top + Top,
             available.ToRect().Right - Right,
             available.ToRect().Bottom - Bottom);
     }
 
-    public SKSize ToSize() => new SKSize(Left + Right, Top + Bottom);
+    public SKSize ToSize() => new (Left + Right, Top + Bottom);
 
     public PaddingSize ToSize(ContentSize content)
     {
