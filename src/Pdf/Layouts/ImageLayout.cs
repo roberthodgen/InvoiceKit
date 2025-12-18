@@ -50,14 +50,13 @@ internal class ImageLayout : ILayout
     public LayoutResult Layout(ILayoutContext context)
     {
         var drawables = new List<IDrawable>();
-        var childContext = GetContext(context);
 
         if (context.TryAllocate(Style.GetStyleSize()) == false)
         {
             return LayoutResult.NeedsNewPage([]);
         }
 
-        if (childContext.TryAllocate(Measure(), out var rect))
+        if (context.TryAllocate(Measure(), out var rect))
         {
             drawables.AddRange(Style.GetStyleDrawables(rect));
 
@@ -70,11 +69,9 @@ internal class ImageLayout : ILayout
                 drawables.Add(new BitmapImageDrawable(Bitmap, rect));
             }
 
-            childContext.CommitChildContext();
             return LayoutResult.FullyDrawn(drawables);
         }
 
-        childContext.CommitChildContext();
         return LayoutResult.NeedsNewPage(drawables);
     }
 

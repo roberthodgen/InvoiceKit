@@ -2,6 +2,10 @@ namespace InvoiceKit.Pdf;
 
 using SkiaSharp;
 
+/// <summary>
+/// A root layout context is one that is root to each page being laid out. A new root layout context is created for each
+/// page in a PDF document with the original page size.
+/// </summary>
 public sealed class RootLayoutContext : LayoutContextBase
 {
     public override SKRect Allocated => new (
@@ -23,11 +27,11 @@ public sealed class RootLayoutContext : LayoutContextBase
 
     public override void CommitChildContext()
     {
-        // Nothing to do
-    }
+        if (_committed)
+        {
+            throw new ApplicationException("Root context commited twice.");
+        }
 
-    public override bool TryAllocate(SKSize size)
-    {
-        throw new ApplicationException("Cannot allocate in root context.");
+        _committed = true;
     }
 }

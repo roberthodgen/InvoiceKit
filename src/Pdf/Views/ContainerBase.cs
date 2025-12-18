@@ -14,7 +14,7 @@ public abstract class ContainerBase(BlockStyle defaultStyle) : IContainer
 
     public IContainer AddText(string text)
     {
-        var child = new TextViewBuilder(text, ChildStyle with { Padding = new Padding(1f)});
+        var child = new TextViewBuilder(text, ChildStyle);
         _children.Add(child);
         return this;
     }
@@ -43,7 +43,13 @@ public abstract class ContainerBase(BlockStyle defaultStyle) : IContainer
 
     public IContainer AddHorizontalRule()
     {
-        var child = new HorizontalRuleViewBuilder(ChildStyle);
+        var child = new HorizontalRuleViewBuilder(ChildStyle with {
+            Margin = new Margin
+            {
+                Top =10f,
+                Bottom = 10f,
+            },
+        });
         _children.Add(child);
         return this;
     }

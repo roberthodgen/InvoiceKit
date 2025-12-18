@@ -4,7 +4,7 @@ using SkiaSharp;
 
 public abstract class LayoutContextBase : ILayoutContext
 {
-    private bool _committed;
+    protected bool _committed;
 
     protected readonly LayoutContextBase? Parent;
 
@@ -28,7 +28,7 @@ public abstract class LayoutContextBase : ILayoutContext
         Parent = parent;
     }
 
-    public virtual bool TryAllocate(SKSize size)
+    public bool TryAllocate(SKSize size)
     {
         if (size.Height > Available.Height || size.Width > Available.Width)
         {
@@ -45,16 +45,7 @@ public abstract class LayoutContextBase : ILayoutContext
         return TryAllocate(size);
     }
 
-    public virtual void CommitChildContext()
-    {
-        if (_committed)
-        {
-            throw new ApplicationException("Cannot commit child context twice.");
-        }
-
-        _committed = true;
-        Parent?.AllocatedHeights.Add(Allocated.Height);
-    }
+    public abstract void CommitChildContext();
 
     public ILayoutContext GetVerticalChildContext(SKRect intersectingRect)
     {

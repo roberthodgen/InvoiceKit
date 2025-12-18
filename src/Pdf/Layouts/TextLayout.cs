@@ -102,19 +102,16 @@ internal class TextLayout : ILayout
             {
                 drawables.Add(new DebugDrawable(rect, DebugDrawable.ContentColor));
                 drawables.Add(new TextDrawable(_wrappedLines[_currentIndex], rect, Style));
+                drawables.InsertRange(0, Style.GetStyleDrawables(rect));
                 _currentIndex++;
                 continue; // Skip to the next line.
             }
-
-            drawables.InsertRange(0, Style.GetStyleDrawables(context.Allocated));
 
             return LayoutResult.NeedsNewPage(drawables);
         }
 
         // Reset index for repeating layouts.
         _currentIndex = 0;
-
-        drawables.InsertRange(0, Style.GetStyleDrawables(context.Allocated));
 
         return LayoutResult.FullyDrawn(drawables);
     }
