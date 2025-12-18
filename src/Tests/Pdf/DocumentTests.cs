@@ -60,6 +60,8 @@ public class DocumentTests(ITestOutputHelper testOutputHelper)
 
         stream.Write(pdfBytes);
         testOutputHelper.WriteLine($"PDF created: file://{Path.GetFullPath(fileName)}");
+
+
         File.Exists(fileName).ShouldBeTrue();
     }
 

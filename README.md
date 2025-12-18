@@ -17,8 +17,8 @@
 
 ```cs
 var invoice = new InvoiceBuilder()
-    .WithCompany("IT Services LLC")
-    .WithClient("ACME,  Inc.")
+    .WithCompany("Your Company")
+    .WithClient("ACME, Inc.")
     .AddItem("Widget", item => item
         .WithQuantity(2)
         .WithPricePerUnit(29.99m))
