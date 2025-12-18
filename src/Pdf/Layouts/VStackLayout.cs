@@ -24,23 +24,23 @@ internal class VStackLayout : ILayout
             return LayoutResult.FullyDrawn([]);
         }
 
-        // Todo: header and footer might not render properly, might act like regular layout instead of repeating.
+        // Todo: header and footer not rendering properly, acts like regular layout instead of repeating.
         // Header and footer were allocated before children leaving space for header and footer at all times.
         // Might be a way to handle this in the layout engine instead of in the stacks.
 
         var childLayouts = new List<ChildLayout>();
 
-        // if (_header is not null)
-        // {
-        //     childLayouts.Add(ChildLayout.CreateVertical(_header, context));
-        // }
+        if (_header is not null)
+        {
+            // childLayouts.Add(ChildLayout.CreateVertical(_header, context));
+        }
 
         childLayouts.AddRange(_children.Select(child => ChildLayout.CreateChild(child, context)));
 
-        // if (_footer is not null)
-        // {
-        //     childLayouts.Add(ChildLayout.CreateVertical(_footer, context));
-        // }
+        if (_footer is not null)
+        {
+            // childLayouts.Add(ChildLayout.CreateVertical(_footer, context));
+        }
 
         return LayoutResult.Deferred(childLayouts);
     }

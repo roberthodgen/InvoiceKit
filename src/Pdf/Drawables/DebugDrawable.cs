@@ -2,31 +2,47 @@ namespace InvoiceKit.Pdf.Drawables;
 
 using SkiaSharp;
 
-internal class DebugDrawable(SKRect rect, SKColor color) : IDrawable
+internal class DebugDrawable(SKRect rect, BlockStyle style) : IDrawable
 {
-    public static SKColor DrawableAreaColor => SKColors.DarkRed;
-
-    public static SKColor AllocatedColor => SKColors.DarkBlue;
-
-    public static SKColor MarginColor => SKColors.Cyan;
-
-    public static SKColor PaddingColor => SKColors.Magenta;
-
-    public static SKColor ContentColor => SKColors.Yellow;
-
     public void Draw(IDrawableContext context)
     {
-        if (context.Debug)
+        if (context.Debug == false)
         {
-            context.Canvas.DrawRect(
-                rect,
-                new SKPaint
-                {
-                    Style = SKPaintStyle.Stroke,
-                    Color = color,
-                    StrokeWidth = 1f,
-                });
+            return;
         }
+
+        // // Draw Margin Debug
+        // if (style.Margin.HasValue)
+        // {
+        //     context.Canvas.DrawRect(
+        //         style.GetMarginDebugRect(rect),
+        //         new SKPaint
+        //         {
+        //             Style = SKPaintStyle.Stroke,
+        //             Color = SKColors.Yellow,
+        //         });
+        // }
+        //
+        // // Draw Padding Debug
+        // if (style.Padding.HasValue)
+        // {
+        //     context.Canvas.DrawRect(
+        //         style.GetPaddingDebugRect(rect),
+        //         new SKPaint
+        //         {
+        //             Style = SKPaintStyle.Stroke,
+        //             Color = SKColors.Magenta,
+        //         });
+        // }
+
+        // Draw Content Debug
+        context.Canvas.DrawRect(
+            rect,
+            new SKPaint
+            {
+                Style = SKPaintStyle.Stroke,
+                Color = SKColors.Cyan,
+            });
     }
 
     public void Dispose()

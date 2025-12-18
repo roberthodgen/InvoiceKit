@@ -104,21 +104,24 @@ public readonly record struct BlockStyle()
     }
 
     /// <summary>
-    /// Creates a list of drawables for the border, background, and debugs.
+    /// Returns the total size the styling would take.
     /// </summary>
-    /// <param name="content">Content rect received from a TryAllocate method on <see cref="ILayoutContext"/>.</param>
-    /// <returns></returns>
-    public List<IDrawable> GetStyleDrawables(OuterRect content)
+    /// <remarks>Used for allocating space in a context.</remarks>
+    public SKSize GetStyleSize()
     {
-        var drawables = new List<IDrawable>
-        {
-            // TODO new BackgroundDrawable(GetBackgroundRect(content), BackgroundToPaint()),
-            new BorderDrawable(content, this),
-            // TODO new DebugDrawable(content, DebugDrawable.ContentColor),
-            // TODO new DebugDrawable(GetMarginDebugRect(content), DebugDrawable.MarginColor),
-            // TODO new DebugDrawable(GetBackgroundRect(content), DebugDrawable.PaddingColor),
-        };
-        return drawables;
+        var width = Padding.Left + Padding.Right + Margin.Left + Margin.Right + Border.Left.Width + Border.Right.Width;
+        var height = Padding.Top + Padding.Bottom + Margin.Top + Margin.Bottom + Border.Top.Width + Border.Bottom.Width;
+        return new SKSize(width, height);
+    }
+
+    /// <summary>
+    /// Returns the available size after taking out the styling size.
+    /// </summary>
+    /// <param name="available">SKSize of the available space</param>
+    public SKSize GetSizeAfterStyle(SKSize available)
+    {
+        var styleSize = GetStyleSize();
+        return new SKSize(available.Width - styleSize.Width, available.Height - styleSize.Height);
     }
 
     /// <summary>

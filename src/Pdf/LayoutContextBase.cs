@@ -17,7 +17,7 @@ public abstract class LayoutContextBase : ILayoutContext
 
     public virtual OuterRect Available => OuterRect.Intersect(
         Parent!.Available,
-        new (
+        new OuterRect(
             OriginalSpace.Left,
             Allocated.Bottom,
             OriginalSpace.Right,

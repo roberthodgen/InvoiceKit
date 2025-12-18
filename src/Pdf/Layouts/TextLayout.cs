@@ -11,7 +11,7 @@ internal class TextLayout : ILayout
 {
     private BlockStyle Style { get; }
 
-    private readonly string _text;
+    private readonly List<string> _lines = [];
 
     private List<string> _wrappedLines = [];
 
@@ -22,7 +22,17 @@ internal class TextLayout : ILayout
     internal TextLayout(BlockStyle style, string text)
     {
         Style = style;
-        _text = text;
+        using var reader = new StringReader(text);
+        while (true)
+        {
+            var line = reader.ReadLine();
+            if (line is null)
+            {
+                break;
+            }
+
+            _lines.Add(line);
+        }
     }
 
     /// <summary>
@@ -97,7 +107,7 @@ internal class TextLayout : ILayout
     {
         if (_wrappedLines.Count == 0)
         {
-            _wrappedLines = WrapText(_text, Style, context.Available.ToSize().Width).ToList();
+            _wrappedLines = _lines.SelectMany(line => WrapText(line, Style, context.Available.Width)).ToList();
         }
 
         if (_currentIndex >= _wrappedLines.Count)
@@ -111,18 +121,24 @@ internal class TextLayout : ILayout
         {
             if (context.TryAllocate(MeasureFullLineSize(context.Available.ToSize()), out var rect))
             {
-                // TODO drawables.Add(new DebugDrawable(rect, DebugDrawable.ContentColor));
                 drawables.Add(new TextDrawable(_wrappedLines[_currentIndex], rect, Style));
-                drawables.InsertRange(0, Style.GetStyleDrawables(rect));
                 _currentIndex++;
                 continue; // Skip to the next line.
             }
+
+            drawables.Insert(0, new DebugDrawable(context.Allocated, Style));
+            drawables.Insert(0, new BackgroundDrawable(context.Allocated, Style.BackgroundToPaint()));
+            // drawables.Add(new BorderDrawable(new OuterRect(context.Allocated), Style.Border));
 
             return LayoutResult.NeedsNewPage(drawables);
         }
 
         // Reset index for repeating layouts.
         _currentIndex = 0;
+
+        drawables.Insert(0, new DebugDrawable(context.Allocated, Style));
+        drawables.Insert(0, new BackgroundDrawable(context.Allocated, Style.BackgroundToPaint()));
+        // drawables.Add(new BorderDrawable(context.Allocated, Style.Border));
 
         return LayoutResult.FullyDrawn(drawables);
     }

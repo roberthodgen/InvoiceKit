@@ -9,7 +9,7 @@ public sealed class VerticalLayoutContext : LayoutContextBase
         OriginalSpace.Left,
         OriginalSpace.Top,
         OriginalSpace.Right,
-        (Math.Max(OriginalSpace.Top, Parent!.Available.Top)) + AllocatedHeights.Sum());
+        Math.Max(OriginalSpace.Top, Parent!.Available.Top) + AllocatedHeights.Sum());
 
     internal VerticalLayoutContext(OuterRect available, LayoutContextBase? parent)
         : base(available, parent)
