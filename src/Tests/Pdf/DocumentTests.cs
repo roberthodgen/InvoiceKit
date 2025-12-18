@@ -184,11 +184,12 @@ public class DocumentTests(ITestOutputHelper testOutputHelper)
                 .AddHorizontalRule()
                 .AddSpacing(20f)
                 .AddHStack(column => column
-                    .AddVStack(stack => stack
-                        .AddText("Customer LLC")
-                        .AddText("321 Curvy Rd.")
-                        .AddText("customer@mail.com")
-                        .AddText("(800) 555 - 4444"))
+                    .AddText("""
+                             Customer LLC
+                             321 Curvy Rd.
+                             customer@mail.com
+                             (800) 555 - 4444
+                             """)
                     .AddVStack(stack => stack
                         .AddText("Company LLC")
                         .AddText("121 Bumpy Street")
