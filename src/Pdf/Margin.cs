@@ -1,5 +1,6 @@
 namespace InvoiceKit.Pdf;
 
+using Geometry;
 using SkiaSharp;
 
 public readonly record struct Margin
@@ -28,31 +29,37 @@ public readonly record struct Margin
         Bottom = margin;
     }
 
-    /// <summary>
-    /// Gets the starting location for the margin.
-    /// </summary>
-    /// <param name="content">SKRect of the drawable content.</param>
-    /// <returns>SKRect for the Margin</returns>
-    /// <remarks>Only used for drawing debug rects.</remarks>
-    public SKRect GetDrawableRect(SKRect content)
+    public SKSize ToSize() => new (Left + Right, Top + Bottom);
+
+    public OuterSize ToSize(BorderSize borderSize)
     {
-        return new SKRect(
-            content.Left - Left,
-            content.Top - Top,
-            content.Right + Right,
-            content.Bottom + Bottom);
+        var size = new SKSize(Top + Bottom, Left + Right);
+        return new OuterSize(borderSize, size);
     }
 
     /// <summary>
     /// Adjusts available space by removing the margin size from each side.
     /// </summary>
-    /// <param name="available">The available space in the context.</param>
-    public SKRect GetContentRect(SKRect available)
+    /// <param name="outer">The available space in the context.</param>
+    public BorderRect GetBorderRect(OuterRect outer)
     {
-        return new SKRect(
-            available.Left + Left,
-            available.Top + Top,
-            available.Right - Right,
-            available.Bottom - Bottom);
+        return new (
+            outer.ToRect().Left + Left,
+            outer.ToRect().Top + Top,
+            outer.ToRect().Right - Right,
+            outer.ToRect().Bottom - Bottom);
+    }
+
+    /// <summary>
+    /// Adjusts a BorderRect back into an OuterRect
+    /// </summary>
+    /// <param name="border">The BorderRect within the OuterRect.</param>
+    public OuterRect GetMarginRect(BorderRect border)
+    {
+        return new OuterRect(
+            border.ToRect().Left - Left,
+            border.ToRect().Top - Top,
+            border.ToRect().Right + Right,
+            border.ToRect().Bottom + Bottom);
     }
 }

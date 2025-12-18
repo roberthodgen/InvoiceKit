@@ -1,18 +1,22 @@
 namespace InvoiceKit.Pdf.Layouts;
 
-using SkiaSharp;
+using Geometry;
 
 internal class SpacingBlockLayout(float height) : ILayout
 {
-    public SKSize Measure(SKSize available)
+    public LayoutResult Layout(ILayoutContext context)
     {
-        return new SKSize(available.Width, height);
+        context.TryAllocate(new OuterSize(context.Available.Width, height));
+        return LayoutResult.FullyDrawn([]);
     }
 
-    public LayoutResult Layout(LayoutContext context)
+    public ILayoutContext GetContext(ILayoutContext parentContext)
     {
-        // Allocates the space but does not draw anything.
-        context.TryAllocate(this);
-        return new LayoutResult([], LayoutStatus.IsFullyDrawn);
+        return parentContext.GetVerticalChildContext();
+    }
+
+    public ILayoutContext GetContext(ILayoutContext parentContext, OuterRect intersectingRect)
+    {
+        return parentContext.GetVerticalChildContext(intersectingRect);
     }
 }

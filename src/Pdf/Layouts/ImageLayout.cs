@@ -1,6 +1,7 @@
 namespace InvoiceKit.Pdf.Layouts;
 
 using Drawables;
+using Geometry;
 using SkiaSharp;
 using Svg.Skia;
 
@@ -32,56 +33,55 @@ internal class ImageLayout : ILayout
         }
     }
 
-    public SKSize Measure(SKSize available)
+    private ContentSize Measure()
     {
         if (Svg?.Drawable is not null)
         {
-            return new SKSize(Svg.Drawable.Bounds.Width, Svg.Drawable.Bounds.Height);
+            return new ContentSize(Svg.Drawable.Bounds.Width, Svg.Drawable.Bounds.Height);
         }
 
         if (Bitmap is not null)
         {
-            return new SKSize(Bitmap.Width, Bitmap.Height);
+            return new ContentSize(Bitmap.Width, Bitmap.Height);
         }
 
         throw new Exception("Image not loaded.");
     }
 
-    public LayoutResult Layout(LayoutContext context)
+    public LayoutResult Layout(ILayoutContext context)
     {
-        var drawables = new List<IDrawable>();
-        var childContext = context.GetChildContext(Style.GetContentRect(context.Available));
-
-        if (context.TryAllocate(Style.GetStyleSize()) == false)
-        {
-            return new LayoutResult(drawables, LayoutStatus.NeedsNewPage);
-        }
-
-        if (childContext.TryAllocate(this, out var rect))
+        var contentSize = Measure();
+        var paddingSize = Style.Padding.ToSize(contentSize);
+        var borderSize = Style.Border.ToSize(paddingSize);
+        var marginSize = Style.Margin.ToSize(borderSize);
+        if (context.TryAllocate(marginSize, out var outerRect))
         {
             if (Svg is not null)
             {
-                // Add border drawable.
-                // Background needs to come before text.
-                drawables.Insert(0, new BackgroundDrawable(Style.GetBackgroundRect(rect), Style.BackgroundToPaint()));
-                drawables.Add(new BorderDrawable(Style.GetBorderRect(rect), Style.Border));
-                drawables.Add(new DebugDrawable(rect, DebugDrawable.ContentColor));
-                drawables.Add(new SvgImageDrawable(Svg, rect));
+                return LayoutResult.FullyDrawn([new SvgImageDrawable(Svg, Style.GetContentRect(outerRect).ToRect()),]);
             }
-            else if (Bitmap is not null)
+
+            if (Bitmap is not null)
             {
-                drawables.Add(new DebugDrawable(rect, DebugDrawable.ContentColor));
-                drawables.Add(new BitmapImageDrawable(Bitmap, rect));
+                return LayoutResult.FullyDrawn(
+                [
+                    new BitmapImageDrawable(Bitmap, Style.GetContentRect(outerRect).ToRect()),
+                ]);
             }
 
-            // Add margin and padding debug drawables.
-            drawables.Add(new DebugDrawable(Style.GetMarginDebugRect(childContext.Allocated), DebugDrawable.MarginColor));
-            drawables.Add(new DebugDrawable(Style.GetBackgroundRect(childContext.Allocated), DebugDrawable.PaddingColor));
-
-            context.CommitChildContext(childContext);
-            return new LayoutResult(drawables, LayoutStatus.IsFullyDrawn);
+            throw new ApplicationException("Image not loaded.");
         }
 
-        return new LayoutResult(drawables, LayoutStatus.NeedsNewPage);
+        return LayoutResult.NeedsNewPage([]);
+    }
+
+    public ILayoutContext GetContext(ILayoutContext parentContext)
+    {
+        return parentContext.GetVerticalChildContext();
+    }
+
+    public ILayoutContext GetContext(ILayoutContext parentContext, OuterRect intersectingRect)
+    {
+        return parentContext.GetVerticalChildContext(intersectingRect);
     }
 }

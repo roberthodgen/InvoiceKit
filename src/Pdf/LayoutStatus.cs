@@ -15,10 +15,29 @@ public readonly record struct LayoutStatus
     /// </summary>
     public static LayoutStatus IsFullyDrawn = new (2);
 
+    /// <summary>
+    /// The layout status is deferred to its children.
+    /// </summary>
+    /// <remarks>
+    /// For use by layouts that don't directly return drawables like: VStacks and HStacks.
+    /// </remarks>
+    public static LayoutStatus Deferred = new (3);
+
     private int Value { get; }
 
     private LayoutStatus(int value)
     {
         Value = value;
+    }
+
+    public override string ToString()
+    {
+        return Value switch
+        {
+            1 => "Needs New Page",
+            2 => "Is Fully Drawn",
+            3 => "Deferred",
+            _ => "Unknown"
+        };
     }
 }

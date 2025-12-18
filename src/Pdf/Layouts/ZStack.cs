@@ -1,34 +1,37 @@
 namespace InvoiceKit.Pdf.Layouts;
 
+using Geometry;
 using SkiaSharp;
 
 internal class ZStack(List<ILayout> children) : ILayout
 {
-    /// <summary>
-    /// A ZStack's measured size is one that fits all children.
-    /// </summary>
-    public SKSize Measure(SKSize available)
+    public LayoutResult Layout(ILayoutContext context)
     {
-        return children.Aggregate(SKSize.Empty, (size, child) => Fit(size, child.Measure(available)));
+        // var size = Measure(context.Available.Size);
+        // if (context.TryAllocate(this))
+        // {
+        //     var rendered = new List<IDrawable>();
+        //     foreach (var child in children)
+        //     {
+        //         var childContext = context.GetChildContext();
+        //         var result = child.Layout(childContext);
+        //         context.CommitChildContext(childContext);
+        //         rendered.AddRange(result.Drawables);
+        //     }
+        //
+        //     return new LayoutResult(rendered, LayoutStatus.IsFullyDrawn);
+        // }
+        return LayoutResult.FullyDrawn([]);
     }
 
-    public LayoutResult Layout(LayoutContext context)
+    public ILayoutContext GetContext(ILayoutContext parentContext)
     {
-        if (context.TryAllocate(this))
-        {
-            var rendered = new List<IDrawable>();
-            foreach (var child in children)
-            {
-                var childContext = context.GetChildContext();
-                var result = child.Layout(childContext);
-                context.CommitChildContext(childContext);
-                rendered.AddRange(result.Drawables);
-            }
+        throw new NotImplementedException();
+    }
 
-            return new LayoutResult(rendered, LayoutStatus.IsFullyDrawn);
-        }
-
-        return new LayoutResult([], LayoutStatus.NeedsNewPage);
+    public ILayoutContext GetContext(ILayoutContext parentContext, OuterRect intersectingRect)
+    {
+        throw new NotImplementedException();
     }
 
     /// <summary>

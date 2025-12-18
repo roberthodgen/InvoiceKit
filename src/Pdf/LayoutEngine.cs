@@ -12,24 +12,62 @@ internal class LayoutEngine(IViewBuilder root) : IDisposable
 
     private readonly List<Page> _pages = [];
 
+    private readonly HashSet<ILayout> _laidOut = [];
+
     public IReadOnlyCollection<Page> Pages => _pages.AsReadOnly();
 
     /// <summary>
-    /// Lays out a page.
+    /// Lays out a page, starts with the root layout, and traverses its children.
     /// </summary>
-    /// <param name="context">The page's layout context to track drawn space on.</param>
+    /// <param name="rootContext">The page's layout context to track drawn space on.</param>
     /// <returns>
     /// A <see cref="PageLayoutResult"/> which contains the page, its <see cref="IDrawable"/>s, and status.
     /// </returns>
-    private PageLayoutResult LayoutPage(LayoutContext context)
+    private PageLayoutResult LayoutPage(RootLayoutContext rootContext)
     {
-        var layoutResult = _root.Layout(context);
+        var stack = new Stack<ChildLayout>();
+        stack.Push(ChildLayout.CreateRoot(_root, rootContext));
         var page = new Page();
-        page.AddDrawables(layoutResult.Drawables);
 
-        if (layoutResult.Status == LayoutStatus.NeedsNewPage)
+        while (stack.Count > 0)
         {
-            return new PageLayoutResult(page, LayoutStatus.NeedsNewPage);
+            var layout = stack.Peek();
+            if (_laidOut.Contains(layout.Layout))
+            {
+                continue;
+            }
+
+            var layoutResult = layout.Layout.Layout(layout.Context);
+            page.AddDrawables(layoutResult.Drawables);
+
+            if (layoutResult.Status == LayoutStatus.NeedsNewPage)
+            {
+                return new PageLayoutResult(page, LayoutStatus.NeedsNewPage);
+            }
+
+            if (layoutResult.Status == LayoutStatus.Deferred)
+            {
+                var childrenNeedingLayout = new List<ChildLayout>();
+                foreach (var child in layoutResult.Children)
+                {
+                    if (_laidOut.Contains(child.Layout))
+                    {
+                        continue;
+                    }
+
+                    childrenNeedingLayout.Add(child);
+                    stack.Push(child);
+                }
+
+                if (childrenNeedingLayout.Count > 0)
+                {
+                    continue;
+                }
+            }
+
+            layout.Context.CommitChildContext();
+            _laidOut.Add(layout.Layout);
+            stack.Pop();
         }
 
         return new PageLayoutResult(page, LayoutStatus.IsFullyDrawn);
@@ -40,7 +78,7 @@ internal class LayoutEngine(IViewBuilder root) : IDisposable
         var status = LayoutStatus.NeedsNewPage;
         while (status == LayoutStatus.NeedsNewPage)
         {
-            var result = LayoutPage(new LayoutContext(drawableArea));
+            var result = LayoutPage(new RootLayoutContext(drawableArea));
             _pages.Add(result.Page);
             status = result.Status;
         }

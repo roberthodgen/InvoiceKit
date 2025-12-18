@@ -7,7 +7,7 @@ using Xunit.Abstractions;
 public class DocumentTests(ITestOutputHelper testOutputHelper)
 {
     [Fact]
-    public void HStack_EndToEnd_Test()
+    public void HStack_Test()
     {
         const string fileName = "hstack-test.pdf";
         File.Delete(fileName);
@@ -15,7 +15,7 @@ public class DocumentTests(ITestOutputHelper testOutputHelper)
         using var stream = File.OpenWrite(fileName);
         using var builder = PdfDocument.UsLetter;
         var pdfBytes = builder
-            .DisplayLayoutGuidelines()
+            // .DisplayLayoutGuidelines()
             .WithVStack(main => main
                 .AddText(
                     "Invoice #123",
@@ -27,35 +27,33 @@ public class DocumentTests(ITestOutputHelper testOutputHelper)
                     """
                 )
                 .AddHStack(stack => stack
-                    .AddHStack(column1 => column1
-                        .AddImage(image => image
-                            .WithSvgImage(Path.Combine(Directory.GetCurrentDirectory(), "Images/circle.svg")))
-                        .AddVStack(cols => cols
-                            .AddText(
-                                "My Co.",
-                                style => style with { FontPath = "Open Sans/Bold", })
-                            .AddText(
-                                """
-                                123 Main Street
-                                Anytown, XX 12345
-                                """
-                            )))
-                    .AddHStack(column2 => column2
-                        .AddVStack(_ => { })
-                        .AddVStack(lines => lines
-                            .AddText(
-                                "Customer Co.",
-                                style => style with { FontPath = "Open Sans/Bold", })
-                            .AddText(
-                                """
-                                999 Billto Lane
-                                Sometime, YY 98765
-                                """))))
-                .AddVStack(stack => stack
-                    .AddText(
-                        """
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut euismod gravida ligula, ac interdum sapien viverra eget. Fusce pellentesque enim tristique interdum aliquet. Nulla quam ex, elementum at lorem ut, pellentesque luctus purus. Curabitur feugiat id tortor ut rutrum. Integer id velit suscipit, maximus nisi ac, sollicitudin odio. Maecenas imperdiet lacus velit, id aliquet sapien consectetur faucibus. Nunc lobortis gravida dui, cursus condimentum ex gravida id. Cras at erat quis mi tempor tempus. Nullam consequat velit non interdum vestibulum. Nulla quis magna ac augue molestie luctus sit amet at dolor. Integer aliquam quam quis lacinia scelerisque. Nunc ante velit, tempor quis luctus id, volutpat non enim. Suspendisse rhoncus imperdiet diam, at semper tellus congue at. In sit amet gravida est, nec viverra erat. Phasellus volutpat blandit ipsum, in condimentum nunc congue ut. Sed lacinia finibus elit eget molestie.
-                        """)))
+                    .AddImage(image => image
+                        .WithSvgImage(Path.Combine(Directory.GetCurrentDirectory(), "Images/circle.svg")))
+                    .AddVStack(cols => cols
+                        .AddText(
+                            "My Co.",
+                            style => style with { FontPath = "Open Sans/Bold", })
+                        .AddText(
+                            """
+                            123 Main Street
+                            Anytown, XX 12345
+                            """
+                        ))
+                    .AddVStack(lines => lines
+                        .AddText(
+                            "Customer Co.",
+                            style => style with { FontPath = "Open Sans/Bold", })
+                        .AddText(
+                            """
+                            999 BillTo Lane
+                            Sometime, YY 98765
+                            """))
+                    )
+                .AddText(
+                    """
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut euismod gravida ligula, ac interdum sapien viverra eget. Fusce pellentesque enim tristique interdum aliquet. Nulla quam ex, elementum at lorem ut, pellentesque luctus purus. Curabitur feugiat id tortor ut rutrum. Integer id velit suscipit, maximus nisi ac, sollicitudin odio. Maecenas imperdiet lacus velit, id aliquet sapien consectetur faucibus. Nunc lobortis gravida dui, cursus condimentum ex gravida id. Cras at erat quis mi tempor tempus. Nullam consequat velit non interdum vestibulum. Nulla quis magna ac augue molestie luctus sit amet at dolor. Integer aliquam quam quis lacinia scelerisque. Nunc ante velit, tempor quis luctus id, volutpat non enim. Suspendisse rhoncus imperdiet diam, at semper tellus congue at. In sit amet gravida est, nec viverra erat. Phasellus volutpat blandit ipsum, in condimentum nunc congue ut. Sed lacinia finibus elit eget molestie.
+                    """)
+            )
             .Build();
 
         stream.Write(pdfBytes);
@@ -121,8 +119,10 @@ public class DocumentTests(ITestOutputHelper testOutputHelper)
         var pdfBytes = builder
             .DisplayLayoutGuidelines()
             .WithVStack(vStack => vStack
-                .WithHeader(header => header.AddText("This is the header."), style => style with { Margin = new Margin(5f) })
-                .WithFooter(footer => footer.AddText("This is the footer."), style => style with { Margin = new Margin(5f) })
+                .WithHeader(header => header.AddText("This is the header."),
+                    style => style with { Margin = new Margin(5f) })
+                .WithFooter(footer => footer.AddText("This is the footer."),
+                    style => style with { Margin = new Margin(5f) })
                 .AddText("This is inside the first page's body.")
                 .AddText("This is inside the first page's body.")
                 .AddText("This is inside the first page's body.")
@@ -184,11 +184,12 @@ public class DocumentTests(ITestOutputHelper testOutputHelper)
                 .AddHorizontalRule()
                 .AddSpacing(20f)
                 .AddHStack(column => column
-                    .AddVStack(stack => stack
-                        .AddText("Customer LLC")
-                        .AddText("321 Curvy Rd.")
-                        .AddText("customer@mail.com")
-                        .AddText("(800) 555 - 4444"))
+                    .AddText("""
+                             Customer LLC
+                             321 Curvy Rd.
+                             customer@mail.com
+                             (800) 555 - 4444
+                             """)
                     .AddVStack(stack => stack
                         .AddText("Company LLC")
                         .AddText("121 Bumpy Street")

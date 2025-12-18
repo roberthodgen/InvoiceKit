@@ -106,80 +106,71 @@ public class TextLayoutTests(ITestOutputHelper testOutputHelper)
                 .AddText(
                     "Text_WithBorders_Text.pdf",
                     style => style with { FontPath = "Open Sans/SemiBold", FontSize = 24f, })
-                .AddText(
-                    """
-                    Solid black border on top only.
-                    """,
-                    style => style with
-                    {
-                        Border = new BoxBorder
+                .AddHorizontalRule()
+                // .AddSpacing(10f)
+                .AddVStack(vStack2 => vStack2
+                    .AddText(
+                        """
+                        Solid black border on top only.
+                        """,
+                        style => style with
                         {
-                            Top = new BorderStyle
+                            Border = new BoxBorder
                             {
-                                Width = 1f,
-                                Color = SKColors.Black,
+                                Top = new BorderStyle
+                                {
+                                    Width = 1f,
+                                    Color = SKColors.Black,
+                                },
                             },
-                        },
-                    })
-                .AddText(
-                    """
-                    Solid black border on left only.
-                    """,
-                    style => style with
-                    {
-                        Border = new BoxBorder
+                        })
+                    .AddText(
+                        """
+                        Solid black border on left only.
+                        """,
+                        style => style with
                         {
-                            Left = new BorderStyle
+                            Border = new BoxBorder
                             {
-                                Width = 1f,
-                                Color = SKColors.Black,
+                                Left = new BorderStyle
+                                {
+                                    Width = 1f,
+                                    Color = SKColors.Black,
+                                },
                             },
-                        },
-                    })
-                .AddText(
-                    """
-                    Solid black border on right only.
-                    """,
-                    style => style with
-                    {
-                        Border = new BoxBorder
+                        })
+                    .AddText(
+                        """
+                        Solid black border on right only.
+                        """,
+                        style => style with
                         {
-                            Right = new BorderStyle
+                            Border = new BoxBorder
                             {
-                                Width = 1f,
-                                Color = SKColors.Black,
+                                Right = new BorderStyle
+                                {
+                                    Width = 1f,
+                                    Color = SKColors.Black,
+                                },
                             },
-                        },
-                    })
-                .AddText(
-                    """
-                    Solid black border on bottom only.
-                    """,
-                    style => style with
-                    {
-                        Border = new BoxBorder
+                        })
+                    .AddText(
+                        """
+                        Solid black border on bottom only.
+                        """,
+                        style => style with
                         {
-                            Bottom = new BorderStyle
+                            Border = new BoxBorder
                             {
-                                Width = 1f,
-                                Color = SKColors.Black,
+                                Bottom = new BorderStyle
+                                {
+                                    Width = 1f,
+                                    Color = SKColors.Black,
+                                },
                             },
-                        },
-                    })
-                .AddSpacing(10f)
-                .AddText(
-                    """
-                    Solid black border on all sides.
-                    """,
-                    style => style with
-                    {
-                        Border = BoxBorder.Create(
-                            new BorderStyle
-                            {
-                                Width = 1f,
-                                Color = SKColors.Black,
-                            }),
-                    }))
+                        })
+                    )
+            )
             .Build();
 
         stream.Write(pdfBytes);
@@ -196,7 +187,7 @@ public class TextLayoutTests(ITestOutputHelper testOutputHelper)
         using var stream = File.OpenWrite(fileName);
         using var builder = PdfDocument.UsLetter;
         var pdfBytes = builder
-            .DisplayLayoutGuidelines()
+            // .DisplayLayoutGuidelines()
             .WithDocumentStyle(style => style with { LineHeight = 1.5f, })
             .WithVStack(vStack => vStack
                 .AddText(

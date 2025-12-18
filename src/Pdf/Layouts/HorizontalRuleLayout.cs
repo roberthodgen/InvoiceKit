@@ -1,35 +1,31 @@
 namespace InvoiceKit.Pdf.Layouts;
 
 using Drawables;
-using SkiaSharp;
+using Geometry;
 
 internal class HorizontalRuleLayout(BlockStyle style) : ILayout
 {
-    private BlockStyle Style { get; } = style;
-
-    public SKSize Measure(SKSize available)
+    public LayoutResult Layout(ILayoutContext context)
     {
-        return new SKSize(available.Width, 1);
+        var contentSize = ContentSize.Empty;
+        var paddingSize = style.Padding.ToSize(contentSize);
+        var borderSize = style.Border.ToSize(paddingSize);
+        var outerSize = style.Margin.ToSize(borderSize);
+        if (context.TryAllocate(outerSize, out var rect))
+        {
+            return LayoutResult.FullyDrawn([new BorderDrawable(rect, style)]);
+        }
+
+        return LayoutResult.NeedsNewPage([]);
     }
 
-    public LayoutResult Layout(LayoutContext context)
+    public ILayoutContext GetContext(ILayoutContext parentContext)
     {
-        var drawables = new List<IDrawable>();
-        var childContext = context.GetChildContext(Style.GetContentRect(context.Available));
+        return parentContext.GetVerticalChildContext();
+    }
 
-        if (context.TryAllocate(Style.GetStyleSize()) == false)
-        {
-            return new LayoutResult(drawables, LayoutStatus.NeedsNewPage);
-        }
-
-        if (childContext.TryAllocate(this, out var rect))
-        {
-            drawables.Add(new HorizontalRuleDrawable(rect, Style.ForegroundToPaint()));
-            context.CommitChildContext(childContext);
-            return new LayoutResult(drawables, LayoutStatus.IsFullyDrawn);
-        }
-
-        context.CommitChildContext(childContext);
-        return new LayoutResult(drawables, LayoutStatus.NeedsNewPage);
+    public ILayoutContext GetContext(ILayoutContext parentContext, OuterRect intersectingRect)
+    {
+        return parentContext.GetVerticalChildContext(intersectingRect);
     }
 }
