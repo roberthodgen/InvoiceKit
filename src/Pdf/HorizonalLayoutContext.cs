@@ -1,5 +1,6 @@
 namespace InvoiceKit.Pdf;
 
+using Geometry;
 using SkiaSharp;
 
 public sealed class HorizonalLayoutContext : LayoutContextBase
@@ -10,7 +11,7 @@ public sealed class HorizonalLayoutContext : LayoutContextBase
         OriginalSpace.Right,
         OriginalSpace.Top); // does not account for allocated height
 
-    internal HorizonalLayoutContext(SKRect available, LayoutContextBase? parent)
+    internal HorizonalLayoutContext(OuterRect available, LayoutContextBase? parent)
         : base(available, parent)
     {
     }
@@ -25,7 +26,7 @@ public sealed class HorizonalLayoutContext : LayoutContextBase
         _committed = true;
         if (AllocatedHeights.Count > 0)
         {
-            Parent?.TryAllocate(new SKSize(OriginalSpace.Width, AllocatedHeights.Max()));
+            Parent?.TryAllocate(new OuterSize(OriginalSpace.Width, AllocatedHeights.Max()));
         }
     }
 }

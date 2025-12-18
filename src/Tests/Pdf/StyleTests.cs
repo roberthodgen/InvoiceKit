@@ -1,6 +1,7 @@
 namespace InvoiceKit.Tests.Pdf;
 
 using InvoiceKit.Pdf;
+using InvoiceKit.Pdf.Geometry;
 using SkiaSharp;
 
 public sealed class StyleTests
@@ -35,30 +36,6 @@ public sealed class StyleTests
     }
 
     [Fact]
-    public void GetStyleSize_ReturnsSizeOfStyles()
-    {
-        // Arrange
-        var style = new BlockStyle
-        {
-            Margin = new Margin(10f),
-            Padding = new Padding(10f),
-            Border = BoxBorder.Create(new BorderStyle { Width = 1f })
-        };
-
-        // Sanity checks
-        style.Margin.Left.ShouldBe(10f);
-        style.Padding.Left.ShouldBe(10f);
-        style.Border.Left.Width.ShouldBe(1f);
-
-        // Act
-        var styleSize = style.GetStyleSize();
-
-        // Assert
-        styleSize.Width.ShouldBe(42f);
-        styleSize.Height.ShouldBe(42f);
-    }
-
-    [Fact]
     public void GetBorderRect_ReturnsRect()
     {
         // Arrange
@@ -75,8 +52,8 @@ public sealed class StyleTests
         style.Border.Left.Width.ShouldBe(1f);
 
         // Act
-        var startingRect = new SKRect(10, 10, 100, 100);
-        var contentRect = style.GetContentRect(startingRect);
+        var outer = new OuterRect(10, 10, 100, 100);
+        var contentRect = style.GetContentRect(outer);
         var borderRect = style.GetBorderRect(contentRect);
 
         // Assert
@@ -103,8 +80,8 @@ public sealed class StyleTests
         style.Border.Left.Width.ShouldBe(1f);
 
         // Act
-        var startingRect = new SKRect(10, 10, 100, 100);
-        var contentRect = style.GetContentRect(startingRect);
+        var outerRect = new OuterRect(10, 10, 100, 100);
+        var contentRect = style.GetContentRect(outerRect);
         var backgroundRect = style.GetBackgroundRect(contentRect);
 
         // Assert
@@ -131,7 +108,7 @@ public sealed class StyleTests
         style.Border.Left.Width.ShouldBe(1f);
 
         // Act
-        var startingRect = new SKRect(10, 10, 100, 100);
+        var startingRect = new OuterRect(10, 10, 100, 100);
         var contentRect = style.GetContentRect(startingRect);
 
         // Assert
@@ -142,59 +119,14 @@ public sealed class StyleTests
     }
 
     [Fact]
-    public void GetMarginDebugRect_ReturnsRect()
-    {
-        // Arrange
-        var style = new BlockStyle
-        {
-            Margin = new Margin(10f),
-            Padding = new Padding(10f),
-            Border = BoxBorder.Create(new BorderStyle { Width = 1f })
-        };
-
-        // Sanity checks
-        style.Margin.Left.ShouldBe(10f);
-        style.Padding.Left.ShouldBe(10f);
-        style.Border.Left.Width.ShouldBe(1f);
-
-        // Act
-        var startingRect = new SKRect(10, 10, 100, 100);
-        var contentRect = style.GetContentRect(startingRect);
-        var marginRect = style.GetMarginDebugRect(contentRect);
-
-        // Assert
-        marginRect.Left.ShouldBe(startingRect.Left);
-        marginRect.Top.ShouldBe(startingRect.Top);
-        marginRect.Right.ShouldBe(startingRect.Right);
-        marginRect.Bottom.ShouldBe(startingRect.Bottom);
-    }
-
-    [Fact]
-    public void MarginTest_GetDrawableRect()
-    {
-        // Arrange
-        var rect = new SKRect(10, 10, 100, 100);
-        var style = new BlockStyle { Margin = new Margin(10f, 10f, 10f, 10f) };
-
-        // Act
-        var styledRect = style.Margin.GetDrawableRect(rect);
-
-        // Assert
-        styledRect.Top.ShouldBe(0);
-        styledRect.Bottom.ShouldBe(110);
-        styledRect.Left.ShouldBe(0);
-        styledRect.Right.ShouldBe(110);
-    }
-
-    [Fact]
     public void MarginTest_GetContentRect()
     {
         // Arrange
-        var rect = new SKRect(10, 10, 100, 100);
-        var style = new BlockStyle { Margin = new Margin(10f, 10f, 10f, 10f) };
+        var rect = new OuterRect(10, 10, 100, 100);
+        var style = new BlockStyle { Margin = new Margin(10f, 10f, 10f, 10f), };
 
         // Act
-        var styledRect = style.Margin.GetContentRect(rect);
+        var styledRect = style.Margin.ToBorderRect(rect);
 
         // Assert
         styledRect.Top.ShouldBe(20);
@@ -207,7 +139,7 @@ public sealed class StyleTests
     public void PaddingTest_GetDrawableRect()
     {
         // Arrange
-        var rect = new SKRect(10, 10, 100, 100);
+        var rect = new ContentRect(10, 10, 100, 100);
         var style = new BlockStyle { Padding = new Padding(10f, 10f, 10f, 10f) };
 
         // Act
@@ -224,7 +156,7 @@ public sealed class StyleTests
     public void PaddingTest_GetContentRect()
     {
         // Arrange
-        var rect = new SKRect(10, 10, 100, 100);
+        var rect = new PaddingRect(10, 10, 100, 100);
         var style = new BlockStyle { Padding = new Padding(10f, 10f, 10f, 10f) };
 
         // Act
@@ -241,7 +173,7 @@ public sealed class StyleTests
     public void BorderTest_GetDrawableRect()
     {
         // Arrange
-        var rect = new SKRect(10, 10, 100, 100);
+        var rect = new PaddingRect(10, 10, 100, 100);
         var style = new BlockStyle { Border = BoxBorder.Create(new BorderStyle { Width = 2f }) };
 
         // Act
@@ -258,7 +190,7 @@ public sealed class StyleTests
     public void BorderTest_GetContentRect()
     {
         // Arrange
-        var rect = new SKRect(10, 10, 100, 100);
+        var rect = new BorderRect(10, 10, 100, 100);
         var style = new BlockStyle { Border = BoxBorder.Create(new BorderStyle { Width = 2f }) };
 
         // Act

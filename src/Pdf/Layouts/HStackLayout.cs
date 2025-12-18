@@ -1,5 +1,6 @@
 namespace InvoiceKit.Pdf.Layouts;
 
+using Geometry;
 using SkiaSharp;
 
 internal class HStackLayout(List<ILayout> columns) : ILayout
@@ -17,7 +18,7 @@ internal class HStackLayout(List<ILayout> columns) : ILayout
         return parentContext.GetHorizontalChildContext();
     }
 
-    public ILayoutContext GetContext(ILayoutContext parentContext, SKRect intersectingRect)
+    public ILayoutContext GetContext(ILayoutContext parentContext, OuterRect intersectingRect)
     {
         return parentContext.GetHorizontalChildContext(intersectingRect);
     }
@@ -34,12 +35,11 @@ internal class HStackLayout(List<ILayout> columns) : ILayout
         return result;
     }
 
-    private SKRect GetContextForNthColumn(int nthColumn, ILayoutContext context)
+    private OuterRect GetContextForNthColumn(int nthColumn, ILayoutContext context)
     {
         var columnSize = GetColumnSize(context);
-        var point = context.Available.Location;
-        point.Offset(columnSize.Width * nthColumn, 0);
-        return SKRect.Create(point, columnSize);
+        var left = context.Available.Left + columnSize.Width * nthColumn;
+        return new (left, context.Available.Top, left + columnSize.Width, context.Available.Height);
     }
 
     private SKSize GetColumnSize(ILayoutContext context)

@@ -1,5 +1,6 @@
 namespace InvoiceKit.Pdf.Layouts;
 
+using Geometry;
 using SkiaSharp;
 
 internal class ZStack(List<ILayout> children) : ILayout
@@ -28,7 +29,7 @@ internal class ZStack(List<ILayout> children) : ILayout
         throw new NotImplementedException();
     }
 
-    public ILayoutContext GetContext(ILayoutContext parentContext, SKRect intersectingRect)
+    public ILayoutContext GetContext(ILayoutContext parentContext, OuterRect intersectingRect)
     {
         throw new NotImplementedException();
     }

@@ -1,25 +1,19 @@
 namespace InvoiceKit.Pdf.Layouts;
 
 using Drawables;
-using SkiaSharp;
+using Geometry;
 
 internal class HorizontalRuleLayout(BlockStyle style) : ILayout
 {
-    private BlockStyle Style { get; } = style;
-
     public LayoutResult Layout(ILayoutContext context)
     {
-        var drawables = new List<IDrawable>();
-        if (context.TryAllocate(Style.GetStyleSize()) == false)
+        var contentSize = ContentSize.Empty;
+        var paddingSize = style.Padding.ToSize(contentSize);
+        var borderSize = style.Border.ToSize(paddingSize);
+        var outerSize = style.Margin.ToSize(borderSize);
+        if (context.TryAllocate(outerSize, out var rect))
         {
-            return LayoutResult.NeedsNewPage([]);
-        }
-
-        if (context.TryAllocate(new SKSize(context.Available.Width, Style.ForegroundToPaint().StrokeWidth)))
-        {
-            drawables.AddRange(Style.GetStyleDrawables(context.Allocated));
-            drawables.Add(new HorizontalRuleDrawable(context.Available, Style.ForegroundToPaint()));
-            return LayoutResult.FullyDrawn(drawables);
+            return LayoutResult.FullyDrawn([new BorderDrawable(rect, style)]);
         }
 
         return LayoutResult.NeedsNewPage([]);
@@ -30,7 +24,7 @@ internal class HorizontalRuleLayout(BlockStyle style) : ILayout
         return parentContext.GetVerticalChildContext();
     }
 
-    public ILayoutContext GetContext(ILayoutContext parentContext, SKRect intersectingRect)
+    public ILayoutContext GetContext(ILayoutContext parentContext, OuterRect intersectingRect)
     {
         return parentContext.GetVerticalChildContext(intersectingRect);
     }

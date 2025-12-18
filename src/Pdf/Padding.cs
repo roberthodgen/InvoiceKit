@@ -1,5 +1,6 @@
 namespace InvoiceKit.Pdf;
 
+using Geometry;
 using SkiaSharp;
 
 public readonly record struct Padding
@@ -33,25 +34,32 @@ public readonly record struct Padding
     /// </summary>
     /// <param name="content">SKRect of the drawable content.</param>
     /// <returns>SKRect for the padding</returns>
-    public SKRect GetDrawableRect(SKRect content)
+    public PaddingRect GetDrawableRect(ContentRect content)
     {
-        return new SKRect(
-            content.Left - Left,
-            content.Top - Top,
-            content.Right + Right,
-            content.Bottom + Bottom);
+        return new (
+            content.ToRect().Left - Left,
+            content.ToRect().Top - Top,
+            content.ToRect().Right + Right,
+            content.ToRect().Bottom + Bottom);
     }
 
     /// <summary>
     /// Adjusts available space by removing the padding size from each side.
     /// </summary>
     /// <param name="available">The available space in the context.</param>
-    public SKRect GetContentRect(SKRect available)
+    public ContentRect GetContentRect(PaddingRect available)
     {
-        return new SKRect(
-            available.Left + Left,
-            available.Top + Top,
-            available.Right - Right,
-            available.Bottom - Bottom);
+        return new (
+            available.ToRect().Left + Left,
+            available.ToRect().Top + Top,
+            available.ToRect().Right - Right,
+            available.ToRect().Bottom - Bottom);
+    }
+
+    public SKSize ToSize() => new SKSize(Left + Right, Top + Bottom);
+
+    public PaddingSize ToSize(ContentSize content)
+    {
+        return new PaddingSize(content, ToSize());
     }
 }

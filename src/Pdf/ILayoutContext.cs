@@ -1,5 +1,6 @@
 namespace InvoiceKit.Pdf;
 
+using Geometry;
 using SkiaSharp;
 
 /// <summary>
@@ -18,7 +19,7 @@ public interface ILayoutContext
     /// <summary>
     /// Gets the available space left for this layout.
     /// </summary>
-    public SKRect Available { get; }
+    public OuterRect Available { get; }
 
     /// <summary>
     /// Determines if this layout can accomodate the size of a rect.
@@ -28,14 +29,14 @@ public interface ILayoutContext
     /// <remarks>
     /// This method will automatically add the height of the rect to the allocated space when it returns true.
     /// </remarks>
-    public bool TryAllocate(SKSize size);
+    public bool TryAllocate(OuterSize size);
 
     /// <summary>
     /// Determines if the measurable can fit onto the page and returns a rect.
     /// </summary>
     /// <param name="size">SKSize of the element being allocated.</param>
-    /// <param name="rect">Outputs the allocated rect for the drawing.</param>
-    public bool TryAllocate(SKSize size, out SKRect rect);
+    /// <param name="outerRect">Outputs the allocated outer rect for the drawing.</param>
+    public bool TryAllocate(OuterSize size, out OuterRect outerRect);
 
     /// <summary>
     /// Commits the allocated space of a child layout context.
@@ -46,7 +47,7 @@ public interface ILayoutContext
     /// Creates a new vertical child context from the remaining available space that intersects with the given rect.
     /// </summary>
     /// <param name="intersectingRect">A rect to limit the child context to.</param>
-    ILayoutContext GetVerticalChildContext(SKRect intersectingRect);
+    ILayoutContext GetVerticalChildContext(OuterRect intersectingRect);
 
     /// <summary>
     /// Creates a new vertical child context from the remaining available space.
@@ -57,7 +58,7 @@ public interface ILayoutContext
     /// Creates a new horizontal child context from the remaining available space that intersects with the given rect.
     /// </summary>
     /// <param name="intersectingRect">A rect to limit the child context to.</param>
-    ILayoutContext GetHorizontalChildContext(SKRect intersectingRect);
+    ILayoutContext GetHorizontalChildContext(OuterRect intersectingRect);
 
     /// <summary>
     /// Creates a new horizontal child context from the remaining available space.

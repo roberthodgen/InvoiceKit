@@ -1,6 +1,6 @@
 namespace InvoiceKit.Pdf.Layouts;
 
-using SkiaSharp;
+using Geometry;
 
 internal class PageBreakLayout : ILayout
 {
@@ -22,7 +22,7 @@ internal class PageBreakLayout : ILayout
         return parentContext.GetVerticalChildContext();
     }
 
-    public ILayoutContext GetContext(ILayoutContext parentContext, SKRect intersectingRect)
+    public ILayoutContext GetContext(ILayoutContext parentContext, OuterRect intersectingRect)
     {
         return parentContext.GetVerticalChildContext(intersectingRect);
     }

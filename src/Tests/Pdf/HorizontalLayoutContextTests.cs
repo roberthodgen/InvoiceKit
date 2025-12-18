@@ -1,7 +1,7 @@
 namespace InvoiceKit.Tests.Pdf;
 
 using InvoiceKit.Pdf;
-using SkiaSharp;
+using InvoiceKit.Pdf.Geometry;
 
 public class HorizontalLayoutContextTests
 {
@@ -10,15 +10,15 @@ public class HorizontalLayoutContextTests
     /// </summary>
     private const float Ppi = 72f;
 
-    private static readonly SKRect UsLetter = SKRect.Create(new (8.5f * Ppi, 11f * Ppi));
+    private static readonly OuterRect UsLetter = new (0, 0, 8.5f * Ppi, 11f * Ppi);
 
-    private readonly RootLayoutContext _root = new (UsLetter);
+    private readonly RootLayoutContext _root = new (UsLetter.ToRect());
 
     [Fact]
     public void TryAllocate_KeepsOriginalAvailable()
     {
         var context = _root.GetHorizontalChildContext();
-        context.TryAllocate(new SKSize(100, 100)).ShouldBeTrue();
+        context.TryAllocate(new OuterSize(100, 100)).ShouldBeTrue();
 
         context.Available.Height.ShouldBe(UsLetter.Height);
     }
@@ -27,7 +27,7 @@ public class HorizontalLayoutContextTests
     public void TryAllocate_KeepsOriginalAllocated()
     {
         var context = _root.GetHorizontalChildContext();
-        context.TryAllocate(new SKSize(100, 100)).ShouldBeTrue();
+        context.TryAllocate(new OuterSize(100, 100)).ShouldBeTrue();
 
         context.Allocated.Size.Height.ShouldBe(0);
     }
@@ -37,13 +37,13 @@ public class HorizontalLayoutContextTests
     {
         var parent = _root.GetHorizontalChildContext();
         var child = parent.GetVerticalChildContext();
-        child.TryAllocate(new SKSize(100, 100)).ShouldBeTrue();
+        child.TryAllocate(new OuterSize(100, 100)).ShouldBeTrue();
 
         // Act
         child.CommitChildContext();
 
         // Assert
-        parent.Available.Size.Height.ShouldBe(UsLetter.Height);
+        parent.Available.ToSize().Height.ShouldBe(UsLetter.Height);
     }
 
     [Fact]
@@ -51,7 +51,7 @@ public class HorizontalLayoutContextTests
     {
         var parent = _root.GetHorizontalChildContext();
         var child = parent.GetVerticalChildContext();
-        child.TryAllocate(new SKSize(100, 100)).ShouldBeTrue();
+        child.TryAllocate(new OuterSize(100, 100)).ShouldBeTrue();
 
         // Act
         child.CommitChildContext();
@@ -65,7 +65,7 @@ public class HorizontalLayoutContextTests
     {
         var parent = _root.GetHorizontalChildContext();
         var child = parent.GetVerticalChildContext();
-        child.TryAllocate(new SKSize(100, 100)).ShouldBeTrue();
+        child.TryAllocate(new OuterSize(100, 100)).ShouldBeTrue();
 
         parent.Available.ShouldBe(UsLetter);
     }
@@ -75,7 +75,7 @@ public class HorizontalLayoutContextTests
     {
         var parent = _root.GetHorizontalChildContext();
         var child = parent.GetVerticalChildContext();
-        child.TryAllocate(new SKSize(100, 100)).ShouldBeTrue();
+        child.TryAllocate(new OuterSize(100, 100)).ShouldBeTrue();
 
         parent.Allocated.Size.Height.ShouldBe(0);
     }
@@ -87,11 +87,11 @@ public class HorizontalLayoutContextTests
         var child = parent.GetHorizontalChildContext();
 
         // Act
-        child.TryAllocate(new SKSize(100, 100)).ShouldBeTrue();
+        child.TryAllocate(new OuterSize(100, 100)).ShouldBeTrue();
         child.CommitChildContext();
 
         // Assert
-        parent.Available.Size.Height.ShouldBe(UsLetter.Height - 100);
+        parent.Available.ToSize().Height.ShouldBe(UsLetter.Height - 100);
         parent.Allocated.Size.Height.ShouldBe(100);
     }
 }

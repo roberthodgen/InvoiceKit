@@ -1,6 +1,7 @@
 namespace InvoiceKit.Pdf;
 
 using Drawables;
+using Geometry;
 using SkiaSharp;
 
 public readonly record struct BlockStyle()
@@ -46,9 +47,8 @@ public readonly record struct BlockStyle()
     public Padding Padding { get; init; } = new ();
 
     /// <summary>
-    /// Converts the foreground to a <see cref="SKPaint"/> for drawing on the canvas.
+    /// Converts the foreground color to a <see cref="SKPaint"/> for drawing on the canvas.
     /// </summary>
-    /// <remarks>Horizontal rule is using this for color, but is taking the default stroke width value.</remarks>
     public SKPaint ForegroundToPaint()
     {
         return new SKPaint
@@ -104,40 +104,19 @@ public readonly record struct BlockStyle()
     }
 
     /// <summary>
-    /// Returns the total size the styling would take.
-    /// </summary>
-    /// <remarks>Used for allocating space in a context.</remarks>
-    public SKSize GetStyleSize()
-    {
-        var width = Padding.Left + Padding.Right + Margin.Left + Margin.Right + Border.Left.Width + Border.Right.Width;
-        var height = Padding.Top + Padding.Bottom + Margin.Top + Margin.Bottom + Border.Top.Width + Border.Bottom.Width;
-        return new SKSize(width, height);
-    }
-
-    /// <summary>
-    /// Returns the available size after taking out the styling size.
-    /// </summary>
-    /// <param name="available">SKSize of the available space</param>
-    public SKSize GetSizeAfterStyle(SKSize available)
-    {
-        var styleSize = GetStyleSize();
-        return new SKSize(available.Width - styleSize.Width, available.Height - styleSize.Height);
-    }
-
-    /// <summary>
     /// Creates a list of drawables for the border, background, and debugs.
     /// </summary>
     /// <param name="content">Content rect received from a TryAllocate method on <see cref="ILayoutContext"/>.</param>
     /// <returns></returns>
-    public List<IDrawable> GetStyleDrawables(SKRect content)
+    public List<IDrawable> GetStyleDrawables(OuterRect content)
     {
         var drawables = new List<IDrawable>
         {
-            new BackgroundDrawable(GetBackgroundRect(content), BackgroundToPaint()),
-            new BorderDrawable(GetBorderRect(content), Border),
-            new DebugDrawable(content, DebugDrawable.ContentColor),
-            new DebugDrawable(GetMarginDebugRect(content), DebugDrawable.MarginColor),
-            new DebugDrawable(GetBackgroundRect(content), DebugDrawable.PaddingColor),
+            // TODO new BackgroundDrawable(GetBackgroundRect(content), BackgroundToPaint()),
+            new BorderDrawable(content, this),
+            // TODO new DebugDrawable(content, DebugDrawable.ContentColor),
+            // TODO new DebugDrawable(GetMarginDebugRect(content), DebugDrawable.MarginColor),
+            // TODO new DebugDrawable(GetBackgroundRect(content), DebugDrawable.PaddingColor),
         };
         return drawables;
     }
@@ -146,16 +125,16 @@ public readonly record struct BlockStyle()
     /// Creates a drawable area after removing styling sizes.
     /// </summary>
     /// <param name="available">Available drawing size.</param>
-    public SKRect GetContentRect(SKRect available)
+    public ContentRect GetContentRect(OuterRect available)
     {
-        return Padding.GetContentRect(Border.GetContentRect(Margin.GetContentRect(available)));
+        return Padding.GetContentRect(Border.GetContentRect(Margin.ToBorderRect(available)));
     }
 
     /// <summary>
     /// Creates a drawable area for the background by expanding from the contentRect.
     /// </summary>
     /// <param name="contentRect">The SKRect of the element that was allocated.</param>
-    public SKRect GetBackgroundRect(SKRect contentRect)
+    public PaddingRect GetBackgroundRect(ContentRect contentRect)
     {
         return Padding.GetDrawableRect(contentRect);
     }
@@ -164,17 +143,8 @@ public readonly record struct BlockStyle()
     /// Creates a drawable rect for the border by expanding from the contentRect.
     /// </summary>
     /// <param name="contentRect">The SKRect of the element that was allocated.</param>
-    public SKRect GetBorderRect(SKRect contentRect)
+    public BorderRect GetBorderRect(ContentRect contentRect)
     {
         return Border.GetDrawableRect(Padding.GetDrawableRect(contentRect));
-    }
-
-    /// <summary>
-    /// Creates a rect to outline where the margin starts in debug mode.
-    /// </summary>
-    /// <param name="contentRect">The allocated element rect.</param>
-    public SKRect GetMarginDebugRect(SKRect contentRect)
-    {
-        return Margin.GetDrawableRect(Border.GetDrawableRect(Padding.GetDrawableRect(contentRect)));
     }
 }

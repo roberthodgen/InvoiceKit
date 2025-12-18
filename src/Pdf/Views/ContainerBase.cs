@@ -1,6 +1,7 @@
 namespace InvoiceKit.Pdf.Views;
 
 using Containers.Tables;
+using SkiaSharp;
 
 public abstract class ContainerBase(BlockStyle defaultStyle) : IContainer
 {
@@ -43,20 +44,30 @@ public abstract class ContainerBase(BlockStyle defaultStyle) : IContainer
 
     public IContainer AddHorizontalRule()
     {
-        var child = new HorizontalRuleViewBuilder(ChildStyle with {
-            Margin = new Margin
-            {
-                Top =10f,
-                Bottom = 10f,
-            },
-        });
-        _children.Add(child);
-        return this;
+        return AddHorizontalRule(style => style);
     }
 
     public IContainer AddHorizontalRule(Func<BlockStyle, BlockStyle> configureStyle)
     {
-        var child = new HorizontalRuleViewBuilder(configureStyle(ChildStyle));
+        var child = new HorizontalRuleViewBuilder(
+            configureStyle(
+                ChildStyle with
+                {
+                    Border = new BoxBorder
+                    {
+                        Bottom = new BorderStyle
+                        {
+                            Color = SKColors.Black,
+                            Width = 1f,
+                        },
+                    },
+                    Margin = new Margin
+                    {
+                        Top = 10f,
+                        Bottom = 10f,
+                    },
+                }));
+
         _children.Add(child);
         return this;
     }

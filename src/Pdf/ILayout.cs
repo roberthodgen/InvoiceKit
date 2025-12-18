@@ -1,6 +1,6 @@
 namespace InvoiceKit.Pdf;
 
-using SkiaSharp;
+using Geometry;
 
 /// <summary>
 /// A layout represents a stateful object that will attempt to split itself across multiple pages. While doing so, it
@@ -28,5 +28,5 @@ public interface ILayout
     /// </summary>
     /// <param name="parentContext">A parent context from which to derive a child context.</param>
     /// <param name="intersectingRect">The required intersecting rect for the new context.</param>
-    ILayoutContext GetContext(ILayoutContext parentContext, SKRect intersectingRect);
+    ILayoutContext GetContext(ILayoutContext parentContext, OuterRect intersectingRect);
 }

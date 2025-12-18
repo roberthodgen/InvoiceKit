@@ -1,5 +1,6 @@
 namespace InvoiceKit.Pdf;
 
+using Geometry;
 using SkiaSharp;
 
 /// <summary>
@@ -36,7 +37,7 @@ public sealed class ChildLayout
     public static ChildLayout CreateChildIntersecting(
         ILayout layout,
         ILayoutContext parentContext,
-        SKRect intersectingRect) =>
+        OuterRect intersectingRect) =>
         new (layout, layout.GetContext(parentContext, intersectingRect));
 
     /// <summary>

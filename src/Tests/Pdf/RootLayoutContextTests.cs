@@ -1,6 +1,7 @@
 namespace InvoiceKit.Tests.Pdf;
 
 using InvoiceKit.Pdf;
+using InvoiceKit.Pdf.Geometry;
 using SkiaSharp;
 
 public class RootLayoutContextTests
@@ -10,17 +11,17 @@ public class RootLayoutContextTests
     /// </summary>
     private const float Ppi = 72f;
 
-    private static readonly SKRect UsLetter = SKRect.Create(new (8.5f * Ppi, 11f * Ppi));
+    private static readonly OuterRect UsLetter = new (0, 0, 8.5f * Ppi, 11f * Ppi);
 
     [Fact]
     public void Available_DecreasesAsChildrenAreCommitted()
     {
-        var root = new RootLayoutContext(UsLetter);
+        var root = new RootLayoutContext(UsLetter.ToRect());
         root.Available.ShouldBe(UsLetter);
         root.Allocated.Size.Height.ShouldBe(0);
 
         var child = root.GetVerticalChildContext(UsLetter);
-        child.TryAllocate(new SKSize(100, 100)).ShouldBeTrue();
+        child.TryAllocate(new OuterSize(100, 100)).ShouldBeTrue();
 
         root.Available.ShouldBe(UsLetter);
         root.Allocated.Size.Height.ShouldBe(0);
@@ -29,18 +30,18 @@ public class RootLayoutContextTests
         child.CommitChildContext();
 
         // Assert
-        root.Available.Size.Height.ShouldBe(UsLetter.Height - 100);
+        root.Available.ToSize().Height.ShouldBe(UsLetter.Height - 100);
     }
 
     [Fact]
     public void Allocated_IncreasesAsChildrenAreCommitted()
     {
-        var root = new RootLayoutContext(UsLetter);
+        var root = new RootLayoutContext(UsLetter.ToRect());
         root.Available.ShouldBe(UsLetter);
         root.Allocated.Size.Height.ShouldBe(0);
 
         var child = root.GetVerticalChildContext(UsLetter);
-        child.TryAllocate(new SKSize(100, 100)).ShouldBeTrue();
+        child.TryAllocate(new OuterSize(100, 100)).ShouldBeTrue();
 
         root.Available.ShouldBe(UsLetter);
         root.Allocated.Size.Height.ShouldBe(0);
@@ -55,12 +56,12 @@ public class RootLayoutContextTests
     [Fact]
     public void Available_UnChangedUntilCommitted()
     {
-        var root = new RootLayoutContext(UsLetter);
+        var root = new RootLayoutContext(UsLetter.ToRect());
         root.Available.ShouldBe(UsLetter);
         root.Allocated.Size.Height.ShouldBe(0);
 
         var child = root.GetVerticalChildContext(UsLetter);
-        child.TryAllocate(new SKSize(100, 100)).ShouldBeTrue();
+        child.TryAllocate(new OuterSize(100, 100)).ShouldBeTrue();
 
         root.Available.ShouldBe(UsLetter);
     }
@@ -68,12 +69,12 @@ public class RootLayoutContextTests
     [Fact]
     public void Allocated_UnChangedUntilCommitted()
     {
-        var root = new RootLayoutContext(UsLetter);
+        var root = new RootLayoutContext(UsLetter.ToRect());
         root.Available.ShouldBe(UsLetter);
         root.Allocated.Size.Height.ShouldBe(0);
 
         var child = root.GetVerticalChildContext(UsLetter);
-        child.TryAllocate(new SKSize(100, 100)).ShouldBeTrue();
+        child.TryAllocate(new OuterSize(100, 100)).ShouldBeTrue();
 
         root.Allocated.Size.Height.ShouldBe(0);
     }

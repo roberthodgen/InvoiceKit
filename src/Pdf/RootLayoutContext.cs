@@ -1,5 +1,6 @@
 namespace InvoiceKit.Pdf;
 
+using Geometry;
 using SkiaSharp;
 
 /// <summary>
@@ -14,14 +15,14 @@ public sealed class RootLayoutContext : LayoutContextBase
         OriginalSpace.Right,
         OriginalSpace.Top + AllocatedHeights.Sum());
 
-    public override SKRect Available => new (
+    public override OuterRect Available => new (
         OriginalSpace.Left,
         Allocated.Bottom,
         OriginalSpace.Right,
         OriginalSpace.Bottom);
 
     public RootLayoutContext(SKRect available)
-        : base(available, null)
+        : base(new (available), null)
     {
     }
 

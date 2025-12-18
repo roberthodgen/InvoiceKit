@@ -1,7 +1,7 @@
 namespace InvoiceKit.Pdf.Layouts;
 
 using Drawables;
-using SkiaSharp;
+using Geometry;
 
 /// <summary>
 /// A text block represents a single paragraph's text. Line breaks may be added to prevent paragraph spacing. Automatic
@@ -28,13 +28,30 @@ internal class TextLayout : ILayout
     /// <summary>
     /// Measures how much space a line of text takes.
     /// </summary>
-    private SKSize MeasureFullLineSize(SKSize available)
+    private OuterSize MeasureFullLineSize(OuterSize available)
     {
         var height = 0f;
-        height += HalfLineHeight - Style.ToFont().Metrics.Ascent;
-        height += HalfLineHeight + Style.ToFont().Metrics.Descent;
+        var font = Style.ToFont();
+        height += HalfLineHeight - font.Metrics.Ascent;
+        height += HalfLineHeight + font.Metrics.Descent;
 
-        return new SKSize(available.Width, height);
+        if (_currentIndex == 0)
+        {
+            // first
+            height += Style.Padding.Top;
+            height += Style.Border.Top.Width;
+            height += Style.Margin.Top;
+        }
+
+        if (_currentIndex == _wrappedLines.Count - 1)
+        {
+            // last
+            height += Style.Padding.Bottom;
+            height += Style.Border.Bottom.Width;
+            height += Style.Margin.Bottom;
+        }
+
+        return new OuterSize(available.Width, height);
     }
 
     /// <summary>
@@ -80,7 +97,7 @@ internal class TextLayout : ILayout
     {
         if (_wrappedLines.Count == 0)
         {
-            _wrappedLines = WrapText(_text, Style, context.Available.Size.Width).ToList();
+            _wrappedLines = WrapText(_text, Style, context.Available.ToSize().Width).ToList();
         }
 
         if (_currentIndex >= _wrappedLines.Count)
@@ -88,19 +105,13 @@ internal class TextLayout : ILayout
             return LayoutResult.FullyDrawn([]);
         }
 
-        // Allocate the style size
-        if (context.TryAllocate(Style.GetStyleSize()) == false)
-        {
-            return LayoutResult.NeedsNewPage([]);
-        }
-
         var drawables = new List<IDrawable>();
 
         while (_currentIndex < _wrappedLines.Count)
         {
-            if (context.TryAllocate(MeasureFullLineSize(context.Available.Size), out var rect))
+            if (context.TryAllocate(MeasureFullLineSize(context.Available.ToSize()), out var rect))
             {
-                drawables.Add(new DebugDrawable(rect, DebugDrawable.ContentColor));
+                // TODO drawables.Add(new DebugDrawable(rect, DebugDrawable.ContentColor));
                 drawables.Add(new TextDrawable(_wrappedLines[_currentIndex], rect, Style));
                 drawables.InsertRange(0, Style.GetStyleDrawables(rect));
                 _currentIndex++;
@@ -121,7 +132,7 @@ internal class TextLayout : ILayout
         return parentContext.GetVerticalChildContext();
     }
 
-    public ILayoutContext GetContext(ILayoutContext parentContext, SKRect intersectingRect)
+    public ILayoutContext GetContext(ILayoutContext parentContext, OuterRect intersectingRect)
     {
         return parentContext.GetVerticalChildContext(intersectingRect);
     }

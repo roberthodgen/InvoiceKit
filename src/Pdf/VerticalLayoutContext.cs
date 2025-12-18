@@ -1,5 +1,6 @@
 namespace InvoiceKit.Pdf;
 
+using Geometry;
 using SkiaSharp;
 
 public sealed class VerticalLayoutContext : LayoutContextBase
@@ -10,7 +11,7 @@ public sealed class VerticalLayoutContext : LayoutContextBase
         OriginalSpace.Right,
         (Math.Max(OriginalSpace.Top, Parent!.Available.Top)) + AllocatedHeights.Sum());
 
-    internal VerticalLayoutContext(SKRect available, LayoutContextBase? parent)
+    internal VerticalLayoutContext(OuterRect available, LayoutContextBase? parent)
         : base(available, parent)
     {
     }
@@ -25,7 +26,7 @@ public sealed class VerticalLayoutContext : LayoutContextBase
         _committed = true;
         if (AllocatedHeights.Count > 0)
         {
-            Parent?.TryAllocate(new SKSize(OriginalSpace.Width, AllocatedHeights.Sum()));
+            Parent?.TryAllocate(new OuterSize(OriginalSpace.Width, AllocatedHeights.Sum()));
         }
     }
 }

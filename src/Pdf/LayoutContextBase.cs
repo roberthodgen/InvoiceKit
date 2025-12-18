@@ -1,5 +1,6 @@
 namespace InvoiceKit.Pdf;
 
+using Geometry;
 using SkiaSharp;
 
 public abstract class LayoutContextBase : ILayoutContext
@@ -10,11 +11,11 @@ public abstract class LayoutContextBase : ILayoutContext
 
     protected readonly List<float> AllocatedHeights = [];
 
-    protected readonly SKRect OriginalSpace;
+    protected readonly OuterRect OriginalSpace;
 
     public abstract SKRect Allocated { get; }
 
-    public virtual SKRect Available => SKRect.Intersect(
+    public virtual OuterRect Available => OuterRect.Intersect(
         Parent!.Available,
         new (
             OriginalSpace.Left,
@@ -22,14 +23,15 @@ public abstract class LayoutContextBase : ILayoutContext
             OriginalSpace.Right,
             OriginalSpace.Bottom));
 
-    protected LayoutContextBase(SKRect available, LayoutContextBase? parent)
+    protected LayoutContextBase(OuterRect available, LayoutContextBase? parent)
     {
         OriginalSpace = available;
         Parent = parent;
     }
 
-    public bool TryAllocate(SKSize size)
+    public bool TryAllocate(OuterSize outer)
     {
+        var size = outer.ToSize();
         if (size.Height > Available.Height || size.Width > Available.Width)
         {
             return false;
@@ -39,17 +41,18 @@ public abstract class LayoutContextBase : ILayoutContext
         return true;
     }
 
-    public bool TryAllocate(SKSize size, out SKRect rect)
+    public bool TryAllocate(OuterSize outer, out OuterRect rect)
     {
-        rect = new SKRect(Available.Left, Available.Top, Available.Left + size.Width, Available.Top + size.Height);
-        return TryAllocate(size);
+        var size = outer.ToSize();
+        rect = new OuterRect(Available.Left, Available.Top, Available.Left + size.Width, Available.Top + size.Height);
+        return TryAllocate(outer);
     }
 
     public abstract void CommitChildContext();
 
-    public ILayoutContext GetVerticalChildContext(SKRect intersectingRect)
+    public ILayoutContext GetVerticalChildContext(OuterRect intersectingRect)
     {
-        return new VerticalLayoutContext(SKRect.Intersect(Available, intersectingRect), this);
+        return new VerticalLayoutContext(OuterRect.Intersect(Available, intersectingRect), this);
     }
 
     public ILayoutContext GetVerticalChildContext()
@@ -57,9 +60,9 @@ public abstract class LayoutContextBase : ILayoutContext
         return new VerticalLayoutContext(Available, this);
     }
 
-    public ILayoutContext GetHorizontalChildContext(SKRect intersectingRect)
+    public ILayoutContext GetHorizontalChildContext(OuterRect intersectingRect)
     {
-        return new HorizonalLayoutContext(SKRect.Intersect(Available, intersectingRect), this);
+        return new HorizonalLayoutContext(OuterRect.Intersect(Available, intersectingRect), this);
     }
 
     public ILayoutContext GetHorizontalChildContext()
