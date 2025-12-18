@@ -13,8 +13,6 @@ public readonly record struct Padding
 
     public float Bottom { get; init; }
 
-    public bool HasValue => Left != 0.0f || Top != 0.0f || Right != 0.0f || Bottom != 0.0f;
-
     public Padding(float left, float top, float right, float bottom)
     {
         Left = left;
