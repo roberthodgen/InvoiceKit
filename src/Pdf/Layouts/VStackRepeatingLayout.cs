@@ -1,38 +1,21 @@
 namespace InvoiceKit.Pdf.Layouts;
 
-using Drawables;
-using SkiaSharp;
+using Geometry;
 
 internal class VStackRepeatingLayout(List<ILayout> children) : ILayout
 {
-    public SKSize Measure(SKSize available)
+    public LayoutResult Layout(ILayoutContext context)
     {
-        if (children.Count == 0)
-        {
-            return SKSize.Empty;
-        }
-
-        return new SKSize(available.Width, children.Sum(child => child.Measure(available).Height));
+        return LayoutResult.Deferred(children.Select(child => ChildLayout.CreateChild(child, context)).ToList());
     }
 
-    public LayoutResult Layout(LayoutContext context)
+    public ILayoutContext GetContext(ILayoutContext parentContext)
     {
-        var drawables = new List<IDrawable>();
+        return parentContext.GetVerticalChildContext();
+    }
 
-        foreach (var child in children)
-        {
-            var childContext = context.GetChildContext();
-            var result = child.Layout(childContext);
-            drawables.AddRange(result.Drawables);
-            drawables.Add(new DebugDrawable(childContext.Allocated,  DebugDrawable.AllocatedColor));
-            context.CommitChildContext(childContext);
-
-            if (result.Status == LayoutStatus.NeedsNewPage)
-            {
-                return new LayoutResult([], LayoutStatus.NeedsNewPage);
-            }
-        }
-
-        return new LayoutResult(drawables, LayoutStatus.IsFullyDrawn);
+    public ILayoutContext GetContext(ILayoutContext parentContext, OuterRect intersectingRect)
+    {
+        return parentContext.GetVerticalChildContext(intersectingRect);
     }
 }

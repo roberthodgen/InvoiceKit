@@ -1,28 +1,29 @@
 namespace InvoiceKit.Pdf.Layouts;
 
-using SkiaSharp;
+using Geometry;
 
 internal class PageBreakLayout : ILayout
 {
     private bool _isDrawn;
 
-    public SKSize Measure(SKSize available)
-    {
-        return new SKSize(available.Width, available.Height);
-    }
-
-    public LayoutResult Layout(LayoutContext context)
+    public LayoutResult Layout(ILayoutContext context)
     {
         if (_isDrawn)
         {
-            return new LayoutResult([], LayoutStatus.IsFullyDrawn);
+            return LayoutResult.FullyDrawn([]);
         }
 
-        // Takes up the rest of available space, putting the footer at the bottom of the page.
-        context.TryAllocate(this);
         _isDrawn = true;
+        return LayoutResult.NeedsNewPage([]);
+    }
 
-        // Calls for a new page with no drawables.
-        return new LayoutResult([], LayoutStatus.NeedsNewPage);
+    public ILayoutContext GetContext(ILayoutContext parentContext)
+    {
+        return parentContext.GetVerticalChildContext();
+    }
+
+    public ILayoutContext GetContext(ILayoutContext parentContext, OuterRect intersectingRect)
+    {
+        return parentContext.GetVerticalChildContext(intersectingRect);
     }
 }

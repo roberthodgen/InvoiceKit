@@ -1,5 +1,6 @@
 namespace InvoiceKit.Pdf;
 
+using Geometry;
 using SkiaSharp;
 using Views;
 
@@ -32,7 +33,7 @@ public sealed class PdfDocument : IPdfDocument
         Margin = new Margin(1f * PointsPerInch)
     };
 
-    private SKRect DrawableArea => DocumentStyle.GetContentRect(SKRect.Create(_pageSize));
+    private SKRect DrawableArea => DocumentStyle.GetContentRect(new OuterRect(_pageSize)).ToRect();
 
     private PdfDocument(float width, float height)
     {

@@ -1,7 +1,7 @@
 namespace InvoiceKit.Pdf.Layouts;
 
 using Drawables;
-using SkiaSharp;
+using Geometry;
 
 /// <summary>
 /// A text block represents a single paragraph's text. Line breaks may be added to prevent paragraph spacing. Automatic
@@ -35,33 +35,37 @@ internal class TextLayout : ILayout
         }
     }
 
-    public SKSize Measure(SKSize available)
-    {
-        var stylingSize = Style.GetStyleSize();
-        var sizeAfterStyle = Style.GetSizeAfterStyle(available);
-        if (_wrappedLines.Count == 0)
-        {
-            _wrappedLines = _lines.SelectMany(line => WrapText(line, Style, sizeAfterStyle.Width)).ToList();
-        }
-
-        var height = _wrappedLines.Select(_ => MeasureFullLineSize(sizeAfterStyle).Height).Sum() + stylingSize.Height;
-        return new SKSize(available.Width, height);
-    }
-
     /// <summary>
     /// Measures how much space a line of text takes.
     /// </summary>
-    private SKSize MeasureFullLineSize(SKSize available)
+    private OuterSize MeasureFullLineSize(OuterSize available)
     {
         var height = 0f;
-        height += HalfLineHeight - Style.ToFont().Metrics.Ascent;
-        height += HalfLineHeight + Style.ToFont().Metrics.Descent;
+        var font = Style.ToFont();
+        height += HalfLineHeight - font.Metrics.Ascent;
+        height += HalfLineHeight + font.Metrics.Descent;
 
-        return new SKSize(available.Width, height);
+        if (_currentIndex == 0)
+        {
+            // first
+            height += Style.Padding.Top;
+            height += Style.Border.Top.Width;
+            height += Style.Margin.Top;
+        }
+
+        if (_currentIndex == _wrappedLines.Count - 1)
+        {
+            // last
+            height += Style.Padding.Bottom;
+            height += Style.Border.Bottom.Width;
+            height += Style.Margin.Bottom;
+        }
+
+        return new OuterSize(available.Width, height);
     }
 
     /// <summary>
-    /// Separates a single string into multiple lines based on the width of the available space.
+    /// Separates a string into multiple lines based on the width of the available space.
     /// </summary>
     private static List<string> WrapText(string text, BlockStyle style, float maxWidth)
     {
@@ -99,58 +103,53 @@ internal class TextLayout : ILayout
         return lines;
     }
 
-    public LayoutResult Layout(LayoutContext context)
+    public LayoutResult Layout(ILayoutContext context)
     {
-        var childContext = context.GetChildContext(Style.GetContentRect(context.Available));
         if (_wrappedLines.Count == 0)
         {
-            _wrappedLines = _lines.SelectMany(line => WrapText(line, Style, childContext.Available.Width)).ToList();
+            _wrappedLines = _lines.SelectMany(line => WrapText(line, Style, context.Available.Width)).ToList();
+        }
+
+        if (_currentIndex >= _wrappedLines.Count)
+        {
+            return LayoutResult.FullyDrawn([]);
         }
 
         var drawables = new List<IDrawable>();
 
-        // Allocate the style size
-        if (context.TryAllocate(Style.GetStyleSize()) == false)
-        {
-            return new LayoutResult(drawables, LayoutStatus.NeedsNewPage);
-        }
-
         while (_currentIndex < _wrappedLines.Count)
         {
-            if (childContext.TryAllocate(MeasureFullLineSize(childContext.Available.Size), out var rect))
+            if (context.TryAllocate(MeasureFullLineSize(context.Available.ToSize()), out var rect))
             {
-                drawables.Add(new DebugDrawable(rect, DebugDrawable.ContentColor));
                 drawables.Add(new TextDrawable(_wrappedLines[_currentIndex], rect, Style));
                 _currentIndex++;
-                continue;   // Skip to the next line.
+                continue; // Skip to the next line.
             }
 
-            // Add background and border drawables.
-            // Background needs to come before text.
-            drawables.Insert(0, new BackgroundDrawable(Style.GetBackgroundRect(childContext.Allocated), Style.BackgroundToPaint()));
-            drawables.Add(new BorderDrawable(Style.GetBorderRect(childContext.Allocated), Style.Border));
+            drawables.Insert(0, new DebugDrawable(context.Allocated, Style));
+            drawables.Insert(0, new BackgroundDrawable(context.Allocated, Style.BackgroundToPaint()));
+            // drawables.Add(new BorderDrawable(new OuterRect(context.Allocated), Style.Border));
 
-            // Add margin and padding debug drawables.
-            drawables.Add(new DebugDrawable(Style.GetMarginDebugRect(childContext.Allocated), DebugDrawable.MarginColor));
-            drawables.Add(new DebugDrawable(Style.GetBackgroundRect(childContext.Allocated), DebugDrawable.PaddingColor));
-
-            context.CommitChildContext(childContext);
-            return new LayoutResult(drawables, LayoutStatus.NeedsNewPage);
+            return LayoutResult.NeedsNewPage(drawables);
         }
 
         // Reset index for repeating layouts.
         _currentIndex = 0;
 
-        // Add and border drawables.
-        // Background needs to come before text.
-        drawables.Insert(0, new BackgroundDrawable(Style.GetBackgroundRect(childContext.Allocated), Style.BackgroundToPaint()));
-        drawables.Add(new BorderDrawable(Style.GetBorderRect(childContext.Allocated), Style.Border));
+        drawables.Insert(0, new DebugDrawable(context.Allocated, Style));
+        drawables.Insert(0, new BackgroundDrawable(context.Allocated, Style.BackgroundToPaint()));
+        // drawables.Add(new BorderDrawable(context.Allocated, Style.Border));
 
-        // Add margin and padding debug drawables.
-        drawables.Add(new DebugDrawable(Style.GetMarginDebugRect(childContext.Allocated), DebugDrawable.MarginColor));
-        drawables.Add(new DebugDrawable(Style.GetBackgroundRect(childContext.Allocated), DebugDrawable.PaddingColor));
+        return LayoutResult.FullyDrawn(drawables);
+    }
 
-        context.CommitChildContext(childContext);
-        return new LayoutResult(drawables, LayoutStatus.IsFullyDrawn);
+    public ILayoutContext GetContext(ILayoutContext parentContext)
+    {
+        return parentContext.GetVerticalChildContext();
+    }
+
+    public ILayoutContext GetContext(ILayoutContext parentContext, OuterRect intersectingRect)
+    {
+        return parentContext.GetVerticalChildContext(intersectingRect);
     }
 }

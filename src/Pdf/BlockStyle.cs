@@ -1,5 +1,7 @@
 namespace InvoiceKit.Pdf;
 
+using Drawables;
+using Geometry;
 using SkiaSharp;
 
 public readonly record struct BlockStyle()
@@ -45,7 +47,7 @@ public readonly record struct BlockStyle()
     public Padding Padding { get; init; } = new ();
 
     /// <summary>
-    /// Converts the foreground to a <see cref="SKPaint"/> for drawing on the canvas.
+    /// Converts the foreground color to a <see cref="SKPaint"/> for drawing on the canvas.
     /// </summary>
     public SKPaint ForegroundToPaint()
     {
@@ -102,59 +104,29 @@ public readonly record struct BlockStyle()
     }
 
     /// <summary>
-    /// Returns the total size the styling would take.
-    /// </summary>
-    /// <remarks>Used for allocating space in a context.</remarks>
-    public SKSize GetStyleSize()
-    {
-        var width = Padding.Left + Padding.Right + Margin.Left + Margin.Right + Border.Left.Width + Border.Right.Width;
-        var height = Padding.Top + Padding.Bottom + Margin.Top + Margin.Bottom + Border.Top.Width + Border.Bottom.Width;
-        return new SKSize(width, height);
-    }
-
-    /// <summary>
-    /// Returns the available size after taking out the styling size.
-    /// </summary>
-    /// <param name="available">SKSize of the available space</param>
-    public SKSize GetSizeAfterStyle(SKSize available)
-    {
-        var styleSize = GetStyleSize();
-        return new SKSize(available.Width - styleSize.Width, available.Height - styleSize.Height);
-    }
-
-    /// <summary>
     /// Creates a drawable area after removing styling sizes.
     /// </summary>
     /// <param name="available">Available drawing size.</param>
-    public SKRect GetContentRect(SKRect available)
+    public ContentRect GetContentRect(OuterRect available)
     {
-        return Padding.GetContentRect(Border.GetContentRect(Margin.GetContentRect(available)));
+        return Padding.GetContentRect(Border.GetPaddingRect(Margin.GetBorderRect(available)));
     }
 
     /// <summary>
     /// Creates a drawable area for the background by expanding from the contentRect.
     /// </summary>
     /// <param name="contentRect">The SKRect of the element that was allocated.</param>
-    public SKRect GetBackgroundRect(SKRect contentRect)
+    public PaddingRect GetBackgroundRect(ContentRect contentRect)
     {
-        return Padding.GetDrawableRect(contentRect);
+        return Padding.GetPaddingRect(contentRect);
     }
 
     /// <summary>
     /// Creates a drawable rect for the border by expanding from the contentRect.
     /// </summary>
     /// <param name="contentRect">The SKRect of the element that was allocated.</param>
-    public SKRect GetBorderRect(SKRect contentRect)
+    public BorderRect GetBorderRect(ContentRect contentRect)
     {
-        return Border.GetDrawableRect(Padding.GetDrawableRect(contentRect));
-    }
-
-    /// <summary>
-    /// Creates a rect to outline where the margin starts in debug mode.
-    /// </summary>
-    /// <param name="contentRect">The allocated element rect.</param>
-    public SKRect GetMarginDebugRect(SKRect contentRect)
-    {
-        return Margin.GetDrawableRect(Border.GetDrawableRect(Padding.GetDrawableRect(contentRect)));
+        return Border.GetBorderRect(Padding.GetPaddingRect(contentRect));
     }
 }

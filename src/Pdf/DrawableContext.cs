@@ -1,6 +1,5 @@
 namespace InvoiceKit.Pdf;
 
-using Drawables;
 using SkiaSharp;
 
 internal class DrawableContext : IDrawableContext
@@ -21,7 +20,7 @@ internal class DrawableContext : IDrawableContext
                 new SKPaint
                 {
                     Style = SKPaintStyle.Stroke,
-                    Color = DebugDrawable.DrawableAreaColor,
+                    Color = SKColors.Black,
                     StrokeWidth = 1f,
                 });
         }

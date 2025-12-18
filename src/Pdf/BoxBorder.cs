@@ -1,5 +1,6 @@
 namespace InvoiceKit.Pdf;
 
+using Geometry;
 using SkiaSharp;
 
 public readonly record struct BoxBorder(BorderStyle Top, BorderStyle Bottom, BorderStyle Left, BorderStyle Right)
@@ -12,17 +13,24 @@ public readonly record struct BoxBorder(BorderStyle Top, BorderStyle Bottom, Bor
         Right = style,
     };
 
+    public SKSize ToSize() => new (Left.Width + Right.Width, Top.Width + Bottom.Width);
+
+    public BorderSize ToSize(PaddingSize paddingSize)
+    {
+        return new BorderSize(paddingSize, ToSize());
+    }
+
     /// <summary>
     /// Adjusts available space by removing the border size from each side.
     /// </summary>
     /// <param name="available">The available space in the context.</param>
-    public SKRect GetContentRect(SKRect available)
+    public PaddingRect GetPaddingRect(BorderRect available)
     {
-        return new SKRect(
-            available.Left + Left.Width,
-            available.Top + Top.Width,
-            available.Right - Right.Width,
-            available.Bottom - Bottom.Width);
+        return new PaddingRect(
+            available.ToRect().Left + Left.Width,
+            available.ToRect().Top + Top.Width,
+            available.ToRect().Right - Right.Width,
+            available.ToRect().Bottom - Bottom.Width);
     }
 
     /// <summary>
@@ -30,41 +38,12 @@ public readonly record struct BoxBorder(BorderStyle Top, BorderStyle Bottom, Bor
     /// </summary>
     /// <param name="content">SKRect of the drawable content.</param>
     /// <returns>SKRect for the border</returns>
-    public SKRect GetDrawableRect(SKRect content)
+    public BorderRect GetBorderRect(PaddingRect content)
     {
-        return new SKRect(
-            content.Left - Left.Width,
-            content.Top - Top.Width,
-            content.Right + Right.Width,
-            content.Bottom + Bottom.Width);
-    }
-
-
-    public (SKPoint, SKPoint) GetTopPoints(SKRect rect)
-    {
-        return (
-            new SKPoint(rect.Left + (Top.Width / 2), rect.Top),
-            new SKPoint(rect.Right - (Top.Width / 2), rect.Top));
-    }
-
-    public (SKPoint, SKPoint) GetBottomPoints(SKRect rect)
-    {
-        return (
-            new SKPoint(rect.Left + (Bottom.Width / 2), rect.Bottom),
-            new SKPoint(rect.Right - (Bottom.Width / 2), rect.Bottom));
-    }
-
-    public (SKPoint, SKPoint) GetLeftPoints(SKRect rect)
-    {
-        return (
-            new SKPoint(rect.Left + Left.Width, rect.Top + (Left.Width / 2)),
-            new SKPoint(rect.Left + Left.Width, rect.Bottom - (Left.Width / 2)));
-    }
-
-    public (SKPoint, SKPoint) GetRightPoints(SKRect rect)
-    {
-        return (
-            new SKPoint(rect.Right - Right.Width, rect.Top + (Right.Width / 2)),
-            new SKPoint(rect.Right - Right.Width, rect.Bottom - (Right.Width / 2)));
+        return new BorderRect(
+            content.ToRect().Left - Left.Width,
+            content.ToRect().Top - Top.Width,
+            content.ToRect().Right + Right.Width,
+            content.ToRect().Bottom + Bottom.Width);
     }
 }
