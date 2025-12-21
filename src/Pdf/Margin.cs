@@ -33,7 +33,7 @@ public readonly record struct Margin
 
     public OuterSize ToSize(BorderSize borderSize)
     {
-        var size = new SKSize(Top + Bottom, Left + Right);
+        var size = new SKSize(Left + Right, Top + Bottom);
         return new OuterSize(borderSize, size);
     }
 

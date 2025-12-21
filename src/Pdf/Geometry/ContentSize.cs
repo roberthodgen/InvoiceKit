@@ -14,6 +14,10 @@ public readonly record struct ContentSize
 
     private SKSize Value { get; }
 
+    public float Width => Value.Width;
+
+    public float Height => Value.Height;
+
     public ContentSize(float width, float height)
         : this(new SKSize(width, height))
     {

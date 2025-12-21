@@ -175,32 +175,58 @@ public class DocumentTests(ITestOutputHelper testOutputHelper)
         using var stream = File.OpenWrite(fileName);
         using var builder = PdfDocument.UsLetter;
         var pdfBytes = builder
-            .DisplayLayoutGuidelines()
-            .WithVStack(vStack => vStack
+            // .DisplayLayoutGuidelines()
+            .WithVStack(root => root
                 .AddHStack(hStack => hStack
-                    .AddText("Invoice #123", style => style with { FontSize = 24f, })
+                    .AddText(
+                        "Invoice #123",
+                        style => style with
+                        {
+                            FontSize = 24f,
+                            FontPath = "Open Sans/SemiBold",
+                        })
                     .AddSpacing()
-                    .AddText("September 29, 2025"))
+                    .AddText(
+                        "September 29, 2025",
+                        style => style with
+                        {
+                            Margin = new Margin
+                            {
+                                Top = 10f,
+                            },
+                        }))
                 .AddHorizontalRule()
-                .AddSpacing(20f)
                 .AddHStack(column => column
-                    .AddText("""
-                             Customer LLC
-                             321 Curvy Rd.
-                             customer@mail.com
-                             (800) 555 - 4444
-                             """)
+                    .AddVStack(vStack => vStack.AddText(
+                            "Customer LLC",
+                            style => style with { FontPath = "Open Sans/SemiBold", })
+                        .AddText(
+                            """
+                            321 Curvy Rd.
+                            customer@mail.com
+                            (800) 555 - 0191
+                            """))
                     .AddVStack(stack => stack
-                        .AddText("Company LLC")
+                        .AddText("Company LLC", style => style with { FontPath = "Open Sans/SemiBold", })
                         .AddText("121 Bumpy Street")
                         .AddText("company@mail.com")
-                        .AddText("(800) 444 - 5555")))
-                .AddSpacing(20f)
-                .AddText("IT Services")
+                        .AddText("(800) 555 - 0190")))
                 .AddText(
-                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut euismod gravida ligula, ac interdum sapien viverra eget. Fusce pellentesque enim tristique interdum aliquet. Nulla quam ex, elementum at lorem ut, pellentesque luctus purus. Curabitur feugiat id tortor ut rutrum. Integer id velit suscipit, maximus nisi ac, sollicitudin odio. Maecenas imperdiet lacus velit, id aliquet sapien consectetur faucibus. Nunc lobortis gravida dui, cursus condimentum ex gravida id. Cras at erat quis mi tempor tempus. Nullam consequat velit non interdum vestibulum. Nulla quis magna ac augue molestie luctus sit amet at dolor. Integer aliquam quam quis lacinia scelerisque. Nunc ante velit, tempor quis luctus id, volutpat non enim. Suspendisse rhoncus imperdiet diam, at semper tellus congue at. In sit amet gravida est, nec viverra erat. Phasellus volutpat blandit ipsum, in condimentum nunc congue ut. Sed lacinia finibus elit eget molestie.")
-                .AddSpacing(20f)
-                .AddText("Add a table here", style => style with { FontSize = 18f, }))
+                    "IT Services",
+                    style => style with
+                    {
+                        FontSize = 18f,
+                        FontPath = "Open Sans/SemiBold",
+                        Margin = style.Margin with
+                        {
+                            Top = 10f,
+                            Bottom = 10f,
+                        },
+                    })
+                .AddText(
+                    """
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut euismod gravida ligula, ac interdum sapien viverra eget. Fusce pellentesque enim tristique interdum aliquet. Nulla quam ex, elementum at lorem ut, pellentesque luctus purus. Curabitur feugiat id tortor ut rutrum. Integer id velit suscipit, maximus nisi ac, sollicitudin odio. Maecenas imperdiet lacus velit, id aliquet sapien consectetur faucibus. Nunc lobortis gravida dui, cursus condimentum ex gravida id. Cras at erat quis mi tempor tempus. Nullam consequat velit non interdum vestibulum. Nulla quis magna ac augue molestie luctus sit amet at dolor. Integer aliquam quam quis lacinia scelerisque. Nunc ante velit, tempor quis luctus id, volutpat non enim. Suspendisse rhoncus imperdiet diam, at semper tellus congue at. In sit amet gravida est, nec viverra erat. Phasellus volutpat blandit ipsum, in condimentum nunc congue ut. Sed lacinia finibus elit eget molestie.
+                    """))
             .Build();
 
         stream.Write(pdfBytes);
