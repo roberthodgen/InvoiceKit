@@ -7,12 +7,9 @@ internal class HorizontalRuleLayout(BlockStyle style) : ILayout
 {
     public LayoutResult Layout(ILayoutContext context)
     {
-        var width = context.Available.ToContentRect(style).ToSize().Width;
-        var contentSize = new ContentSize(width, 0);
-        var paddingSize = style.Padding.ToSize(contentSize);
-        var borderSize = style.Border.ToSize(paddingSize);
-        var outerSize = style.Margin.ToSize(borderSize);
-        if (context.TryAllocate(outerSize, out var rect))
+        var contentWidth = context.Available.ToContentRect(style).ToSize().Width;
+        var contentSize = new ContentSize(contentWidth, 0); // 0 height
+        if (context.TryAllocate(contentSize.ToOuterSize(style), out var rect))
         {
             return LayoutResult.FullyDrawn([new BorderDrawable(rect, style),]);
         }

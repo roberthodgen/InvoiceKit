@@ -57,9 +57,4 @@ public readonly record struct Padding
     }
 
     public SKSize ToSize() => new (Left + Right, Top + Bottom);
-
-    public PaddingSize ToSize(ContentSize content)
-    {
-        return new PaddingSize(content, ToSize());
-    }
 }

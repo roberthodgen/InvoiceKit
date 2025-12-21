@@ -5,7 +5,7 @@ using SkiaSharp;
 /// <summary>
 /// The outermost size after having margin, border, and padding applied to the content size.
 /// </summary>
-public readonly record struct OuterSize
+public readonly record struct OuterSize : ISize
 {
     private SKSize Value { get; }
 
@@ -30,9 +30,24 @@ public readonly record struct OuterSize
 
     public SKSize ToSize() => Value;
 
+    public ContentSize ToContentSize(BlockStyle style)
+    {
+        return ToPaddingSize(style).ToContentSize(style);
+    }
+
+    public PaddingSize ToPaddingSize(BlockStyle style)
+    {
+        return ToBorderSize(style).ToPaddingSize(style);
+    }
+
     public BorderSize ToBorderSize(BlockStyle style)
     {
-        return new (ToSize() - style.Margin.ToSize());
+        return new BorderSize(Value - style.Margin.ToSize());
+    }
+
+    public OuterSize ToOuterSize(BlockStyle style)
+    {
+        return this;
     }
 
     public override string ToString()

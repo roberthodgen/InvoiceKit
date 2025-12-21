@@ -8,7 +8,7 @@ using SkiaSharp;
 /// <remarks>
 /// The content area is inset within the padding, border, and margin.
 /// </remarks>
-public readonly record struct ContentSize
+public readonly record struct ContentSize : ISize
 {
     public static ContentSize Empty => new (SKSize.Empty);
 
@@ -29,6 +29,26 @@ public readonly record struct ContentSize
     }
 
     public SKSize ToSize() => Value;
+
+    public ContentSize ToContentSize(BlockStyle style)
+    {
+        return this;
+    }
+
+    public PaddingSize ToPaddingSize(BlockStyle style)
+    {
+        return new PaddingSize(Value + style.Padding.ToSize());
+    }
+
+    public BorderSize ToBorderSize(BlockStyle style)
+    {
+        return ToPaddingSize(style).ToBorderSize(style);
+    }
+
+    public OuterSize ToOuterSize(BlockStyle style)
+    {
+        return ToBorderSize(style).ToOuterSize(style);
+    }
 
     public override string ToString()
     {
