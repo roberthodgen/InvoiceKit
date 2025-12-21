@@ -46,4 +46,11 @@ public readonly record struct OuterRect
     {
         return Value.ToString();
     }
+
+    public ContentRect ToContentRect(BlockStyle style)
+    {
+        var border = style.Margin.GetBorderRect(this);
+        var padding = style.Border.GetPaddingRect(border);
+        return style.Padding.GetContentRect(padding);
+    }
 }

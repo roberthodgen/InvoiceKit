@@ -15,11 +15,6 @@ public readonly record struct BoxBorder(BorderStyle Top, BorderStyle Bottom, Bor
 
     public SKSize ToSize() => new (Left.Width + Right.Width, Top.Width + Bottom.Width);
 
-    public BorderSize ToSize(PaddingSize paddingSize)
-    {
-        return new BorderSize(paddingSize, ToSize());
-    }
-
     /// <summary>
     /// Adjusts available space by removing the border size from each side.
     /// </summary>

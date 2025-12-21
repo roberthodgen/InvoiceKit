@@ -51,10 +51,7 @@ internal class ImageLayout : ILayout
     public LayoutResult Layout(ILayoutContext context)
     {
         var contentSize = Measure();
-        var paddingSize = Style.Padding.ToSize(contentSize);
-        var borderSize = Style.Border.ToSize(paddingSize);
-        var marginSize = Style.Margin.ToSize(borderSize);
-        if (context.TryAllocate(marginSize, out var outerRect))
+        if (context.TryAllocate(contentSize.ToOuterSize(Style), out var outerRect))
         {
             if (Svg is not null)
             {

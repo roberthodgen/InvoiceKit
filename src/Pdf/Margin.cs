@@ -31,12 +31,6 @@ public readonly record struct Margin
 
     public SKSize ToSize() => new (Left + Right, Top + Bottom);
 
-    public OuterSize ToSize(BorderSize borderSize)
-    {
-        var size = new SKSize(Top + Bottom, Left + Right);
-        return new OuterSize(borderSize, size);
-    }
-
     /// <summary>
     /// Adjusts available space by removing the margin size from each side.
     /// </summary>
@@ -48,18 +42,5 @@ public readonly record struct Margin
             outer.ToRect().Top + Top,
             outer.ToRect().Right - Right,
             outer.ToRect().Bottom - Bottom);
-    }
-
-    /// <summary>
-    /// Adjusts a BorderRect back into an OuterRect
-    /// </summary>
-    /// <param name="border">The BorderRect within the OuterRect.</param>
-    public OuterRect GetMarginRect(BorderRect border)
-    {
-        return new OuterRect(
-            border.ToRect().Left - Left,
-            border.ToRect().Top - Top,
-            border.ToRect().Right + Right,
-            border.ToRect().Bottom + Bottom);
     }
 }

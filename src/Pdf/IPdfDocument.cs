@@ -5,7 +5,7 @@ public interface IPdfDocument : IDisposable
     /// <summary>
     /// Completes the build and returns a byte array for use in a file stream.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>A byte array containing the PDF document.</returns>
     byte[] Build();
 
     /// <summary>
