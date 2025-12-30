@@ -1,6 +1,7 @@
 namespace InvoiceKit.Tests.Pdf.Layouts;
 
 using InvoiceKit.Pdf;
+using SkiaSharp;
 using Xunit.Abstractions;
 
 public class VStackTests(ITestOutputHelper testOutputHelper)
@@ -94,6 +95,87 @@ public class VStackTests(ITestOutputHelper testOutputHelper)
                     """
                 )
             )
+            .Build();
+
+        stream.Write(pdfBytes);
+        testOutputHelper.WriteLine($"PDF created: file://{Path.GetFullPath(fileName)}");
+        File.Exists(fileName).ShouldBeTrue();
+    }
+
+    [Fact]
+    public void SimpleHeader_Test()
+    {
+        const string fileName = "vstack-simple-header.pdf";
+        File.Delete(fileName);
+
+        using var stream = File.OpenWrite(fileName);
+        using var builder = PdfDocument.UsLetter;
+        var pdfBytes = builder
+            // .DisplayLayoutGuidelines()
+            .WithVStack(main => main
+                .WithHeader(header => header.AddText(
+                    "HEADER",
+                    style => style with { FontPath = "Open Sans/Bold", ForegroundColor = SKColors.Gray, }))
+                .AddText(
+                    fileName,
+                    style => style with { FontPath = "Open Sans/Bold", FontSize = 24f, })
+                .AddHorizontalRule()
+                .AddText("Lorem ipsum."))
+            .Build();
+
+        stream.Write(pdfBytes);
+        testOutputHelper.WriteLine($"PDF created: file://{Path.GetFullPath(fileName)}");
+        File.Exists(fileName).ShouldBeTrue();
+    }
+
+    [Fact]
+    public void SimpleFooter_Test()
+    {
+        const string fileName = "vstack-simple-footer.pdf";
+        File.Delete(fileName);
+
+        using var stream = File.OpenWrite(fileName);
+        using var builder = PdfDocument.UsLetter;
+        var pdfBytes = builder
+            // .DisplayLayoutGuidelines()
+            .WithVStack(main => main
+                .WithFooter(footer => footer.AddText(
+                    "FOOTER",
+                    style => style with { FontPath = "Open Sans/Bold", ForegroundColor = SKColors.Gray, }))
+                .AddText(
+                    fileName,
+                    style => style with { FontPath = "Open Sans/Bold", FontSize = 24f, })
+                .AddHorizontalRule()
+                .AddText("Lorem ipsum."))
+            .Build();
+
+        stream.Write(pdfBytes);
+        testOutputHelper.WriteLine($"PDF created: file://{Path.GetFullPath(fileName)}");
+        File.Exists(fileName).ShouldBeTrue();
+    }
+
+    [Fact]
+    public void HeaderAndFooter_Test()
+    {
+        const string fileName = "vstack-header-and-footer.pdf";
+        File.Delete(fileName);
+
+        using var stream = File.OpenWrite(fileName);
+        using var builder = PdfDocument.UsLetter;
+        var pdfBytes = builder
+            // .DisplayLayoutGuidelines()
+            .WithVStack(main => main
+                .WithHeader(header => header.AddText(
+                    "HEADER",
+                    style => style with { FontPath = "Open Sans/Bold", ForegroundColor = SKColors.Gray, }))
+                .WithFooter(footer => footer.AddText(
+                    "FOOTER",
+                    style => style with { FontPath = "Open Sans/Bold", ForegroundColor = SKColors.Gray, }))
+                .AddText(
+                    fileName,
+                    style => style with { FontPath = "Open Sans/Bold", FontSize = 24f, })
+                .AddHorizontalRule()
+                .AddText("Lorem ipsum."))
             .Build();
 
         stream.Write(pdfBytes);

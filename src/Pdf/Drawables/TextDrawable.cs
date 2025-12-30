@@ -9,9 +9,6 @@ internal class TextDrawable(string text, ContentRect rect, BlockStyle style) : I
 
     public void Draw(IDrawableContext context)
     {
-        // var border = style.Margin.GetBorderRect(rect);
-        // var padding = style.Border.GetPaddingRect(border);
-        // var content = style.Padding.GetContentRect(padding);
         var font = style.ToFont();
         context.Canvas.DrawText(
             text,
