@@ -22,6 +22,11 @@ public interface ILayoutContext
     public OuterRect Available { get; }
 
     /// <summary>
+    /// Indicates this layout may repeat across multiple pages.
+    /// </summary>
+    public bool Repeating { get; }
+
+    /// <summary>
     /// Determines if this layout can accomodate the size of a rect.
     /// </summary>
     /// <param name="size">The size to check.</param>
@@ -64,4 +69,17 @@ public interface ILayoutContext
     /// Creates a new horizontal child context from the remaining available space.
     /// </summary>
     ILayoutContext GetHorizontalChildContext();
+
+    /// <summary>
+    /// Creates a new repeating child context from the remaining available space.
+    /// </summary>
+    /// <returns></returns>
+    ILayoutContext GetRepeatingChildContext();
+
+    /// <summary>
+    /// Creates a new repeating child context from the remaining available space that intersects with the given rect.
+    /// </summary>
+    /// <param name="intersectingRect">A rect to limit the child context to.</param>
+    /// <returns></returns>
+    ILayoutContext GetRepeatingChildContext(OuterRect intersectingRect);
 }

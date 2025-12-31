@@ -27,12 +27,14 @@ public sealed class VStack : ContainerBase
     public override ILayout ToLayout()
     {
         var childrenLayouts = Children.Select(child => child.ToLayout()).ToList();
-        if (_headerOrFooter)
+        if (_header is not null)
         {
-            return new VStackRepeatingLayout(childrenLayouts);
+            var header = new RepeatingLayout(_header.ToLayout());
+            return new VStackLayout(
+                childrenLayouts.Select(ILayout (child) => new VStackLayout([header, child,])).ToList());
         }
 
-        return new VStackLayout(childrenLayouts, _header?.ToLayout(), _footer?.ToLayout());
+        return new VStackLayout(childrenLayouts);
     }
 
     public VStack WithHeader(Action<VStack> configure)
