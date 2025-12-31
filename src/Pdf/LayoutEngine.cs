@@ -28,11 +28,17 @@ internal class LayoutEngine(IViewBuilder root) : IDisposable
         var stack = new Stack<ChildLayout>();
         stack.Push(ChildLayout.CreateRoot(_root, rootContext));
         var page = new Page();
+        var repeatingLayouts = new HashSet<ILayout>();
 
         while (stack.Count > 0)
         {
             var layout = stack.Peek();
             if (_laidOut.Contains(layout.Layout))
+            {
+                continue;
+            }
+
+            if (layout.Context.Repeating && repeatingLayouts.Contains(layout.Layout))
             {
                 continue;
             }
@@ -55,6 +61,11 @@ internal class LayoutEngine(IViewBuilder root) : IDisposable
                         continue;
                     }
 
+                    if (child.Context.Repeating && repeatingLayouts.Contains(child.Layout))
+                    {
+                        continue;
+                    }
+
                     childrenNeedingLayout.Add(child);
                     stack.Push(child);
                 }
@@ -66,8 +77,14 @@ internal class LayoutEngine(IViewBuilder root) : IDisposable
             }
 
             layout.Context.CommitChildContext();
-            _laidOut.Add(layout.Layout);
             stack.Pop();
+            if (layout.Context.Repeating)
+            {
+                repeatingLayouts.Add(layout.Layout);
+                continue;
+            }
+
+            _laidOut.Add(layout.Layout);
         }
 
         return new PageLayoutResult(page, LayoutStatus.IsFullyDrawn);

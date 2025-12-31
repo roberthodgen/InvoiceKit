@@ -121,7 +121,31 @@ internal class TextLayout : ILayout
         {
             if (context.TryAllocate(MeasureFullLineSize(context.Available.ToSize()), out var rect))
             {
-                drawables.Add(new TextDrawable(_wrappedLines[_currentIndex], rect, Style));
+                var nonVerticalAdjustedContent = Style.GetContentRect(rect);
+                var adjustedContent = new ContentRect(
+                    nonVerticalAdjustedContent.Left,
+                    nonVerticalAdjustedContent.Top - Style.Margin.Top,
+                    nonVerticalAdjustedContent.Right,
+                    nonVerticalAdjustedContent.Bottom + Style.Margin.Bottom);
+                if (_currentIndex == 0)
+                {
+                    adjustedContent = new ContentRect(
+                        adjustedContent.Left,
+                        adjustedContent.Top + Style.Margin.Top,
+                        adjustedContent.Right,
+                        adjustedContent.Bottom);
+                }
+
+                if (_currentIndex == _wrappedLines.Count - 1)
+                {
+                    adjustedContent = new ContentRect(
+                        adjustedContent.Left,
+                        adjustedContent.Top,
+                        adjustedContent.Right,
+                        adjustedContent.Bottom - Style.Margin.Bottom);
+                }
+
+                drawables.Add(new TextDrawable(_wrappedLines[_currentIndex], adjustedContent, Style));
                 _currentIndex++;
                 continue; // Skip to the next line.
             }
