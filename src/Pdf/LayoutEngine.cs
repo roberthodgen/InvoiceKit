@@ -38,7 +38,7 @@ internal class LayoutEngine(IViewBuilder root) : IDisposable
                 continue;
             }
 
-            if (layout.Context.Repeating && repeatingLayouts.Contains(layout.Layout))
+            if (repeatingLayouts.Contains(layout.Layout))
             {
                 continue;
             }

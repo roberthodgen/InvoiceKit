@@ -31,7 +31,9 @@ public sealed class VStack : ContainerBase
         {
             var header = new RepeatingLayout(_header.ToLayout());
             return new VStackLayout(
-                childrenLayouts.Select(ILayout (child) => new VStackLayout([header, child,])).ToList());
+                childrenLayouts.Select(ILayout (child) =>
+                        new VStackLayout([header, child,]))
+                    .ToList());
         }
 
         return new VStackLayout(childrenLayouts);
