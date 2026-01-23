@@ -23,10 +23,20 @@ public abstract class LayoutContextBase : ILayoutContext
             OriginalSpace.Right,
             OriginalSpace.Bottom));
 
+    public bool Repeating { get; }
+
     protected LayoutContextBase(OuterRect available, LayoutContextBase? parent)
     {
         OriginalSpace = available;
         Parent = parent;
+        Repeating = parent?.Repeating ?? false;
+    }
+
+    protected LayoutContextBase(OuterRect available, LayoutContextBase parent, bool repeating)
+    {
+        OriginalSpace = available;
+        Parent = parent;
+        Repeating = parent.Repeating || repeating;
     }
 
     public bool TryAllocate(OuterSize outer)
@@ -68,5 +78,15 @@ public abstract class LayoutContextBase : ILayoutContext
     public ILayoutContext GetHorizontalChildContext()
     {
         return new HorizonalLayoutContext(Available, this);
+    }
+
+    public ILayoutContext GetRepeatingChildContext()
+    {
+        return new RepeatingLayoutContext(Available, this);
+    }
+
+    public ILayoutContext GetRepeatingChildContext(OuterRect intersectingRect)
+    {
+        return new RepeatingLayoutContext(OuterRect.Intersect(Available, intersectingRect), this);
     }
 }

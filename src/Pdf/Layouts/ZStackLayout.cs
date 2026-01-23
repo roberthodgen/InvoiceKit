@@ -3,7 +3,7 @@ namespace InvoiceKit.Pdf.Layouts;
 using Geometry;
 using SkiaSharp;
 
-internal class ZStack(List<ILayout> children) : ILayout
+internal class ZStackLayout(List<ILayout> children) : ILayout
 {
     public LayoutResult Layout(ILayoutContext context)
     {

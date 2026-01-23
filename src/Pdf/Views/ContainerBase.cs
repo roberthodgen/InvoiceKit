@@ -15,14 +15,32 @@ public abstract class ContainerBase(BlockStyle defaultStyle) : IContainer
 
     public IContainer AddText(string text)
     {
-        var child = new TextViewBuilder(text, ChildStyle);
+        var child = new TextViewBuilder(
+            text,
+            ChildStyle with
+            {
+                Margin = new Margin
+                {
+                    Top = 5f,
+                    Bottom = 5f,
+                }
+            });
         _children.Add(child);
         return this;
     }
 
     public IContainer AddText(string text, Func<BlockStyle, BlockStyle> configureStyle)
     {
-        var child = new TextViewBuilder(text, configureStyle(ChildStyle));
+        var style = configureStyle(
+            ChildStyle with
+            {
+                Margin = new Margin
+                {
+                    Top = 5f,
+                    Bottom = 5f,
+                }
+            });
+        var child = new TextViewBuilder(text, style);
         _children.Add(child);
         return this;
     }

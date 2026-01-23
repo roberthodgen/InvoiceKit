@@ -8,6 +8,11 @@ internal class PageBreakLayout : ILayout
 
     public LayoutResult Layout(ILayoutContext context)
     {
+        if (context.Repeating)
+        {
+            return LayoutResult.FullyDrawn([]); // can't break a repeating layout
+        }
+
         if (_isDrawn)
         {
             return LayoutResult.FullyDrawn([]);
