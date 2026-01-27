@@ -11,7 +11,7 @@ public sealed class TableViewBuilder : IViewBuilder
     /// <summary>
     /// Specifies how column sizes will be computed.
     /// </summary>
-    private ColumnSizing ColumnSizing { get; set; } = ColumnSizing.Equal;
+    private ColumnWidthType ColumnWidthType { get; set; } = ColumnWidthType.Equal;
 
     private List<ColumnWidthPercent> ColumnWidthPercentages { get; set; } = [];
 
@@ -48,19 +48,19 @@ public sealed class TableViewBuilder : IViewBuilder
 
     public TableViewBuilder UseEquallySpaceColumns()
     {
-        ColumnSizing = ColumnSizing.Equal;
+        ColumnWidthType = ColumnWidthType.Equal;
         return this;
     }
 
     public TableViewBuilder UseFixedColumnWidths(List<ColumnWidthPercent> columnWidths)
     {
-        ColumnSizing = ColumnSizing.FixedPercentage;
+        ColumnWidthType = ColumnWidthType.Percentage;
         ColumnWidthPercentages = columnWidths;
         return this;
     }
 
     /// <summary>
-    /// Adds row separators between rows. 
+    /// Adds row separators between rows.
     /// </summary>
     public TableViewBuilder AddRowSeparators()
     {
@@ -69,12 +69,12 @@ public sealed class TableViewBuilder : IViewBuilder
     }
 
     public float GetColumnWidth(float available, int numberOfColumns, int columnIndex) =>
-        ColumnSizing switch
+        ColumnWidthType switch
         {
-            ColumnSizing.Equal => available / numberOfColumns,
-            ColumnSizing.FixedPercentage => available * ColumnWidthPercentages[columnIndex].Percent,
-            ColumnSizing.FixedPoints => throw new NotImplementedException("TODO"),
-            ColumnSizing.Auto => throw new NotImplementedException("TODO"),
+            ColumnWidthType.Equal => available / numberOfColumns,
+            ColumnWidthType.Percentage => available * ColumnWidthPercentages[columnIndex].Percent,
+            ColumnWidthType.Points => throw new NotImplementedException("TODO"),
+            ColumnWidthType.Auto => throw new NotImplementedException("TODO"),
             _ => throw new NotImplementedException(),
         };
 

@@ -7,6 +7,8 @@ public abstract class ContainerBase(BlockStyle defaultStyle) : IContainer
 {
     private readonly List<IViewBuilder> _children = [];
 
+    private List<ColumnWidth>? _columnsWidths;
+
     public BlockStyle DefaultStyle { get; private set; } = defaultStyle;
 
     protected IReadOnlyCollection<IViewBuilder> Children => _children.AsReadOnly();
@@ -139,6 +141,14 @@ public abstract class ContainerBase(BlockStyle defaultStyle) : IContainer
     public IContainer WithDefaultStyle(Func<BlockStyle, BlockStyle> configureStyle)
     {
         DefaultStyle = configureStyle(DefaultStyle);
+        return this;
+    }
+
+    public IContainer WithColumnWidths(Action<ColumnBuilder> configure)
+    {
+        var columnWidths = new ColumnBuilder();
+        configure(columnWidths);
+        _columnsWidths = columnWidths.Build();
         return this;
     }
 
