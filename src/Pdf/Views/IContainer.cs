@@ -81,6 +81,4 @@ public interface IContainer : IViewBuilder
     /// Margin, padding, and border will be reset for all children.
     /// </remarks>
     IContainer WithDefaultStyle(Func<BlockStyle, BlockStyle> configureStyle);
-
-    IContainer WithColumnWidths(Action<ColumnBuilder> configure);
 }

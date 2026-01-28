@@ -5,7 +5,7 @@ using Layouts;
 /// <summary>
 /// Renders content vertically. Each row is rendered on a new line.
 /// </summary>
-public sealed class VStack : ContainerBase
+public sealed class VStack : ContainerBase, ITable
 {
     private VStack? _header;
 
@@ -13,13 +13,13 @@ public sealed class VStack : ContainerBase
 
     private readonly bool _headerOrFooter;
 
-    internal VStack(BlockStyle defaultStyle)
-        : base(defaultStyle)
+    internal VStack(BlockStyle defaultStyle, List<ColumnWidth>? columnWidths = null)
+        : base(defaultStyle,  columnWidths)
     {
     }
 
-    private VStack(BlockStyle defaultStyle, bool headerOrFooter)
-        : base(defaultStyle)
+    private VStack(BlockStyle defaultStyle, bool headerOrFooter,  List<ColumnWidth>? columnWidths = null)
+        : base(defaultStyle, columnWidths)
     {
         _headerOrFooter = headerOrFooter;
     }
@@ -39,50 +39,56 @@ public sealed class VStack : ContainerBase
         return new VStackLayout(childrenLayouts);
     }
 
-    public VStack WithHeader(Action<VStack> configure)
+    public ITable WithColumnWidths(Action<ColumnBuilder> configureColumns)
+    {
+        // Todo: Implement
+        return this;
+    }
+
+    public ITable WithHeader(Action<VStack> configure)
     {
         if (_headerOrFooter)
         {
             throw new Exception("Cannot add a header to another header or footer.");
         }
 
-        _header = new VStack(DefaultStyle.CopyForChild(), true);
+        _header = new VStack(DefaultStyle.CopyForChild(), true, ColumnsWidths);
         configure(_header);
         return this;
     }
 
-    public VStack WithHeader(Action<VStack> configure, Func<BlockStyle, BlockStyle> configureStyle)
+    public ITable WithHeader(Action<VStack> configure, Func<BlockStyle, BlockStyle> configureStyle)
     {
         if (_headerOrFooter)
         {
             throw new Exception("Cannot add a header to another header or footer.");
         }
 
-        _header = new VStack(configureStyle(DefaultStyle.CopyForChild()), true);
+        _header = new VStack(configureStyle(DefaultStyle.CopyForChild()), true,  ColumnsWidths);
         configure(_header);
         return this;
     }
 
-    public VStack WithFooter(Action<VStack> configure)
+    public ITable WithFooter(Action<VStack> configure)
     {
         if (_headerOrFooter)
         {
             throw new Exception("Cannot add a footer to another header or footer.");
         }
 
-        _footer = new VStack(DefaultStyle.CopyForChild(), true);
+        _footer = new VStack(DefaultStyle.CopyForChild(), true,  ColumnsWidths);
         configure(_footer);
         return this;
     }
 
-    public VStack WithFooter(Action<VStack> configure, Func<BlockStyle, BlockStyle> configureStyle)
+    public ITable WithFooter(Action<VStack> configure, Func<BlockStyle, BlockStyle> configureStyle)
     {
         if (_headerOrFooter)
         {
             throw new Exception("Cannot add a a footer to another header or footer.");
         }
 
-        _footer = new VStack(configureStyle(DefaultStyle.CopyForChild()), true);
+        _footer = new VStack(configureStyle(DefaultStyle.CopyForChild()), true,   ColumnsWidths);
         configure(_footer);
         return this;
     }

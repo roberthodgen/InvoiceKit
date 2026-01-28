@@ -3,11 +3,11 @@ namespace InvoiceKit.Pdf.Views;
 using Containers.Tables;
 using SkiaSharp;
 
-public abstract class ContainerBase(BlockStyle defaultStyle) : IContainer
+public abstract class ContainerBase(BlockStyle defaultStyle, List<ColumnWidth>? columnWidths) : IContainer
 {
     private readonly List<IViewBuilder> _children = [];
 
-    private List<ColumnWidth>? _columnsWidths;
+    public List<ColumnWidth>? ColumnsWidths { get; private set; } = columnWidths;
 
     public BlockStyle DefaultStyle { get; private set; } = defaultStyle;
 
@@ -94,7 +94,7 @@ public abstract class ContainerBase(BlockStyle defaultStyle) : IContainer
 
     public IContainer AddHStack(Action<HStack> configure)
     {
-        var child = new HStack(ChildStyle);
+        var child = new HStack(ChildStyle, ColumnsWidths);
         configure(child);
         _children.Add(child);
         return this;
@@ -102,7 +102,7 @@ public abstract class ContainerBase(BlockStyle defaultStyle) : IContainer
 
     public IContainer AddVStack(Action<VStack> configure)
     {
-        var child = new VStack(ChildStyle);
+        var child = new VStack(ChildStyle,  ColumnsWidths);
         configure(child);
         _children.Add(child);
         return this;
@@ -144,11 +144,11 @@ public abstract class ContainerBase(BlockStyle defaultStyle) : IContainer
         return this;
     }
 
-    public IContainer WithColumnWidths(Action<ColumnBuilder> configure)
+    public IContainer WithColumnWidths(Action<ColumnBuilder> configureColumns)
     {
         var columnWidths = new ColumnBuilder();
-        configure(columnWidths);
-        _columnsWidths = columnWidths.Build();
+        configureColumns(columnWidths);
+        ColumnsWidths = columnWidths.Build();
         return this;
     }
 

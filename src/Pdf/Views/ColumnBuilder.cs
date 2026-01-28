@@ -11,13 +11,15 @@ public sealed class ColumnBuilder : IColumnBuilder
         return ColumnWidths;
     }
 
-    public void AddColumnPercent(float percent)
+    public IColumnBuilder AddColumnPercent(float percent)
     {
         ColumnWidths.Add(new ColumnWidth(ColumnWidthType.Percentage, percent));
+        return this;
     }
 
-    public void AddColumnPoints(float points)
+    public IColumnBuilder AddColumnPoints(float points)
     {
         ColumnWidths.Add(new ColumnWidth(ColumnWidthType.Points, points));
+        return this;
     }
 }
