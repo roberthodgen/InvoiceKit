@@ -41,7 +41,9 @@ public sealed class VStack : ContainerBase, ITable
 
     public ITable WithColumnWidths(Action<ColumnBuilder> configureColumns)
     {
-        // Todo: Implement
+        var columnWidths = new ColumnBuilder();
+        configureColumns(columnWidths);
+        ColumnsWidths = columnWidths.Build();
         return this;
     }
 

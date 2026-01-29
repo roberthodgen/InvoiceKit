@@ -19,9 +19,12 @@ public sealed class HStack : ContainerBase, IRow
         return new HStackLayout(childrenLayouts);
     }
 
+
     public IRow WithColumnWidths(Action<ColumnBuilder> configureColumns)
     {
-        //Todo: Implement
+        var columnWidths = new ColumnBuilder();
+        configureColumns(columnWidths);
+        ColumnsWidths = columnWidths.Build();
         return this;
     }
 }
