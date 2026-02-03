@@ -8,7 +8,7 @@ using Layouts;
 /// <remarks>If you need more than one element in a column, use a <see cref="VStack"/> inside of this.</remarks>
 public sealed class HStack : ContainerBase, IRow
 {
-    internal HStack(BlockStyle defaultStyle, List<ColumnWidth>? columnWidths = null)
+    internal HStack(BlockStyle defaultStyle, List<IColumnWidth>? columnWidths = null)
         : base(defaultStyle,  columnWidths)
     {
     }
@@ -22,9 +22,14 @@ public sealed class HStack : ContainerBase, IRow
 
     public IRow WithColumnWidths(Action<ColumnBuilder> configureColumns)
     {
+        if (ColumnWidths is not null)
+        {
+            throw new ApplicationException("Column widths were already set from a parent vStack.");
+        }
+
         var columnWidths = new ColumnBuilder();
         configureColumns(columnWidths);
-        ColumnsWidths = columnWidths.Build();
+        ColumnWidths = columnWidths.Build();
         return this;
     }
 }

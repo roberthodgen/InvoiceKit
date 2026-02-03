@@ -3,7 +3,7 @@ namespace InvoiceKit.Pdf.Layouts;
 using Geometry;
 using SkiaSharp;
 
-internal class HStackLayout(List<ILayout> columns) : ILayout
+internal class HStackLayout(List<ILayout> columns, List<IColumnWidth>? columnWidths = null) : ILayout
 {
     /// <summary>
     /// Horizontal stack layout that will split into columns based on the number of children.
@@ -39,7 +39,7 @@ internal class HStackLayout(List<ILayout> columns) : ILayout
     {
         var columnSize = GetColumnSize(context);
         var left = context.Available.Left + columnSize.Width * nthColumn;
-        return new (left, context.Available.Top, left + columnSize.Width, context.Available.Height);
+        return new OuterRect(left, context.Available.Top, left + columnSize.Width, context.Available.Height);
     }
 
     private SKSize GetColumnSize(ILayoutContext context)

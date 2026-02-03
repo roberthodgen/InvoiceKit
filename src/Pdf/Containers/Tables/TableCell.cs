@@ -11,7 +11,7 @@ public class TableCell : ContainerBase
     /// <summary>
     ///
     /// </summary>
-    internal TableCell(BlockStyle defaultStyle, List<ColumnWidth>? columnWidths = null)
+    internal TableCell(BlockStyle defaultStyle, List<IColumnWidth>? columnWidths = null)
         : base(defaultStyle, columnWidths)
     {
     }

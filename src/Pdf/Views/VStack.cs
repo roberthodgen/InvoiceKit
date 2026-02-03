@@ -13,12 +13,12 @@ public sealed class VStack : ContainerBase, ITable
 
     private readonly bool _headerOrFooter;
 
-    internal VStack(BlockStyle defaultStyle, List<ColumnWidth>? columnWidths = null)
+    internal VStack(BlockStyle defaultStyle, List<IColumnWidth>? columnWidths = null)
         : base(defaultStyle,  columnWidths)
     {
     }
 
-    private VStack(BlockStyle defaultStyle, bool headerOrFooter,  List<ColumnWidth>? columnWidths = null)
+    private VStack(BlockStyle defaultStyle, bool headerOrFooter,  List<IColumnWidth>? columnWidths = null)
         : base(defaultStyle, columnWidths)
     {
         _headerOrFooter = headerOrFooter;
@@ -43,7 +43,7 @@ public sealed class VStack : ContainerBase, ITable
     {
         var columnWidths = new ColumnBuilder();
         configureColumns(columnWidths);
-        ColumnsWidths = columnWidths.Build();
+        ColumnWidths = columnWidths.Build();
         return this;
     }
 
@@ -54,7 +54,7 @@ public sealed class VStack : ContainerBase, ITable
             throw new Exception("Cannot add a header to another header or footer.");
         }
 
-        _header = new VStack(DefaultStyle.CopyForChild(), true, ColumnsWidths);
+        _header = new VStack(DefaultStyle.CopyForChild(), true, ColumnWidths);
         configure(_header);
         return this;
     }
@@ -66,7 +66,7 @@ public sealed class VStack : ContainerBase, ITable
             throw new Exception("Cannot add a header to another header or footer.");
         }
 
-        _header = new VStack(configureStyle(DefaultStyle.CopyForChild()), true,  ColumnsWidths);
+        _header = new VStack(configureStyle(DefaultStyle.CopyForChild()), true,  ColumnWidths);
         configure(_header);
         return this;
     }
@@ -78,7 +78,7 @@ public sealed class VStack : ContainerBase, ITable
             throw new Exception("Cannot add a footer to another header or footer.");
         }
 
-        _footer = new VStack(DefaultStyle.CopyForChild(), true,  ColumnsWidths);
+        _footer = new VStack(DefaultStyle.CopyForChild(), true,  ColumnWidths);
         configure(_footer);
         return this;
     }
@@ -90,7 +90,7 @@ public sealed class VStack : ContainerBase, ITable
             throw new Exception("Cannot add a a footer to another header or footer.");
         }
 
-        _footer = new VStack(configureStyle(DefaultStyle.CopyForChild()), true,   ColumnsWidths);
+        _footer = new VStack(configureStyle(DefaultStyle.CopyForChild()), true,   ColumnWidths);
         configure(_footer);
         return this;
     }

@@ -68,15 +68,15 @@ public sealed class TableViewBuilder : IViewBuilder
         return this;
     }
 
-    public float GetColumnWidth(float available, int numberOfColumns, int columnIndex) =>
-        ColumnWidthType switch
-        {
-            ColumnWidthType.Equal => available / numberOfColumns,
-            ColumnWidthType.Percentage => available * ColumnWidthPercentages[columnIndex].Percent,
-            ColumnWidthType.Points => throw new NotImplementedException("TODO"),
-            ColumnWidthType.Auto => throw new NotImplementedException("TODO"),
-            _ => throw new NotImplementedException(),
-        };
+    // public float GetColumnWidth(float available, int numberOfColumns, int columnIndex) =>
+    //     ColumnWidthType switch
+    //     {
+    //         ColumnWidthType.Equal => available / numberOfColumns,
+    //         ColumnWidthType.Percentage => available * ColumnWidthPercentages[columnIndex].Percent,
+    //         ColumnWidthType.Points => throw new NotImplementedException("TODO"),
+    //         ColumnWidthType.Auto => throw new NotImplementedException("TODO"),
+    //         _ => throw new NotImplementedException(),
+    //     };
 
     public ILayout ToLayout()
     {

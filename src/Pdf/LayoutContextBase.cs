@@ -39,16 +39,25 @@ public abstract class LayoutContextBase : ILayoutContext
         Repeating = parent.Repeating || repeating;
     }
 
-    public bool TryAllocate(OuterSize outer)
+    public bool CanFit(OuterSize size)
     {
-        var size = outer.ToSize();
         if (size.Height > Available.Height || size.Width > Available.Width)
         {
             return false;
         }
-
-        AllocatedHeights.Add(size.Height);
         return true;
+    }
+
+    public bool TryAllocate(OuterSize outer)
+    {
+        // Todo: Unit test
+        if (CanFit(outer))
+        {
+            AllocatedHeights.Add(outer.Height);
+            return true;
+        }
+
+        return false;
     }
 
     public bool TryAllocate(OuterSize outer, out OuterRect rect)
@@ -70,12 +79,12 @@ public abstract class LayoutContextBase : ILayoutContext
         return new VerticalLayoutContext(Available, this);
     }
 
-    public ILayoutContext GetHorizontalChildContext(OuterRect intersectingRect)
+    public HorizonalLayoutContext GetHorizontalChildContext(OuterRect intersectingRect)
     {
         return new HorizonalLayoutContext(OuterRect.Intersect(Available, intersectingRect), this);
     }
 
-    public ILayoutContext GetHorizontalChildContext()
+    public HorizonalLayoutContext GetHorizontalChildContext()
     {
         return new HorizonalLayoutContext(Available, this);
     }

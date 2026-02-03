@@ -39,12 +39,6 @@ public class TableTests(ITestOutputHelper testOutputHelper)
                     style => style with { FontPath = "Open Sans/Bold", FontSize = 24f, })
                 .AddText("The table below contains 3 fixed-percentage width columns.")
                 .AddTable(table => table
-                    .UseFixedColumnWidths(
-                    [
-                        ColumnWidthPercent.FromPercent(75),
-                        ColumnWidthPercent.FromPercent(10),
-                        ColumnWidthPercent.FromPercent(15),
-                    ])
                     .AddHeader(header => header
                         .AddCell(cell => cell.AddText(("Description")))
                         .AddCell(cell => cell.AddText("Qty"))
@@ -62,12 +56,6 @@ public class TableTests(ITestOutputHelper testOutputHelper)
                     style => style with { FontPath = "Open Sans/Bold", FontSize = 24f, })
                 .AddText("All rows are the same height with row separators.")
                 .AddTable(table => table
-                    .UseFixedColumnWidths(
-                    [
-                        ColumnWidthPercent.FromPercent(50),
-                        ColumnWidthPercent.FromPercent(25),
-                        ColumnWidthPercent.FromPercent(25),
-                    ])
                     .AddRowSeparators()
                     .AddHeader(header => header
                         .AddCell(cell => cell.AddText(("Description")))

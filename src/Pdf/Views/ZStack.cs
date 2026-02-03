@@ -2,7 +2,7 @@ namespace InvoiceKit.Pdf.Views;
 
 public sealed class ZStack : ContainerBase
 {
-    internal ZStack(BlockStyle defaultStyle, List<ColumnWidth>? columnWidths)
+    internal ZStack(BlockStyle defaultStyle, List<IColumnWidth>? columnWidths)
         : base(defaultStyle,  columnWidths)
     {
     }

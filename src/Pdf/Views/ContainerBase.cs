@@ -3,11 +3,11 @@ namespace InvoiceKit.Pdf.Views;
 using Containers.Tables;
 using SkiaSharp;
 
-public abstract class ContainerBase(BlockStyle defaultStyle, List<ColumnWidth>? columnWidths) : IContainer
+public abstract class ContainerBase(BlockStyle defaultStyle, List<IColumnWidth>? columnWidths) : IContainer
 {
     private readonly List<IViewBuilder> _children = [];
 
-    protected List<ColumnWidth>? ColumnsWidths { get; set; } = columnWidths;
+    protected List<IColumnWidth>? ColumnWidths { get; set; } = columnWidths;
 
     public BlockStyle DefaultStyle { get; private set; } = defaultStyle;
 
@@ -94,7 +94,7 @@ public abstract class ContainerBase(BlockStyle defaultStyle, List<ColumnWidth>? 
 
     public IContainer AddHStack(Action<HStack> configure)
     {
-        var child = new HStack(ChildStyle, ColumnsWidths);
+        var child = new HStack(ChildStyle, ColumnWidths);
         configure(child);
         _children.Add(child);
         return this;
@@ -102,7 +102,7 @@ public abstract class ContainerBase(BlockStyle defaultStyle, List<ColumnWidth>? 
 
     public IContainer AddVStack(Action<VStack> configure)
     {
-        var child = new VStack(ChildStyle,  ColumnsWidths);
+        var child = new VStack(ChildStyle);
         configure(child);
         _children.Add(child);
         return this;

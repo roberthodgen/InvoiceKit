@@ -1,10 +1,8 @@
 namespace InvoiceKit.Pdf;
 
-using Containers.Tables;
+using Geometry;
 
 public interface IColumnWidth
 {
-    public ColumnWidthType Type { get; }
-
-    public float Width { get; }
+    OuterRect GetColumnWidth(HorizonalLayoutContext context);
 }
