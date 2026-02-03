@@ -24,7 +24,7 @@ public sealed record ColumnWidthPoints : IColumnWidth
             context.Available.Left + Points,
             context.Available.Bottom);
 
-        if (context.CanFit(column.ToSize()))
+        if (context.CanFit(column.ToSize()) == false)
         {
             throw new ApplicationException(
                 "Column width cannot fit, check that all points do not exceed available width.");

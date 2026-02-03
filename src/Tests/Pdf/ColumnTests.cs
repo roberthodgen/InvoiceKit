@@ -19,7 +19,7 @@ public sealed class ColumnTests
         var context = _root.GetHorizontalChildContext();
         var columnPercent = ColumnWidthPercent.FromPercent(50);
         var columnWidth = columnPercent.GetColumnWidth(context);
-        columnWidth.ShouldBeEquivalentTo(new ContentRect(0, 0, 250, 500));
+        columnWidth.ShouldBeEquivalentTo(new OuterRect(0, 0, 250, 500));
     }
 
     [Fact]
@@ -28,7 +28,7 @@ public sealed class ColumnTests
         var context = _root.GetHorizontalChildContext();
         var columnPoints = ColumnWidthPoints.FromPoints(200);
         var columnWidth = columnPoints.GetColumnWidth(context);
-        columnWidth.ShouldBeEquivalentTo(new ContentRect(0, 0, 200, 500));
+        columnWidth.ShouldBeEquivalentTo(new OuterRect(0, 0, 200, 500));
     }
 
     [Fact]
