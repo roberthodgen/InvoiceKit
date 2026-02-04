@@ -1,6 +1,7 @@
 namespace InvoiceKit.Tests.Pdf.Layouts;
 
 using InvoiceKit.Pdf;
+using InvoiceKit.Pdf.Views;
 using Xunit.Abstractions;
 
 public class HStackTests(ITestOutputHelper testOutputHelper)
@@ -109,5 +110,22 @@ public class HStackTests(ITestOutputHelper testOutputHelper)
         stream.Write(pdfBytes);
         testOutputHelper.WriteLine($"PDF created: file://{Path.GetFullPath(fileName)}");
         File.Exists(fileName).ShouldBeTrue();
+    }
+
+    [Fact]
+    public void HStack_ToLayout_ThrowsWhenUnequalColumnsAndWidths()
+    {
+        using var builder = PdfDocument.UsLetter;
+        var exception = Should.Throw<ApplicationException>(() =>
+            builder.WithVStack(root => root
+                .WithColumnWidths(widths => widths
+                    .AddColumnPercent(50)
+                    .AddColumnPercent(50))
+                .AddHStack(table => table
+                    .AddText("Column1")
+                    .AddText("Column2")
+                    .AddText("Column3")))
+            .Build());
+        exception.Message.ShouldContain("Column");
     }
 }

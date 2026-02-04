@@ -15,8 +15,13 @@ public sealed class HStack : ContainerBase, IRow
 
     public override ILayout ToLayout()
     {
+        if (ColumnWidths is not null && ColumnWidths.Count != Children.Count)
+        {
+            throw new ApplicationException("Column widths does not equal the number of columns.");
+        }
+
         var childrenLayouts = Children.Select(child => child.ToLayout()).ToList();
-        return new HStackLayout(childrenLayouts);
+        return new HStackLayout(childrenLayouts, ColumnWidths);
     }
 
 
