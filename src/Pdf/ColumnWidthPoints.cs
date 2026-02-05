@@ -16,20 +16,16 @@ public sealed record ColumnWidthPoints : IColumnWidth
         return new ColumnWidthPoints(points);
     }
 
-    public OuterRect GetColumnWidth(HorizonalLayoutContext context)
+    public OuterSize GetColumnWidth(ILayoutContext context)
     {
-        var column = new OuterRect(
-            context.Available.Left,
-            context.Available.Top,
-            context.Available.Left + Points,
-            context.Available.Bottom);
+        var columnSize = new OuterSize(Points, context.Available.Height);
 
-        if (context.CanFit(column.ToSize()) == false)
+        if (context.CanFit(columnSize) == false)
         {
             throw new ApplicationException(
                 "Column width cannot fit, check that all points do not exceed available width.");
         }
 
-        return column;
+        return columnSize;
     }
 }

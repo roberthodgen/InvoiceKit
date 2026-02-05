@@ -1,10 +1,10 @@
 namespace InvoiceKit.Pdf.Layouts;
 
 using Geometry;
-using SkiaSharp;
 
 internal class HStackLayout(List<ILayout> columns, List<IColumnWidth>? columnWidths = null) : ILayout
 {
+    private float _left;
     /// <summary>
     /// Horizontal stack layout that will split into columns based on the number of children.
     /// </summary>
@@ -25,25 +25,29 @@ internal class HStackLayout(List<ILayout> columns, List<IColumnWidth>? columnWid
 
     private List<ChildLayout> GetChildLayouts(ILayoutContext context)
     {
+        _left = context.Available.Left;
         var result = new List<ChildLayout>();
         foreach (var i in Enumerable.Range(0, columns.Count))
         {
-            var nthColumn = columns[i];
-            result.Add(ChildLayout.CreateChildIntersecting(nthColumn, context, GetContextForNthColumn(i, context)));
+            var columnRect = GetRectForNthColumn(i, context, _left);
+            _left += columnRect.Width;
+            result.Add(ChildLayout.CreateChildIntersecting(columns[i], context, columnRect));
         }
 
         return result;
     }
 
-    private OuterRect GetContextForNthColumn(int nthColumn, ILayoutContext context)
+    private OuterRect GetRectForNthColumn(int nthColumn, ILayoutContext context, float left)
     {
-        var columnSize = GetColumnSize(context);
-        var left = context.Available.Left + columnSize.Width * nthColumn;
-        return new OuterRect(left, context.Available.Top, left + columnSize.Width, context.Available.Height);
-    }
+        var width = columnWidths is not null
+            ? columnWidths[nthColumn].GetColumnWidth(context).Width
+            : context.Available.Width / columns.Count;
 
-    private SKSize GetColumnSize(ILayoutContext context)
-    {
-        return new SKSize(context.Available.Width / columns.Count, context.Available.Height);
+        if (left + width > context.Available.Right)
+        {
+            throw new ApplicationException($"Column width exceeds available space at column {nthColumn}");
+        }
+
+        return new OuterRect(left, context.Available.Top, left + width, context.Available.Bottom);
     }
 }

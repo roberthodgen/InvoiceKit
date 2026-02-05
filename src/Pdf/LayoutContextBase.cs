@@ -50,7 +50,6 @@ public abstract class LayoutContextBase : ILayoutContext
 
     public bool TryAllocate(OuterSize outer)
     {
-        // Todo: Unit test
         if (CanFit(outer))
         {
             AllocatedHeights.Add(outer.Height);

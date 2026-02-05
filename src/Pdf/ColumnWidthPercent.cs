@@ -16,22 +16,16 @@ public sealed record ColumnWidthPercent : IColumnWidth
         return new ColumnWidthPercent(percent);
     }
 
-    public OuterRect GetColumnWidth(HorizonalLayoutContext context)
+    public OuterSize GetColumnWidth(ILayoutContext context)
     {
-        var width = context.Available.Width * (Percent / 100);
+        var columnSize = new OuterSize(context.Available.Width * (Percent / 100), context.Available.Height);
 
-        var column = new OuterRect(
-            context.Available.Left,
-            context.Available.Top,
-            context.Available.Left + width,
-            context.Available.Bottom);
-
-        if (context.CanFit(column.ToSize()) == false)
+        if (context.CanFit(columnSize) == false)
         {
             throw new ApplicationException(
                 "Column width cannot fit, check that all percentages do not exceed 100 percent.");
         }
 
-        return column;
+        return columnSize;
     }
 }

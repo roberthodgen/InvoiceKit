@@ -1,7 +1,6 @@
 namespace InvoiceKit.Tests.Pdf.Layouts;
 
 using InvoiceKit.Pdf;
-using InvoiceKit.Pdf.Views;
 using Xunit.Abstractions;
 
 public class HStackTests(ITestOutputHelper testOutputHelper)
@@ -60,10 +59,6 @@ public class HStackTests(ITestOutputHelper testOutputHelper)
                             .AddText("Column 1")
                             .AddText("Column 2")
                             .AddText("Column 3")))
-                    .WithColumnWidths(widths => widths
-                        .AddColumnPercent(20)
-                        .AddColumnPercent(60)
-                        .AddColumnPercent(20))
                     .AddHStack(row1 => row1.AddText("Row 1 Col 1").AddText("Row 1 Col 2").AddText("Row 1 Col 3"))
                     .AddHStack(row2 => row2.AddText("Row 2 Col 1").AddText("Row 2 Col 2").AddText("Row 2 Col 3"))
                     .AddHStack(row3 => row3.AddText("Row 3 Col 1").AddText("Row 3 Col 2").AddText("Row 3 Col 3"))))
@@ -90,7 +85,7 @@ public class HStackTests(ITestOutputHelper testOutputHelper)
                 .AddVStack(table => table
                     .WithColumnWidths(widths => widths
                         .AddColumnPoints(100)
-                        .AddColumnPoints(400)
+                        .AddColumnPoints(250)
                         .AddColumnPoints(100))
                     .WithHeader(header => header
                         .AddHStack(headerRow => headerRow
@@ -98,10 +93,6 @@ public class HStackTests(ITestOutputHelper testOutputHelper)
                             .AddText("Column 1")
                             .AddText("Column 2")
                             .AddText("Column 3")))
-                    .WithColumnWidths(widths => widths
-                        .AddColumnPoints(100)
-                        .AddColumnPoints(400)
-                        .AddColumnPoints(100))
                     .AddHStack(row1 => row1.AddText("Row 1 Col 1").AddText("Row 1 Col 2").AddText("Row 1 Col 3"))
                     .AddHStack(row2 => row2.AddText("Row 2 Col 1").AddText("Row 2 Col 2").AddText("Row 2 Col 3"))
                     .AddHStack(row3 => row3.AddText("Row 3 Col 1").AddText("Row 3 Col 2").AddText("Row 3 Col 3"))))
@@ -126,6 +117,24 @@ public class HStackTests(ITestOutputHelper testOutputHelper)
                     .AddText("Column2")
                     .AddText("Column3")))
             .Build());
+        exception.Message.ShouldContain("Column");
+    }
+
+    [Fact]
+    public void HStack_ToLayout_ThrowsWhenPointsOversize()
+    {
+        using var builder = PdfDocument.UsLetter;
+        var exception = Should.Throw<ApplicationException>(() =>
+            builder.WithVStack(root => root
+                    .WithColumnWidths(widths => widths
+                        .AddColumnPoints(100)
+                        .AddColumnPoints(300)
+                        .AddColumnPoints(100))
+                    .AddHStack(table => table
+                        .AddText("Column1")
+                        .AddText("Column2")
+                        .AddText("Column3")))
+                .Build());
         exception.Message.ShouldContain("Column");
     }
 }
