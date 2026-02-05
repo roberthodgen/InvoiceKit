@@ -137,4 +137,21 @@ public class HStackTests(ITestOutputHelper testOutputHelper)
                 .Build());
         exception.Message.ShouldContain("Column");
     }
+
+    [Fact]
+    public void ColumnBuilder_ThrowsWhenDifferentColumnTypes()
+    {
+        using var builder = PdfDocument.UsLetter;
+        var exception = Should.Throw<ApplicationException>(() =>
+            builder.WithVStack(root => root
+                    .WithColumnWidths(widths => widths
+                        .AddColumnPoints(100)
+                        .AddColumnPercent(50))
+                    .AddHStack(table => table
+                        .AddText("Column1")
+                        .AddText("Column2")
+                        .AddText("Column3")))
+                .Build());
+        exception.Message.ShouldContain("percents or points");
+    }
 }
