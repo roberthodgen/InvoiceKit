@@ -49,11 +49,11 @@ public class HStackTests(ITestOutputHelper testOutputHelper)
                 .AddText(fileName, style => style with { FontPath = "Open Sans/Bold", FontSize = 24f, })
                 .AddHorizontalRule()
                 .AddVStack(table => table
+                    .WithColumnWidths(widths => widths
+                        .AddColumnPercent(20)
+                        .AddColumnPercent(60)
+                        .AddColumnPercent(20))
                     .WithHeader(header => header
-                        .WithColumnWidths(widths => widths
-                            .AddColumnPercent(20)
-                            .AddColumnPercent(60)
-                            .AddColumnPercent(20))
                         .AddHStack(headerRow => headerRow
                             .WithDefaultStyle(style => style with { FontPath = "Open Sans/SemiBold", })
                             .AddText("Column 1")
