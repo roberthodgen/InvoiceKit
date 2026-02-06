@@ -11,6 +11,11 @@ public sealed record ColumnWidthPercent : IColumnWidth
         Percent = percent;
     }
 
+    /// <summary>
+    /// Creates a column width based on a percentage of the available width.
+    /// </summary>
+    /// <param name="percent"></param>
+    /// <returns></returns>
     public static ColumnWidthPercent FromPercent(float percent)
     {
         return new ColumnWidthPercent(percent);

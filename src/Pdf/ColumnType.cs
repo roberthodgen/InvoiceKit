@@ -16,11 +16,17 @@ public readonly record struct ColumnType
     /// <summary>
     /// Column is given a percentage of the available width.
     /// </summary>
+    /// <remarks>
+    /// See <see cref="ColumnWidthPercent"/>
+    /// </remarks>
     public static ColumnType Percent => new (1);
 
     /// <summary>
     /// Column is given a fixed width in points.
     /// </summary>
+    /// <remarks>
+    /// See <see cref="ColumnWidthPoints"/>
+    /// </remarks>
     public static ColumnType Points => new (2);
 
     private int Value { get; }
