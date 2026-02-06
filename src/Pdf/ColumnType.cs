@@ -1,7 +1,7 @@
-namespace InvoiceKit.Pdf.Layouts;
+namespace InvoiceKit.Pdf;
 
 /// <summary>
-/// Describes how columns are laid out for an <see cref="HStackLayout"/>
+/// Describes how columns are laid out for an HStackLayout
 /// </summary>
 public readonly record struct ColumnType
 {
@@ -14,12 +14,12 @@ public readonly record struct ColumnType
     public static ColumnType Equal => new (0);
 
     /// <summary>
-    ///
+    /// Column is given a percentage of the available width.
     /// </summary>
     public static ColumnType Percent => new (1);
 
     /// <summary>
-    ///
+    /// Column is given a fixed width in points.
     /// </summary>
     public static ColumnType Points => new (2);
 
@@ -45,7 +45,7 @@ public readonly record struct ColumnType
     /// Checks that a given column type can be converted to another type.
     /// </summary>
     /// <param name="other">The type to be converted to.</param>
-    /// <returns></returns>
+    /// <returns>True when possible, false otherwise.</returns>
     public bool CanBeConvertedTo(ColumnType other)
     {
         if (this == Equal)

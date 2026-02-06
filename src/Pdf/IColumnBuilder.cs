@@ -1,7 +1,5 @@
 namespace InvoiceKit.Pdf;
 
-using Layouts;
-
 public interface IColumnBuilder
 {
     /// <summary>
@@ -15,9 +13,12 @@ public interface IColumnBuilder
     IColumnBuilder AddColumnPoints(float points);
 
     /// <summary>
-    ///
+    /// Stores the column widths for the layout.
     /// </summary>
     IReadOnlyList<IColumnWidth> ColumnWidths { get; }
 
+    /// <summary>
+    /// Specifies how columns are laid out for an HStackLayout.
+    /// </summary>
     ColumnType ColumnType { get; }
 }

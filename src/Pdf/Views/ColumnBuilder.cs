@@ -1,7 +1,5 @@
 namespace InvoiceKit.Pdf.Views;
 
-using Layouts;
-
 public sealed class ColumnBuilder : IColumnBuilder
 {
     private readonly List<IColumnWidth> _columnWidths = [];

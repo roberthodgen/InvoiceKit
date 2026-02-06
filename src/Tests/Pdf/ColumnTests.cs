@@ -6,9 +6,6 @@ using InvoiceKit.Pdf.Views;
 
 public sealed class ColumnTests
 {
-    /// <summary>
-    /// Points per inch.
-    /// </summary>
     private static readonly OuterRect TestRect = new (0, 0, 500, 500);
 
     private readonly RootLayoutContext _root = new (TestRect.ToRect());
@@ -46,5 +43,21 @@ public sealed class ColumnTests
         var columnPoints = ColumnWidthPoints.FromPoints(501);
         var exception = Should.Throw<ApplicationException>(() => columnPoints.GetColumnSize(context));
         exception.Message.ShouldContain("Points");
+    }
+
+    [Fact]
+    public void ColumnType_CanConvert_ReturnsTrue()
+    {
+        var columnType = ColumnType.Equal;
+        columnType.CanBeConvertedTo(ColumnType.Percent).ShouldBeTrue();
+        columnType.CanBeConvertedTo(ColumnType.Points).ShouldBeTrue();
+    }
+
+    [Fact]
+    public void ColumnType_CanConvert_ReturnsFalse()
+    {
+        var columnType = ColumnType.Percent;
+        columnType.CanBeConvertedTo(ColumnType.Equal).ShouldBeFalse();
+        columnType.CanBeConvertedTo(ColumnType.Points).ShouldBeFalse();
     }
 }
