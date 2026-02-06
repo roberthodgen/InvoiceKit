@@ -1,17 +1,19 @@
 namespace InvoiceKit.Pdf.Views;
 
-using Containers.Tables;
+using Layouts;
 using SkiaSharp;
 
-public abstract class ContainerBase(BlockStyle defaultStyle, List<IColumnWidth>? columnWidths) : IContainer
+public abstract class ContainerBase(BlockStyle defaultStyle) : IContainer
 {
     private readonly List<IViewBuilder> _children = [];
 
-    protected List<IColumnWidth>? ColumnWidths { get; set; } = columnWidths;
+    protected IReadOnlyList<IColumnWidth> ColumnWidths { get; set; } = [];
+
+    protected ColumnType ColumnType { get; set; } = ColumnType.Equal;
 
     public BlockStyle DefaultStyle { get; private set; } = defaultStyle;
 
-    protected IReadOnlyCollection<IViewBuilder> Children => _children.AsReadOnly();
+    protected IReadOnlyList<IViewBuilder> Children => _children.AsReadOnly();
 
     private BlockStyle ChildStyle => DefaultStyle.CopyForChild();
 
@@ -94,7 +96,9 @@ public abstract class ContainerBase(BlockStyle defaultStyle, List<IColumnWidth>?
 
     public IContainer AddHStack(Action<HStack> configure)
     {
-        var child = new HStack(ChildStyle, ColumnWidths);
+        var child = new HStack(ChildStyle);
+        child.ColumnType = ColumnType;
+        child.ColumnWidths = ColumnWidths;
         configure(child);
         _children.Add(child);
         return this;
@@ -111,22 +115,6 @@ public abstract class ContainerBase(BlockStyle defaultStyle, List<IColumnWidth>?
     public IContainer AddSpacing(float height = 5f)
     {
         var child = new SpacingBlockViewBuilder(height);
-        _children.Add(child);
-        return this;
-    }
-
-    public IContainer AddTable(Action<TableViewBuilder> configure)
-    {
-        var child = new TableViewBuilder(ChildStyle);
-        configure(child);
-        _children.Add(child);
-        return this;
-    }
-
-    public IContainer AddTable(Action<TableViewBuilder> configure, Func<BlockStyle, BlockStyle> configureStyle)
-    {
-        var child = new TableViewBuilder(configureStyle(ChildStyle));
-        configure(child);
         _children.Add(child);
         return this;
     }

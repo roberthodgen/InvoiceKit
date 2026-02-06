@@ -16,7 +16,7 @@ public sealed record ColumnWidthPercent : IColumnWidth
         return new ColumnWidthPercent(percent);
     }
 
-    public OuterSize GetColumnWidth(ILayoutContext context)
+    public OuterSize GetColumnSize(ILayoutContext context)
     {
         var columnSize = new OuterSize(context.Available.Width * (Percent / 100), context.Available.Height);
 

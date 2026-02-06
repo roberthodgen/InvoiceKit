@@ -4,5 +4,5 @@ using Geometry;
 
 public interface IColumnWidth
 {
-    OuterSize GetColumnWidth(ILayoutContext context);
+    OuterSize GetColumnSize(ILayoutContext context);
 }

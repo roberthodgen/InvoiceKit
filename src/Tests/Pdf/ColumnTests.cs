@@ -18,7 +18,7 @@ public sealed class ColumnTests
     {
         var context = _root.GetHorizontalChildContext();
         var columnPercent = ColumnWidthPercent.FromPercent(50);
-        var columnWidth = columnPercent.GetColumnWidth(context);
+        var columnWidth = columnPercent.GetColumnSize(context);
         columnWidth.ShouldBeEquivalentTo(new OuterSize(250, 500));
     }
 
@@ -27,7 +27,7 @@ public sealed class ColumnTests
     {
         var context = _root.GetHorizontalChildContext();
         var columnPoints = ColumnWidthPoints.FromPoints(200);
-        var columnWidth = columnPoints.GetColumnWidth(context);
+        var columnWidth = columnPoints.GetColumnSize(context);
         columnWidth.ShouldBeEquivalentTo(new OuterSize(200, 500));
     }
 
@@ -44,7 +44,7 @@ public sealed class ColumnTests
     {
         var context = _root.GetHorizontalChildContext();
         var columnPoints = ColumnWidthPoints.FromPoints(501);
-        var exception = Should.Throw<ApplicationException>(() => columnPoints.GetColumnWidth(context));
+        var exception = Should.Throw<ApplicationException>(() => columnPoints.GetColumnSize(context));
         exception.Message.ShouldContain("Points");
     }
 }

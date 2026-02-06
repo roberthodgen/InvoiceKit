@@ -1,21 +1,20 @@
 namespace InvoiceKit.Pdf.Views;
 
+using Layouts;
+
 public sealed class ColumnBuilder : IColumnBuilder
 {
     private readonly List<IColumnWidth> _columnWidths = [];
 
-    private Type? _columnType;
+    public ColumnType ColumnType { get; private set; } = ColumnType.Equal;
+
+    public IReadOnlyList<IColumnWidth> ColumnWidths => _columnWidths.AsReadOnly();
 
     private float _columnSum;
 
-    public List<IColumnWidth> Build()
-    {
-        return _columnWidths;
-    }
-
     public IColumnBuilder AddColumnPercent(float percent)
     {
-        if (_columnType is not null && _columnType != typeof(ColumnWidthPercent))
+        if (ColumnType.CanBeConvertedTo(ColumnType.Percent) == false)
         {
             throw new ApplicationException("Can only have either percents or points, not both.");
         }
@@ -26,19 +25,19 @@ public sealed class ColumnBuilder : IColumnBuilder
             throw new ApplicationException("Can only have a maximum of 100 percent points.");
         }
 
-        _columnType = typeof(ColumnWidthPercent);
+        ColumnType = ColumnType.Percent;
         _columnWidths.Add(ColumnWidthPercent.FromPercent(percent));
         return this;
     }
 
     public IColumnBuilder AddColumnPoints(float points)
     {
-        if (_columnType is not null && _columnType != typeof(ColumnWidthPoints))
+        if (ColumnType.CanBeConvertedTo(ColumnType.Points) == false)
         {
             throw new ApplicationException("Can only have either percents or points, not both.");
         }
 
-        _columnType = typeof(ColumnWidthPoints);
+        ColumnType = ColumnType.Points;
         _columnWidths.Add(ColumnWidthPoints.FromPoints(points));
         return this;
     }

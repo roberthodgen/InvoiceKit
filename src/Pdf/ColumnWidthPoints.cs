@@ -16,7 +16,7 @@ public sealed record ColumnWidthPoints : IColumnWidth
         return new ColumnWidthPoints(points);
     }
 
-    public OuterSize GetColumnWidth(ILayoutContext context)
+    public OuterSize GetColumnSize(ILayoutContext context)
     {
         var columnSize = new OuterSize(Points, context.Available.Height);
 
