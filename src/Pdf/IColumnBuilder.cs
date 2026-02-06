@@ -1,5 +1,8 @@
 namespace InvoiceKit.Pdf;
 
+/// <summary>
+/// Used inside other builders to define column widths for layouts.
+/// </summary>
 public interface IColumnBuilder
 {
     /// <summary>
