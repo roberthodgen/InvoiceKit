@@ -46,6 +46,24 @@ public sealed class ColumnTests
     }
 
     [Fact]
+    public void ColumnWidthEqual_CreateEqualColumns_ReturnsCorrectList()
+    {
+        var numberOfColumns = 3;
+        var columnWidths = ColumnWidthEqual.CreateEqualColumns(numberOfColumns);
+        columnWidths.Count.ShouldBe(numberOfColumns);
+    }
+
+    [Fact]
+    public void ColumnWidthEqual_GetColumnSize_ReturnsCorrectSize()
+    {
+        var context = _root.GetHorizontalChildContext();
+        var columnWidths = ColumnWidthEqual.CreateEqualColumns(2);
+        var columnWidth1 = columnWidths[0].GetColumnSize(context).Width;
+        var columnWidth2 = columnWidths[1].GetColumnSize(context).Width;
+        columnWidth1.ShouldBeEquivalentTo(columnWidth2);
+    }
+
+    [Fact]
     public void ColumnType_CanConvert_ReturnsTrue()
     {
         var columnType = ColumnType.Equal;
