@@ -60,4 +60,12 @@ public sealed class ColumnTests
         columnType.CanBeConvertedTo(ColumnType.Equal).ShouldBeFalse();
         columnType.CanBeConvertedTo(ColumnType.Points).ShouldBeFalse();
     }
+
+    [Fact]
+    public void ColumnType_ToString_ReturnsCorrectStrings()
+    {
+        ColumnType.Equal.ToString().ShouldBe("Equal Width");
+        ColumnType.Percent.ToString().ShouldBe("Percent");
+        ColumnType.Points.ToString().ShouldBe("Points");
+    }
 }
