@@ -5,7 +5,7 @@ using Layouts;
 /// <summary>
 /// Renders content vertically. Each row is rendered on a new line.
 /// </summary>
-public sealed class VStack : ContainerBase
+public sealed class VStack : ContainerBase, ITable
 {
     private VStack? _header;
 
@@ -39,7 +39,16 @@ public sealed class VStack : ContainerBase
         return new VStackLayout(childrenLayouts);
     }
 
-    public VStack WithHeader(Action<VStack> configure)
+    public ITable WithColumnWidths(Action<ColumnBuilder> configureColumns)
+    {
+        var builder = new ColumnBuilder();
+        configureColumns(builder);
+        ColumnType = builder.ColumnType;
+        ColumnWidths = builder.ColumnWidths;
+        return this;
+    }
+
+    public ITable WithHeader(Action<VStack> configure)
     {
         if (_headerOrFooter)
         {
@@ -47,11 +56,13 @@ public sealed class VStack : ContainerBase
         }
 
         _header = new VStack(DefaultStyle.CopyForChild(), true);
+        _header.ColumnType = ColumnType;
+        _header.ColumnWidths = ColumnWidths;
         configure(_header);
         return this;
     }
 
-    public VStack WithHeader(Action<VStack> configure, Func<BlockStyle, BlockStyle> configureStyle)
+    public ITable WithHeader(Action<VStack> configure, Func<BlockStyle, BlockStyle> configureStyle)
     {
         if (_headerOrFooter)
         {
@@ -59,11 +70,13 @@ public sealed class VStack : ContainerBase
         }
 
         _header = new VStack(configureStyle(DefaultStyle.CopyForChild()), true);
+        _header.ColumnType = ColumnType;
+        _header.ColumnWidths = ColumnWidths;
         configure(_header);
         return this;
     }
 
-    public VStack WithFooter(Action<VStack> configure)
+    public ITable WithFooter(Action<VStack> configure)
     {
         if (_headerOrFooter)
         {
@@ -71,11 +84,13 @@ public sealed class VStack : ContainerBase
         }
 
         _footer = new VStack(DefaultStyle.CopyForChild(), true);
+        _footer.ColumnType = ColumnType;
+        _footer.ColumnWidths = ColumnWidths;
         configure(_footer);
         return this;
     }
 
-    public VStack WithFooter(Action<VStack> configure, Func<BlockStyle, BlockStyle> configureStyle)
+    public ITable WithFooter(Action<VStack> configure, Func<BlockStyle, BlockStyle> configureStyle)
     {
         if (_headerOrFooter)
         {
@@ -83,6 +98,8 @@ public sealed class VStack : ContainerBase
         }
 
         _footer = new VStack(configureStyle(DefaultStyle.CopyForChild()), true);
+        _footer.ColumnType = ColumnType;
+        _footer.ColumnWidths = ColumnWidths;
         configure(_footer);
         return this;
     }

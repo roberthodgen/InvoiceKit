@@ -1,7 +1,5 @@
 namespace InvoiceKit.Pdf.Views;
 
-using Containers.Tables;
-
 /// <summary>
 /// A layout is a drawable component that contains one or more children.
 /// Layouts compose and create complex PDF layouts.
@@ -55,16 +53,6 @@ public interface IContainer : IViewBuilder
     /// </summary>
     /// <param name="height">Float for the amount of spacing. Default of 5f.</param>
     IContainer AddSpacing(float height = 5f);
-
-    /// <summary>
-    /// Adds a new table.
-    /// </summary>
-    IContainer AddTable(Action<TableViewBuilder> configureTableBlock);
-
-    /// <summary>
-    /// Adds a new table with custom styling.
-    /// </summary>
-    IContainer AddTable(Action<TableViewBuilder> configureTableBlock, Func<BlockStyle, BlockStyle> configureStyle);
 
     /// <summary>
     /// Fills the rest of the page with blank space and starts a new page.

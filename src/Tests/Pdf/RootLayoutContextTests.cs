@@ -78,4 +78,19 @@ public class RootLayoutContextTests
 
         root.Allocated.Size.Height.ShouldBe(0);
     }
+
+    [Fact]
+    public void CanFit_ReturnsTrue()
+    {
+        var root = new RootLayoutContext(UsLetter.ToRect());
+        root.CanFit(new OuterSize(100, 100)).ShouldBeTrue();
+    }
+
+    [Fact]
+    public void CanFit_ReturnsFalse()
+    {
+        var root = new RootLayoutContext(UsLetter.ToRect());
+        root.CanFit(new OuterSize(9f * Ppi, 0)).ShouldBeFalse();
+        root.CanFit(new OuterSize(0, 12 * Ppi)).ShouldBeFalse();
+    }
 }

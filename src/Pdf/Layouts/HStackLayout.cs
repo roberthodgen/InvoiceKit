@@ -1,9 +1,8 @@
 namespace InvoiceKit.Pdf.Layouts;
 
 using Geometry;
-using SkiaSharp;
 
-internal class HStackLayout(List<ILayout> columns) : ILayout
+internal class HStackLayout(List<Column> columns) : ILayout
 {
     /// <summary>
     /// Horizontal stack layout that will split into columns based on the number of children.
@@ -25,25 +24,21 @@ internal class HStackLayout(List<ILayout> columns) : ILayout
 
     private List<ChildLayout> GetChildLayouts(ILayoutContext context)
     {
+        var left = context.Available.Left;
         var result = new List<ChildLayout>();
         foreach (var i in Enumerable.Range(0, columns.Count))
         {
-            var nthColumn = columns[i];
-            result.Add(ChildLayout.CreateChildIntersecting(nthColumn, context, GetContextForNthColumn(i, context)));
+            var columnSize = columns[i].ColumnWidth.GetColumnSize(context);
+            if (left + columnSize.Width > context.Available.Right)
+            {
+                throw new ApplicationException($"Column {i} exceeds available width.");
+            }
+
+            var rect = new OuterRect(left, context.Available.Top, left + columnSize.Width, context.Available.Bottom);
+            left += columnSize.Width;
+            result.Add(ChildLayout.CreateChildIntersecting(columns[i].Layout, context, rect));
         }
 
         return result;
-    }
-
-    private OuterRect GetContextForNthColumn(int nthColumn, ILayoutContext context)
-    {
-        var columnSize = GetColumnSize(context);
-        var left = context.Available.Left + columnSize.Width * nthColumn;
-        return new (left, context.Available.Top, left + columnSize.Width, context.Available.Height);
-    }
-
-    private SKSize GetColumnSize(ILayoutContext context)
-    {
-        return new SKSize(context.Available.Width / columns.Count, context.Available.Height);
     }
 }
